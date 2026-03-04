@@ -6,7 +6,7 @@ import {
 import {
     AlertTriangle, HardDrive, CheckCircle, Search,
     Wrench, Truck, AlertOctagon, Download, Upload, Filter, Database,
-    LayoutDashboard, Table, ChevronLeft, ChevronRight, RefreshCw, FileText, X, Activity, Hammer, ExternalLink, Sun, Moon
+    LayoutDashboard, Table, ChevronLeft, ChevronRight, RefreshCw, FileText, X, Activity, Hammer, ExternalLink, Sun, Moon, Menu
 } from 'lucide-react';
 import { generateWorkOrderPDF } from './utils/pdfGenerator';
 import { YANACOCHA_FLEETS, REPSOL_FLEETS, TRACKLOG_INTERNAL_FLEETS } from './utils/fleets';
@@ -988,6 +988,8 @@ export default function TracklogDashboard() {
         }
     }, [isDarkMode]);
 
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
     // Estado para Seguimiento Correctivo
     const [repairData, setRepairData] = useState<Record<string, RepairTracking>>({});
 
@@ -1763,7 +1765,7 @@ export default function TracklogDashboard() {
                                 <Database className="w-6 h-6 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-xl font-bold text-slate-900 dark:text-zinc-100 dark:text-white tracking-tight leading-none">TRACKLOG DISK MANAGER</h1>
+                                <h1 className="text-xl font-bold text-slate-900 dark:text-zinc-100 tracking-tight leading-none">TRACKLOG DISK MANAGER</h1>
                                 <div className="flex items-center gap-2 mt-1">
                                     <span className="text-xs font-medium text-slate-500 dark:text-zinc-400">Gestión de Almacenamiento MDVR</span>
                                     {lastUpdate && (
@@ -1771,96 +1773,124 @@ export default function TracklogDashboard() {
                                             Actualizado: {lastUpdate}
                                         </span>
                                     )}
-                                    <div className="flex bg-slate-200 dark:bg-zinc-800 rounded-lg p-0.5 mr-2">
-                                        <button
-                                            onClick={() => setScopeFilter('customer')}
-                                            className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${scopeFilter === 'customer' ? 'bg-white dark:bg-zinc-700 text-blue-700 dark:text-blue-400 dark:text-white shadow-sm' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 dark:hover:text-zinc-200'}`}
-                                        >
-                                            Clientes
-                                        </button>
-                                        <button
-                                            onClick={() => setScopeFilter('internal')}
-                                            className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${scopeFilter === 'internal' ? 'bg-white dark:bg-zinc-700 text-blue-700 dark:text-blue-400 dark:text-white shadow-sm' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 dark:hover:text-zinc-200'}`}
-                                        >
-                                            Tracklog
-                                        </button>
-                                        <button
-                                            onClick={() => setScopeFilter('all')}
-                                            className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${scopeFilter === 'all' ? 'bg-white dark:bg-zinc-700 text-blue-700 dark:text-blue-400 dark:text-white shadow-sm' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 dark:hover:text-zinc-200'}`}
-                                        >
-                                            Todos
-                                        </button>
-                                    </div>
-                                    {/* ACTION AREA: MONTH SELECTOR & REFRESH */}
-                                    <div className="flex items-center gap-4">
-                                        <div className="flex items-center gap-2 bg-slate-100 dark:bg-zinc-800 rounded-lg p-1">
-                                            {availableMonths.map(month => (
-                                                <button
-                                                    key={month.id}
-                                                    onClick={() => {
-                                                        const newSelection = selectedMonths.includes(month.id)
-                                                            ? selectedMonths.filter(m => m !== month.id)
-                                                            : [...selectedMonths, month.id];
-                                                        setSelectedMonths(newSelection);
-                                                        // Trigger reload effectively? Ideally we call loadData, but state update is async.
-                                                        // Better to have a explicit "Apply" or "Reload" button, or auto-reload in useEffect (dangerous with file fetching).
-                                                        // Let's rely on the Update button.
-                                                    }}
-                                                    className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${selectedMonths.includes(month.id)
-                                                        ? 'bg-white dark:bg-zinc-900 text-blue-600 dark:text-blue-400 shadow-sm'
-                                                        : 'text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:text-zinc-400'
-                                                        }`}
-                                                >
-                                                    {month.label}
-                                                </button>
-                                            ))}
-                                        </div>
-
-                                        <button
-                                            onClick={() => loadData(true)}
-                                            disabled={isLoading}
-                                            className="flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:bg-blue-900/50 rounded-lg text-sm font-bold transition-colors disabled:opacity-50"
-                                        >
-                                            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-                                            {isLoading ? 'Cargando...' : 'Actualizar Data'}
-                                        </button>
-                                    </div>
-                                    <div className="h-6 w-px bg-slate-300 mx-2"></div>
-
-                                    <div className="flex items-center gap-1 bg-slate-100 dark:bg-zinc-800 rounded p-0.5 border border-slate-300 dark:border-zinc-700">
-                                        <button
-                                            onClick={handleExportBackup}
-                                            className="flex items-center gap-1 bg-white dark:bg-zinc-900 hover:bg-blue-50 dark:bg-blue-900/40 text-slate-600 dark:text-zinc-400 hover:text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded shadow-sm transition-colors text-[10px] font-bold uppercase tracking-wider"
-                                            title="Guardar respaldo (Descargar JSON)"
-                                        >
-                                            <Download className="w-3 h-3" /> Guardar
-                                        </button>
-                                        <label
-                                            className="flex items-center gap-1 bg-white dark:bg-zinc-900 hover:bg-blue-50 dark:bg-blue-900/40 text-slate-600 dark:text-zinc-400 hover:text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded shadow-sm transition-colors text-[10px] font-bold uppercase tracking-wider cursor-pointer"
-                                            title="Cargar respaldo (Subir JSON)"
-                                        >
-                                            <Upload className="w-3 h-3" /> Cargar
-                                            <input
-                                                type="file"
-                                                accept=".json"
-                                                className="hidden"
-                                                onChange={handleImportBackup}
-                                            />
-                                        </label>
-                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Dark Mode Toggle */}
-                        <div className="flex items-center ml-4">
+                        {/* Contenedor Derecho: Menú Hamburguesa + Dark Mode */}
+                        <div className="flex items-center gap-4">
+                            {/* Dark Mode Toggle */}
                             <button
                                 onClick={() => setIsDarkMode(!isDarkMode)}
-                                className="p-2 rounded-full bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-600 dark:text-zinc-300  transition-colors shadow-sm border border-slate-200 dark:border-zinc-700"
+                                className="p-2 rounded-full bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-600 dark:text-zinc-300 transition-colors shadow-sm border border-slate-200 dark:border-zinc-700"
                                 title={isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
                             >
                                 {isDarkMode ? <Sun className="w-5 h-5 text-amber-500 dark:text-amber-400" /> : <Moon className="w-5 h-5 text-slate-600 dark:text-zinc-400" />}
                             </button>
+
+                            {/* Hamburger Menu Toggle */}
+                            <div className="relative">
+                                <button
+                                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                    className="p-2 rounded-lg bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-600 dark:text-zinc-300 transition-colors border border-slate-200 dark:border-zinc-700"
+                                    title="Abrir menú"
+                                    aria-label="Menú principal"
+                                >
+                                    <Menu className="w-5 h-5" />
+                                </button>
+
+                                {/* Hamburger Dropdown */}
+                                {isMobileMenuOpen && (
+                                    <div className="absolute right-0 mt-3 w-80 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl shadow-xl z-50 overflow-hidden flex flex-col gap-4 p-5 animate-in fade-in slide-in-from-top-2">
+
+                                        {/* Scope Filters */}
+                                        <div className="flex flex-col gap-3">
+                                            <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Filtro de Alcance</span>
+                                            <div className="flex bg-slate-100 dark:bg-zinc-800 rounded-lg p-1">
+                                                <button
+                                                    onClick={() => setScopeFilter('customer')}
+                                                    className={`flex-1 px-3 py-1.5 text-xs font-bold rounded transition-all ${scopeFilter === 'customer' ? 'bg-white dark:bg-zinc-700 text-blue-700 dark:text-white shadow-sm' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:hover:text-zinc-200'}`}
+                                                >
+                                                    Clientes
+                                                </button>
+                                                <button
+                                                    onClick={() => setScopeFilter('internal')}
+                                                    className={`flex-1 px-3 py-1.5 text-xs font-bold rounded transition-all ${scopeFilter === 'internal' ? 'bg-white dark:bg-zinc-700 text-blue-700 dark:text-white shadow-sm' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:hover:text-zinc-200'}`}
+                                                >
+                                                    Tracklog
+                                                </button>
+                                                <button
+                                                    onClick={() => setScopeFilter('all')}
+                                                    className={`flex-1 px-3 py-1.5 text-xs font-bold rounded transition-all ${scopeFilter === 'all' ? 'bg-white dark:bg-zinc-700 text-blue-700 dark:text-white shadow-sm' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:hover:text-zinc-200'}`}
+                                                >
+                                                    Todos
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="h-px w-full bg-slate-100 dark:bg-zinc-800" />
+
+                                        {/* Data Update & Monthly Selector */}
+                                        <div className="flex flex-col gap-3">
+                                            <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Sincronización & Meses</span>
+                                            <div className="grid grid-cols-2 gap-2 mb-2">
+                                                {availableMonths.map(month => (
+                                                    <button
+                                                        key={month.id}
+                                                        onClick={() => {
+                                                            const newSelection = selectedMonths.includes(month.id)
+                                                                ? selectedMonths.filter(m => m !== month.id)
+                                                                : [...selectedMonths, month.id];
+                                                            setSelectedMonths(newSelection);
+                                                        }}
+                                                        className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-all ${selectedMonths.includes(month.id)
+                                                            ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800 shadow-sm'
+                                                            : 'bg-slate-50 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 border-slate-200 dark:border-zinc-700 hover:bg-slate-100 dark:hover:bg-zinc-700'
+                                                            }`}
+                                                    >
+                                                        {month.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                            <button
+                                                onClick={() => { loadData(true); setIsMobileMenuOpen(false); }}
+                                                disabled={isLoading}
+                                                className="w-full justify-center flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold transition-colors disabled:opacity-50 shadow-md shadow-blue-500/20"
+                                            >
+                                                <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+                                                {isLoading ? 'Cargando...' : 'Actualizar Data'}
+                                            </button>
+                                        </div>
+
+                                        <div className="h-px w-full bg-slate-100 dark:bg-zinc-800" />
+
+                                        {/* Backups */}
+                                        <div className="flex flex-col gap-3">
+                                            <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Respaldo de Datos (JSON)</span>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={() => { handleExportBackup(); setIsMobileMenuOpen(false); }}
+                                                    className="flex-1 flex items-center justify-center gap-2 bg-slate-100 dark:bg-zinc-800 hover:bg-blue-50 dark:hover:bg-blue-900/40 text-slate-700 dark:text-zinc-300 hover:text-blue-700 dark:hover:text-blue-400 px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 shadow-sm transition-colors text-xs font-bold"
+                                                >
+                                                    <Download className="w-4 h-4" /> Guardar
+                                                </button>
+                                                <label
+                                                    className="flex-1 flex items-center justify-center gap-2 bg-slate-100 dark:bg-zinc-800 hover:bg-blue-50 dark:hover:bg-blue-900/40 text-slate-700 dark:text-zinc-300 hover:text-blue-700 dark:hover:text-blue-400 px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 shadow-sm transition-colors text-xs font-bold cursor-pointer"
+                                                >
+                                                    <Upload className="w-4 h-4" /> Cargar
+                                                    <input
+                                                        type="file"
+                                                        accept=".json"
+                                                        className="hidden"
+                                                        onChange={(e) => { handleImportBackup(e); setIsMobileMenuOpen(false); }}
+                                                    />
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
