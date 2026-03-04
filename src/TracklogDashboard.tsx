@@ -1807,7 +1807,7 @@ export default function TracklogDashboard() {
 
                                         {/* Scope Filters */}
                                         <div className="flex flex-col gap-3">
-                                            <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Filtro de Alcance</span>
+                                            <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Filtros</span>
                                             <div className="flex bg-slate-100 dark:bg-zinc-800 rounded-lg p-1">
                                                 <button
                                                     onClick={() => setScopeFilter('customer')}
@@ -1834,7 +1834,7 @@ export default function TracklogDashboard() {
 
                                         {/* Data Update & Monthly Selector */}
                                         <div className="flex flex-col gap-3">
-                                            <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Sincronización & Meses</span>
+                                            <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Meses</span>
                                             <div className="grid grid-cols-2 gap-2 mb-2">
                                                 {availableMonths.map(month => (
                                                     <button
@@ -1868,7 +1868,7 @@ export default function TracklogDashboard() {
 
                                         {/* Backups */}
                                         <div className="flex flex-col gap-3">
-                                            <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Respaldo de Datos (JSON)</span>
+                                            <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Respaldo de datos</span>
                                             <div className="flex items-center gap-2">
                                                 <button
                                                     onClick={() => { handleExportBackup(); setIsMobileMenuOpen(false); }}
@@ -3245,6 +3245,7 @@ export default function TracklogDashboard() {
                                         onAddComment={addComment}
                                         selectedDevice={selectedTrackingDevice}
                                         onSelectDevice={setSelectedTrackingDevice}
+                                        onViewDetails={setViewingDeviceDetails}
                                         showAll={true}
                                         statusFilter={generalStatusFilter}
                                     />
