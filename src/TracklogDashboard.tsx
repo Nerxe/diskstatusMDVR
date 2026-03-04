@@ -1860,7 +1860,7 @@ export default function TracklogDashboard() {
                                                 className="w-full justify-center flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold transition-colors disabled:opacity-50 shadow-md shadow-blue-500/20"
                                             >
                                                 <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-                                                {isLoading ? 'Cargando...' : 'Actualizar Data'}
+                                                {isLoading ? 'Actaulizando...' : 'Forzar Actualización'}
                                             </button>
                                         </div>
 
@@ -2411,9 +2411,9 @@ export default function TracklogDashboard() {
                                                                     </td>
                                                                     <td className="px-6 py-4 max-w-xs">
                                                                         <div className="flex items-center gap-2 mb-1">
-                                                                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${row.component === 'SSD/HDD' ? 'bg-purple-50 text-purple-700 border-purple-100' :
-                                                                                row.component === 'SD/Firebox' ? 'bg-cyan-50 text-cyan-700 border-cyan-100' :
-                                                                                    'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 border-slate-200 dark:border-zinc-800'
+                                                                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${row.component === 'SSD/HDD' ? 'bg-purple-50 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 border-purple-100 dark:border-purple-800/50' :
+                                                                                row.component === 'SD/Firebox' ? 'bg-cyan-50 dark:bg-cyan-900/40 text-cyan-700 dark:text-cyan-300 border-cyan-100 dark:border-cyan-800/50' :
+                                                                                    'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 border-slate-200 dark:border-zinc-700'
                                                                                 }`}>
                                                                                 {row.component}
                                                                             </span>
