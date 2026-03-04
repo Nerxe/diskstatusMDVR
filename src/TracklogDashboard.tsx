@@ -373,7 +373,7 @@ const parseDateLocal = (dateStr: string): number => {
 const CommentTimeline = ({ comments }: { comments: Comment[] }) => {
     if (!comments || comments.length === 0) {
         return (
-            <div className="text-center py-4 text-slate-400 text-xs">
+            <div className="text-center py-4 text-slate-400 dark:text-zinc-500 text-xs">
                 No hay comentarios aún
             </div>
         );
@@ -390,22 +390,22 @@ const CommentTimeline = ({ comments }: { comments: Comment[] }) => {
                 <div
                     key={comment.id}
                     className={`p-2 rounded-lg text-xs ${comment.type === 'system'
-                        ? 'bg-blue-50 border border-blue-200'
-                        : 'bg-slate-50 border border-slate-200'
+                        ? 'bg-blue-50 dark:bg-blue-900/40 border border-blue-200 dark:border-blue-800'
+                        : 'bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800'
                         }`}
                 >
                     <div className="flex items-start justify-between gap-2">
                         <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
-                                <span className={`font-bold ${comment.type === 'system' ? 'text-blue-700' : 'text-slate-700'
+                                <span className={`font-bold ${comment.type === 'system' ? 'text-blue-700 dark:text-blue-400' : 'text-slate-700 dark:text-zinc-300'
                                     }`}>
                                     {comment.type === 'system' ? '🤖' : '👤'} {comment.author}
                                 </span>
-                                <span className="text-slate-400 text-[10px]">
+                                <span className="text-slate-400 dark:text-zinc-500 text-[10px]">
                                     {formatRelativeTime(comment.timestamp)}
                                 </span>
                             </div>
-                            <p className="text-slate-600 whitespace-pre-wrap">{comment.text}</p>
+                            <p className="text-slate-600 dark:text-zinc-400 whitespace-pre-wrap">{comment.text}</p>
                         </div>
                     </div>
                 </div>
@@ -442,12 +442,12 @@ const CommentInput = ({
                         onChange={(e) => setCommentText(e.target.value)}
                         placeholder={placeholder}
                         maxLength={500}
-                        className="w-full p-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                        className="w-full p-2 text-xs border border-slate-300 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                         rows={3}
                         autoFocus
                     />
                     <div className="flex items-center justify-between">
-                        <span className="text-[10px] text-slate-400">
+                        <span className="text-[10px] text-slate-400 dark:text-zinc-500">
                             {commentText.length}/500
                         </span>
                         <div className="flex gap-2">
@@ -456,7 +456,7 @@ const CommentInput = ({
                                     setCommentText('');
                                     setIsExpanded(false);
                                 }}
-                                className="px-3 py-1 text-xs text-slate-600 hover:text-slate-800 transition-colors"
+                                className="px-3 py-1 text-xs text-slate-600 dark:text-zinc-400 hover:text-slate-800 dark:text-zinc-200 transition-colors"
                             >
                                 Cancelar
                             </button>
@@ -473,7 +473,7 @@ const CommentInput = ({
             ) : (
                 <button
                     onClick={() => setIsExpanded(true)}
-                    className="w-full p-2 text-xs text-left text-slate-400 border border-slate-200 rounded-lg hover:border-blue-300 hover:text-blue-600 transition-colors"
+                    className="w-full p-2 text-xs text-left text-slate-400 dark:text-zinc-500 border border-slate-200 dark:border-zinc-800 rounded-lg hover:border-blue-300 dark:border-blue-800 hover:text-blue-600 dark:text-blue-400 transition-colors"
                 >
                     {placeholder}
                 </button>
@@ -486,14 +486,14 @@ const CommentInput = ({
 const KpiCard = ({ title, value, icon, color, subtext, onClick, isActive }: any) => (
     <div
         onClick={onClick}
-        className={`bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border transition-all cursor-pointer flex items-center justify-between
-      ${isActive ? 'border-blue-500 ring-1 ring-blue-500 bg-blue-50/50 dark:bg-blue-900/40' : 'border-slate-200 dark:border-slate-700 hover:border-blue-300 hover:shadow-md'}
+        className={`bg-white dark:bg-zinc-900 p-5 rounded-xl shadow-sm border transition-all cursor-pointer flex items-center justify-between
+      ${isActive ? 'border-blue-500 ring-1 ring-blue-500 bg-blue-50/50 dark:bg-zinc-800 border-zinc-700' : 'border-slate-200 dark:border-zinc-800 hover:border-blue-300 dark:border-blue-800 hover:shadow-md'}
     `}
     >
         <div>
-            <p className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wide mb-1">{title}</p>
-            <h3 className="text-3xl font-bold text-slate-800 dark:text-white">{value}</h3>
-            {subtext && <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{subtext}</p>}
+            <p className="text-slate-500 dark:text-zinc-400 text-xs font-bold uppercase tracking-wide mb-1">{title}</p>
+            <h3 className="text-3xl font-bold text-slate-800 dark:text-zinc-200 dark:text-white">{value}</h3>
+            {subtext && <p className="text-xs text-slate-400 dark:text-zinc-500  mt-1">{subtext}</p>}
         </div>
         <div className={`p-3 rounded-lg ${color} bg-opacity-20`}>
             {React.cloneElement(icon, { className: `w-6 h-6 ${color.replace('bg-', 'text-').replace('/20', '')}` })}
@@ -549,15 +549,15 @@ const DeviceDetailsModal = ({
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
                 {/* Header */}
-                <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-start bg-slate-50">
+                <div className="px-6 py-4 border-b border-slate-200 dark:border-zinc-800 flex justify-between items-start bg-slate-50 dark:bg-zinc-900">
                     <div>
-                        <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <h2 className="text-2xl font-bold text-slate-800 dark:text-zinc-200 flex items-center gap-2">
                             {name}
-                            {id && <span className="text-lg font-mono text-slate-500 bg-slate-200 px-2 py-0.5 rounded">ID: {id}</span>}
+                            {id && <span className="text-lg font-mono text-slate-500 dark:text-zinc-400 bg-slate-200 dark:bg-zinc-800 px-2 py-0.5 rounded">ID: {id}</span>}
                         </h2>
-                        <div className="flex items-center gap-3 mt-1 text-sm text-slate-500 font-bold uppercase">
+                        <div className="flex items-center gap-3 mt-1 text-sm text-slate-500 dark:text-zinc-400 font-bold uppercase">
                             <span>{fleet}</span>
                             <span className="text-slate-300">•</span>
                             <span>{alarms.length} Alarmas Totales</span>
@@ -567,7 +567,7 @@ const DeviceDetailsModal = ({
                         onClick={onClose}
                         title="Cerrar"
                         aria-label="Cerrar"
-                        className="text-slate-400 hover:text-slate-600 p-2 hover:bg-slate-200 rounded-full transition-colors"
+                        className="text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:text-zinc-400 p-2 hover:bg-slate-200 dark:bg-zinc-800 rounded-full transition-colors"
                     >
                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -577,68 +577,68 @@ const DeviceDetailsModal = ({
 
                 <div className="flex-1 overflow-hidden flex flex-col lg:flex-row">
                     {/* Left Column: Alarms History & Status */}
-                    <div className="flex-1 overflow-y-auto p-6 border-r border-slate-200 bg-white">
+                    <div className="flex-1 overflow-y-auto p-6 border-r border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
 
                         {/* Status Summary */}
-                        <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 mb-6 flex gap-8">
+                        <div className="bg-slate-50 dark:bg-zinc-900 rounded-lg p-4 border border-slate-200 dark:border-zinc-800 mb-6 flex gap-8">
                             <div>
-                                <div className="text-xs text-slate-400 uppercase font-bold mb-1">Estado de Reparación</div>
+                                <div className="text-xs text-slate-400 dark:text-zinc-500 uppercase font-bold mb-1">Estado de Reparación</div>
                                 <div className={`inline-flex px-3 py-1 rounded text-sm font-bold border
-                                    ${repairData?.status === 'Pendiente' ? 'bg-slate-100 text-slate-600 border-slate-300' :
-                                        repairData?.status === 'En Proceso' ? 'bg-amber-100 text-amber-700 border-amber-300' :
-                                            repairData?.status === 'Validando' ? 'bg-blue-100 text-blue-700 border-blue-300' :
-                                                'bg-emerald-100 text-emerald-700 border-emerald-300'}`}>
+                                    ${repairData?.status === 'Pendiente' ? 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 border-slate-300 dark:border-zinc-700' :
+                                        repairData?.status === 'En Proceso' ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-800' :
+                                            repairData?.status === 'Validando' ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400 border-blue-300 dark:border-blue-800' :
+                                                'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800'}`}>
                                     {repairData?.status || 'Pendiente'}
                                 </div>
                             </div>
                             <div>
-                                <div className="text-xs text-slate-400 uppercase font-bold mb-1">Prioridad</div>
-                                <div className={`text-sm font-bold ${repairData?.priority === 'Crítica' ? 'text-red-600' :
-                                    repairData?.priority === 'Alta' ? 'text-orange-600' :
-                                        'text-blue-600'
+                                <div className="text-xs text-slate-400 dark:text-zinc-500 uppercase font-bold mb-1">Prioridad</div>
+                                <div className={`text-sm font-bold ${repairData?.priority === 'Crítica' ? 'text-red-600 dark:text-red-400' :
+                                    repairData?.priority === 'Alta' ? 'text-orange-600 dark:text-orange-400' :
+                                        'text-blue-600 dark:text-blue-400'
                                     }`}>
                                     {repairData?.priority || 'Media'}
                                 </div>
                             </div>
                         </div>
 
-                        <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <h3 className="text-sm font-bold text-slate-800 dark:text-zinc-200 uppercase tracking-wider mb-4 flex items-center gap-2">
                             <span className="w-2 h-2 rounded-full bg-red-500"></span>
                             Historial de Fallas
                         </h3>
 
                         <div className="space-y-3 relative">
                             {/* Vertical Line */}
-                            <div className="absolute left-[85px] top-2 bottom-2 w-0.5 bg-slate-100"></div>
+                            <div className="absolute left-[85px] top-2 bottom-2 w-0.5 bg-slate-100 dark:bg-zinc-800"></div>
 
                             {sortedAlarms.map((alarm, idx) => (
                                 <div key={idx} className="flex gap-4 group">
                                     <div className="w-20 pt-1 text-right">
-                                        <div className="text-xs font-bold text-slate-500">{alarm.Date.split(' ')[0]}</div>
-                                        <div className="text-[10px] text-slate-400">{alarm.Date.split(' ')[1]}</div>
+                                        <div className="text-xs font-bold text-slate-500 dark:text-zinc-400">{alarm.Date.split(' ')[0]}</div>
+                                        <div className="text-[10px] text-slate-400 dark:text-zinc-500">{alarm.Date.split(' ')[1]}</div>
                                     </div>
 
                                     <div className="relative z-10 pt-1.5">
                                         <div className={`w-3 h-3 rounded-full border-2 border-white ring-1 
-                                            ${alarm.severity === 'Alta' ? 'bg-red-500 ring-red-100' :
-                                                alarm.severity === 'Media' ? 'bg-amber-500 ring-amber-100' :
-                                                    'bg-blue-500 ring-blue-100'}`}></div>
+                                            ${alarm.severity === 'Alta' ? 'bg-red-500 ring-red-100 dark:ring-red-900/50' :
+                                                alarm.severity === 'Media' ? 'bg-amber-500 ring-amber-100 dark:ring-amber-900/50' :
+                                                    'bg-blue-500 ring-blue-100 dark:ring-blue-900/50'}`}></div>
                                     </div>
 
-                                    <div className="flex-1 bg-slate-50 rounded p-3 border border-transparent group-hover:border-slate-200 transition-colors">
+                                    <div className="flex-1 bg-slate-50 dark:bg-zinc-900 rounded p-3 border border-transparent group-hover:border-slate-200 dark:border-zinc-800 transition-colors">
                                         <div className="flex justify-between items-start gap-2">
-                                            <div className="text-sm font-bold text-slate-700">{alarm.diagnosis}</div>
+                                            <div className="text-sm font-bold text-slate-700 dark:text-zinc-300">{alarm.diagnosis}</div>
                                             <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase whitespace-nowrap
-                                                 ${alarm.severity === 'Alta' ? 'bg-red-100 text-red-700' :
-                                                    alarm.severity === 'Media' ? 'bg-amber-100 text-amber-700' :
-                                                        'bg-slate-200 text-slate-600'}`}>
+                                                 ${alarm.severity === 'Alta' ? 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-400' :
+                                                    alarm.severity === 'Media' ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400' :
+                                                        'bg-slate-200 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400'}`}>
                                                 {alarm.level}
                                             </span>
                                         </div>
-                                        <div className="text-xs text-slate-500 mt-1">
+                                        <div className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
                                             <span className="font-semibold">Acción:</span> {alarm.action}
                                         </div>
-                                        <div className="text-[10px] text-slate-400 mt-2 font-mono">
+                                        <div className="text-[10px] text-slate-400 dark:text-zinc-500 mt-2 font-mono">
                                             Componente: {alarm.component} | Modelo: {alarm.model}
                                         </div>
                                     </div>
@@ -648,16 +648,16 @@ const DeviceDetailsModal = ({
                     </div>
 
                     {/* Right Column: Comments (Bitácora) */}
-                    <div className="w-full lg:w-96 flex flex-col bg-slate-50 border-t lg:border-t-0 lg:border-l border-slate-200 h-96 lg:h-auto">
-                        <div className="p-4 border-b border-slate-200 bg-white shadow-sm z-10">
-                            <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                    <div className="w-full lg:w-96 flex flex-col bg-slate-50 dark:bg-zinc-900 border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-zinc-800 h-96 lg:h-auto">
+                        <div className="p-4 border-b border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm z-10">
+                            <h3 className="text-sm font-bold text-slate-700 dark:text-zinc-300 flex items-center gap-2">
                                 💬 Bitácora de Seguimiento
                             </h3>
                         </div>
                         <div className="flex-1 overflow-y-auto p-4">
                             <CommentTimeline comments={repairData?.comments || []} />
                         </div>
-                        <div className="p-4 border-t border-slate-200 bg-white">
+                        <div className="p-4 border-t border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
                             <CommentInput
                                 onSubmit={(text) => onAddComment(text)}
                                 placeholder="Agregar nota, actualización o cambio de estado..."
@@ -704,7 +704,7 @@ const TrackingRow: React.FC<TrackingRowProps> = ({
     return (
         <React.Fragment>
             <tr
-                className={`hover:bg-slate-50 transition-colors ${selectedDevice === item.equipment ? 'bg-blue-100/50 ring-1 ring-blue-400' : ''}`}
+                className={`hover:bg-slate-50 dark:bg-zinc-900 transition-colors ${selectedDevice === item.equipment ? 'bg-blue-100/50 ring-1 ring-blue-400 dark:ring-blue-700/50' : ''}`}
             >
                 <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
@@ -714,7 +714,7 @@ const TrackingRow: React.FC<TrackingRowProps> = ({
                                 e.stopPropagation();
                                 setIsExpanded(!isExpanded);
                             }}
-                            className="text-slate-400 hover:text-slate-600 transition-colors"
+                            className="text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:text-zinc-400 transition-colors"
                             title={isExpanded ? "Ocultar comentarios" : "Ver comentarios"}
                         >
                             {isExpanded ? '▼' : '▶'}
@@ -724,19 +724,19 @@ const TrackingRow: React.FC<TrackingRowProps> = ({
                             className="cursor-pointer flex-1"
                             onClick={() => onSelectDevice && onSelectDevice(item.equipment === selectedDevice ? null : item.equipment)}
                         >
-                            <div className="font-bold text-slate-900">{name}</div>
+                            <div className="font-bold text-slate-900 dark:text-zinc-100">{name}</div>
                             {/* Mostrar ID solo si es Seguimiento General (showAll=true) y existe ID */}
                             {showAll && useId && (
-                                <div className="text-[10px] text-slate-400 font-mono">
+                                <div className="text-[10px] text-slate-400 dark:text-zinc-500 font-mono">
                                     ID: {useId}
                                 </div>
                             )}
-                            <div className="text-xs text-slate-500">{item.fleet}</div>
+                            <div className="text-xs text-slate-500 dark:text-zinc-400">{item.fleet}</div>
                         </div>
                     </div>
                 </td>
                 <td className="px-4 py-3 text-center">
-                    <span className="font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">
+                    <span className="font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/40 px-2 py-0.5 rounded">
                         {item.highSeverityCount}
                     </span>
                 </td>
@@ -744,10 +744,10 @@ const TrackingRow: React.FC<TrackingRowProps> = ({
                     <select
                         aria-label="Estado de reparación"
                         className={`text-xs font-bold py-1 px-2 rounded border focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer
-                            ${status === 'Pendiente' ? 'bg-slate-100 text-slate-600 border-slate-300' :
-                                status === 'En Proceso' ? 'bg-amber-100 text-amber-700 border-amber-300' :
-                                    status === 'Validando' ? 'bg-blue-100 text-blue-700 border-blue-300' :
-                                        'bg-emerald-100 text-emerald-700 border-emerald-300'}
+                            ${status === 'Pendiente' ? 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 border-slate-300 dark:border-zinc-700' :
+                                status === 'En Proceso' ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-800' :
+                                    status === 'Validando' ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400 border-blue-300 dark:border-blue-800' :
+                                        'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800'}
                         `}
                         value={status}
                         onChange={(e) => onUpdateStatus(item.equipment, e.target.value, item.highSeverityCount)}
@@ -763,20 +763,19 @@ const TrackingRow: React.FC<TrackingRowProps> = ({
 
             {/* Fila de Comentarios (Expandible) */}
             {isExpanded && (
-                <tr className="bg-slate-50/50">
-                    <td colSpan={3} className="px-4 py-3 border-b border-slate-100">
+                <tr className="bg-slate-50 dark:bg-zinc-900/50">
+                    <td colSpan={3} className="px-4 py-3 border-b border-slate-100 dark:border-zinc-800">
                         <div className="pl-6 space-y-3">
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => onViewDetails && onViewDetails(item.equipment)}
-                                    className="text-xs bg-white border border-slate-200 hover:bg-slate-50 px-3 py-1 rounded shadow-sm flex items-center gap-1 text-slate-600"
+                                    className="text-xs bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:bg-slate-50 dark:bg-zinc-900 px-3 py-1 rounded shadow-sm flex items-center gap-1 text-slate-600 dark:text-zinc-400"
                                 >
                                     <ExternalLink className="w-3 h-3" />
                                     Ver Detalles Completos
                                 </button>
                             </div>
                             <CommentTimeline
-                                equipmentId={item.equipment}
                                 comments={tracking?.comments || []}
                             />
                             <CommentInput
@@ -844,36 +843,36 @@ const TrackingColumn = ({ title, color, data, repairData, onUpdateStatus, onAddC
 
     const top10 = paginatedItems;
 
-    const bgColor = color === 'blue' ? 'bg-blue-50' : 'bg-orange-50';
-    const borderColor = color === 'blue' ? 'border-blue-200' : 'border-orange-200';
-    const textColor = color === 'blue' ? 'text-blue-800' : 'text-orange-800';
+    const bgColor = color === 'blue' ? 'bg-blue-50 dark:bg-blue-900/40' : 'bg-orange-50 dark:bg-orange-900/40';
+    const borderColor = color === 'blue' ? 'border-blue-200 dark:border-blue-800' : 'border-orange-200 dark:border-orange-800';
+    const textColor = color === 'blue' ? 'text-blue-800 dark:text-blue-400' : 'text-orange-800 dark:text-orange-400';
 
     return (
-        <div className={`rounded-xl border ${borderColor} shadow-sm overflow-hidden bg-white`}>
+        <div className={`rounded-xl border ${borderColor} shadow-sm overflow-hidden bg-white dark:bg-zinc-900`}>
             {/* Search Bar and Pagination (only for showAll) */}
             {showAll && (
-                <div className="px-6 py-3 border-b border-slate-200 bg-slate-50">
+                <div className="px-6 py-3 border-b border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900">
                     {/* Pagination Controls */}
                     {totalPages > 1 && (
                         <div className="flex items-center justify-between text-xs">
-                            <div className="text-slate-500">
+                            <div className="text-slate-500 dark:text-zinc-400">
                                 Mostrando {currentPage * ITEMS_PER_PAGE + 1} - {Math.min((currentPage + 1) * ITEMS_PER_PAGE, items.length)} de {items.length} equipos
                             </div>
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => setCurrentPage(prev => Math.max(0, prev - 1))}
                                     disabled={currentPage === 0}
-                                    className="px-3 py-1.5 font-bold rounded-md border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    className="px-3 py-1.5 font-bold rounded-md border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:bg-slate-50 dark:bg-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                 >
                                     ← Anterior
                                 </button>
-                                <span className="px-3 py-1.5 font-bold text-slate-600">
+                                <span className="px-3 py-1.5 font-bold text-slate-600 dark:text-zinc-400">
                                     Página {currentPage + 1} de {totalPages}
                                 </span>
                                 <button
                                     onClick={() => setCurrentPage(prev => Math.min(totalPages - 1, prev + 1))}
                                     disabled={currentPage >= totalPages - 1}
-                                    className="px-3 py-1.5 font-bold rounded-md border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    className="px-3 py-1.5 font-bold rounded-md border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:bg-slate-50 dark:bg-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                 >
                                     Siguiente →
                                 </button>
@@ -887,14 +886,14 @@ const TrackingColumn = ({ title, color, data, repairData, onUpdateStatus, onAddC
             <div className={`px-6 py-4 border-b ${borderColor} ${bgColor}`}>
                 <h3 className={`font-bold ${textColor} flex items-center gap-2`}>
                     {title}
-                    <span className="bg-white px-2 py-0.5 rounded text-xs border border-slate-200 text-slate-500">
+                    <span className="bg-white dark:bg-zinc-900 px-2 py-0.5 rounded text-xs border border-slate-200 dark:border-zinc-800 text-slate-500 dark:text-zinc-400">
                         {showAll ? `${items.length} Equipos` : 'Top 5 Críticos'}
                     </span>
                 </h3>
             </div>
 
             <table className="w-full text-sm text-left">
-                <thead className="bg-slate-50 text-slate-500 font-semibold uppercase text-xs">
+                <thead className="bg-slate-50 dark:bg-zinc-900 text-slate-500 dark:text-zinc-400 font-semibold uppercase text-xs">
                     <tr>
                         <th className="px-4 py-3">Equipo</th>
                         <th className="px-4 py-3 text-center">Fallas L1</th>
@@ -918,7 +917,7 @@ const TrackingColumn = ({ title, color, data, repairData, onUpdateStatus, onAddC
                     {top10.length === 0 && (
                         <tr>
                             <td colSpan={3} className="px-4 py-8 text-center">
-                                <div className="text-slate-400 italic">
+                                <div className="text-slate-400 dark:text-zinc-500 italic">
                                     {showAll ? (
                                         'No se encontraron equipos.'
                                     ) : (
@@ -940,7 +939,7 @@ const TabButton = ({ active, onClick, icon, label }: { active: boolean; onClick:
         onClick={onClick}
         className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all ${active
             ? 'bg-blue-600 text-white shadow-md'
-            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
+            : 'bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-300  hover:bg-slate-100 dark:bg-zinc-800 dark:hover:bg-zinc-800 border border-slate-200 dark:border-zinc-800'
             }`}
     >
         {icon}
@@ -1751,10 +1750,10 @@ export default function TracklogDashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 font-sans text-slate-900 dark:text-slate-100 transition-colors">
+        <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 font-sans text-slate-900 dark:text-zinc-100 transition-colors">
 
             {/* HEADER DE GESTIÓN */}
-            <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50 transition-colors">
+            <header className="bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 sticky top-0 z-50 transition-colors">
                 <div className="max-w-7xl mx-auto px-6 py-4">
                     <div className="flex justify-between items-center">
 
@@ -1764,37 +1763,37 @@ export default function TracklogDashboard() {
                                 <Database className="w-6 h-6 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight leading-none">TRACKLOG DISK MANAGER</h1>
+                                <h1 className="text-xl font-bold text-slate-900 dark:text-zinc-100 dark:text-white tracking-tight leading-none">TRACKLOG DISK MANAGER</h1>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Gestión de Almacenamiento MDVR</span>
+                                    <span className="text-xs font-medium text-slate-500 dark:text-zinc-400">Gestión de Almacenamiento MDVR</span>
                                     {lastUpdate && (
-                                        <span className="text-[10px] bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+                                        <span className="text-[10px] bg-emerald-100 dark:bg-zinc-800 text-emerald-700 dark:text-zinc-300 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-zinc-700">
                                             Actualizado: {lastUpdate}
                                         </span>
                                     )}
-                                    <div className="flex bg-slate-200 dark:bg-slate-700 rounded-lg p-0.5 mr-2">
+                                    <div className="flex bg-slate-200 dark:bg-zinc-800 rounded-lg p-0.5 mr-2">
                                         <button
                                             onClick={() => setScopeFilter('customer')}
-                                            className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${scopeFilter === 'customer' ? 'bg-white dark:bg-slate-600 text-blue-700 dark:text-blue-300 shadow-sm' : 'text-slate-500 dark:text-slate-300 hover:text-slate-700 dark:hover:text-white'}`}
+                                            className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${scopeFilter === 'customer' ? 'bg-white dark:bg-zinc-700 text-blue-700 dark:text-blue-400 dark:text-white shadow-sm' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 dark:hover:text-zinc-200'}`}
                                         >
                                             Clientes
                                         </button>
                                         <button
                                             onClick={() => setScopeFilter('internal')}
-                                            className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${scopeFilter === 'internal' ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                                            className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${scopeFilter === 'internal' ? 'bg-white dark:bg-zinc-700 text-blue-700 dark:text-blue-400 dark:text-white shadow-sm' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 dark:hover:text-zinc-200'}`}
                                         >
                                             Tracklog
                                         </button>
                                         <button
                                             onClick={() => setScopeFilter('all')}
-                                            className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${scopeFilter === 'all' ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                                            className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${scopeFilter === 'all' ? 'bg-white dark:bg-zinc-700 text-blue-700 dark:text-blue-400 dark:text-white shadow-sm' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 dark:hover:text-zinc-200'}`}
                                         >
                                             Todos
                                         </button>
                                     </div>
                                     {/* ACTION AREA: MONTH SELECTOR & REFRESH */}
                                     <div className="flex items-center gap-4">
-                                        <div className="flex items-center gap-2 bg-slate-100 rounded-lg p-1">
+                                        <div className="flex items-center gap-2 bg-slate-100 dark:bg-zinc-800 rounded-lg p-1">
                                             {availableMonths.map(month => (
                                                 <button
                                                     key={month.id}
@@ -1808,8 +1807,8 @@ export default function TracklogDashboard() {
                                                         // Let's rely on the Update button.
                                                     }}
                                                     className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${selectedMonths.includes(month.id)
-                                                        ? 'bg-white text-blue-600 shadow-sm'
-                                                        : 'text-slate-400 hover:text-slate-600'
+                                                        ? 'bg-white dark:bg-zinc-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                                                        : 'text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:text-zinc-400'
                                                         }`}
                                                 >
                                                     {month.label}
@@ -1820,7 +1819,7 @@ export default function TracklogDashboard() {
                                         <button
                                             onClick={() => loadData(true)}
                                             disabled={isLoading}
-                                            className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg text-sm font-bold transition-colors disabled:opacity-50"
+                                            className="flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:bg-blue-900/50 rounded-lg text-sm font-bold transition-colors disabled:opacity-50"
                                         >
                                             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
                                             {isLoading ? 'Cargando...' : 'Actualizar Data'}
@@ -1828,16 +1827,16 @@ export default function TracklogDashboard() {
                                     </div>
                                     <div className="h-6 w-px bg-slate-300 mx-2"></div>
 
-                                    <div className="flex items-center gap-1 bg-slate-100 rounded p-0.5 border border-slate-300">
+                                    <div className="flex items-center gap-1 bg-slate-100 dark:bg-zinc-800 rounded p-0.5 border border-slate-300 dark:border-zinc-700">
                                         <button
                                             onClick={handleExportBackup}
-                                            className="flex items-center gap-1 bg-white hover:bg-blue-50 text-slate-600 hover:text-blue-700 px-2 py-0.5 rounded shadow-sm transition-colors text-[10px] font-bold uppercase tracking-wider"
+                                            className="flex items-center gap-1 bg-white dark:bg-zinc-900 hover:bg-blue-50 dark:bg-blue-900/40 text-slate-600 dark:text-zinc-400 hover:text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded shadow-sm transition-colors text-[10px] font-bold uppercase tracking-wider"
                                             title="Guardar respaldo (Descargar JSON)"
                                         >
                                             <Download className="w-3 h-3" /> Guardar
                                         </button>
                                         <label
-                                            className="flex items-center gap-1 bg-white hover:bg-blue-50 text-slate-600 hover:text-blue-700 px-2 py-0.5 rounded shadow-sm transition-colors text-[10px] font-bold uppercase tracking-wider cursor-pointer"
+                                            className="flex items-center gap-1 bg-white dark:bg-zinc-900 hover:bg-blue-50 dark:bg-blue-900/40 text-slate-600 dark:text-zinc-400 hover:text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded shadow-sm transition-colors text-[10px] font-bold uppercase tracking-wider cursor-pointer"
                                             title="Cargar respaldo (Subir JSON)"
                                         >
                                             <Upload className="w-3 h-3" /> Cargar
@@ -1857,10 +1856,10 @@ export default function TracklogDashboard() {
                         <div className="flex items-center ml-4">
                             <button
                                 onClick={() => setIsDarkMode(!isDarkMode)}
-                                className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors shadow-sm border border-slate-200 dark:border-slate-700"
+                                className="p-2 rounded-full bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-600 dark:text-zinc-300  transition-colors shadow-sm border border-slate-200 dark:border-zinc-700"
                                 title={isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
                             >
-                                {isDarkMode ? <Sun className="w-5 h-5 text-amber-500" /> : <Moon className="w-5 h-5 text-slate-600" />}
+                                {isDarkMode ? <Sun className="w-5 h-5 text-amber-500 dark:text-amber-400" /> : <Moon className="w-5 h-5 text-slate-600 dark:text-zinc-400" />}
                             </button>
                         </div>
                     </div>
@@ -1870,7 +1869,7 @@ export default function TracklogDashboard() {
             {/* TABS NAVIGATION */}
             {!isLoading && data.length > 0 && (
                 <>
-                    <div className="bg-slate-100 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700 transition-colors">
+                    <div className="bg-slate-100 dark:bg-zinc-950/50 border-b border-slate-200 dark:border-zinc-800 transition-colors">
                         <div className="max-w-7xl mx-auto px-6 py-3">
                             <div className="flex gap-2">
                                 <TabButton
@@ -1909,21 +1908,21 @@ export default function TracklogDashboard() {
                     <div className="flex flex-col items-center justify-center h-[60vh]">
                         <div className="relative">
                             {/* Spinner animado */}
-                            <div className="w-20 h-20 border-4 border-slate-200 rounded-full"></div>
+                            <div className="w-20 h-20 border-4 border-slate-200 dark:border-zinc-800 rounded-full"></div>
                             <div className="w-20 h-20 border-4 border-blue-600 rounded-full absolute top-0 left-0 animate-spin border-t-transparent"></div>
                         </div>
                         <div className="mt-8 text-center">
-                            <h2 className="text-xl font-bold text-slate-800 mb-2">Cargando Datos...</h2>
-                            <p className="text-slate-500">Procesando información de almacenamiento MDVR</p>
+                            <h2 className="text-xl font-bold text-slate-800 dark:text-zinc-200 mb-2">Cargando Datos...</h2>
+                            <p className="text-slate-500 dark:text-zinc-400">Procesando información de almacenamiento MDVR</p>
                         </div>
                     </div>
                 ) : data.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-[60vh] border-2 border-dashed border-slate-300 rounded-2xl bg-white text-center p-12">
-                        <div className="bg-red-50 p-6 rounded-full mb-6 ring-8 ring-red-50/50">
+                    <div className="flex flex-col items-center justify-center h-[60vh] border-2 border-dashed border-slate-300 dark:border-zinc-700 rounded-2xl bg-white dark:bg-zinc-900 text-center p-12">
+                        <div className="bg-red-50 dark:bg-red-900/40 p-6 rounded-full mb-6 ring-8 ring-red-50/50">
                             <AlertTriangle className="w-16 h-16 text-red-400" />
                         </div>
-                        <h2 className="text-2xl font-bold text-slate-800 mb-2">Error al Cargar Datos</h2>
-                        <p className="text-slate-500 max-w-md mb-8">
+                        <h2 className="text-2xl font-bold text-slate-800 dark:text-zinc-200 mb-2">Error al Cargar Datos</h2>
+                        <p className="text-slate-500 dark:text-zinc-400 max-w-md mb-8">
                             No se pudo cargar la base de datos. Verifique que el archivo CSV esté disponible.
                         </p>
                         <button
@@ -1943,8 +1942,8 @@ export default function TracklogDashboard() {
 
                                     <div className="flex items-center justify-between mb-4">
                                         <div className="flex items-center gap-2 group relative">
-                                            <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Resumen de Estado</h3>
-                                            <div className="cursor-help text-slate-400 hover:text-blue-500 transition-colors">
+                                            <h3 className="text-sm font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Resumen de Estado</h3>
+                                            <div className="cursor-help text-slate-400 dark:text-zinc-500 hover:text-blue-500 dark:text-blue-400 transition-colors">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-info"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></svg>
                                             </div>
 
@@ -1961,28 +1960,28 @@ export default function TracklogDashboard() {
                                         <div className="flex justify-between items-center mb-6">
                                             <div className="flex items-center gap-4">
                                                 {/* Filtro Componente */}
-                                                <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-lg">
+                                                <div className="flex items-center gap-2 bg-slate-100 dark:bg-zinc-800 p-1 rounded-lg">
                                                     <button
                                                         onClick={() => setDashboardComponent('all')}
-                                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${dashboardComponent === 'all' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${dashboardComponent === 'all' ? 'bg-white dark:bg-zinc-900 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300'}`}
                                                     >
                                                         Todos
                                                     </button>
                                                     <button
                                                         onClick={() => setDashboardComponent('ssd')}
-                                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${dashboardComponent === 'ssd' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${dashboardComponent === 'ssd' ? 'bg-white dark:bg-zinc-900 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300'}`}
                                                     >
                                                         SSD/HDD
                                                     </button>
                                                     <button
                                                         onClick={() => setDashboardComponent('sd')}
-                                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${dashboardComponent === 'sd' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${dashboardComponent === 'sd' ? 'bg-white dark:bg-zinc-900 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300'}`}
                                                     >
                                                         SD/Firebox
                                                     </button>
                                                     <button
                                                         onClick={() => setDashboardComponent('other')}
-                                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${dashboardComponent === 'other' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${dashboardComponent === 'other' ? 'bg-white dark:bg-zinc-900 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300'}`}
                                                     >
                                                         Otros
                                                     </button>
@@ -1992,7 +1991,7 @@ export default function TracklogDashboard() {
                                             {filterAction && (
                                                 <button
                                                     onClick={() => setFilterAction(null)}
-                                                    className="text-xs font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                                                    className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:text-blue-400 flex items-center gap-1"
                                                 >
                                                     Limpiar Selección <span className="text-lg leading-none">×</span>
                                                 </button>
@@ -2006,7 +2005,7 @@ export default function TracklogDashboard() {
                                             value={stats.totalDevices.toLocaleString()}
                                             subtext={`${stats.totalAlerts.toLocaleString()} alertas`}
                                             icon={<HardDrive />}
-                                            color="bg-slate-100 text-slate-600"
+                                            color="bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400"
                                             isActive={filterAction === null}
                                             onClick={() => setFilterAction(null)}
                                         />
@@ -2015,7 +2014,7 @@ export default function TracklogDashboard() {
                                             value={stats.critical.toLocaleString()}
                                             subtext={`${stats.criticalAlerts.toLocaleString()} alertas`}
                                             icon={<AlertTriangle />}
-                                            color="bg-red-100 text-red-600"
+                                            color="bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400"
                                             isActive={filterAction === 'Reemplazo Físico'}
                                             onClick={() => setFilterAction('Reemplazo Físico')}
                                         />
@@ -2024,7 +2023,7 @@ export default function TracklogDashboard() {
                                             value={stats.review.toLocaleString()}
                                             subtext={`${stats.reviewAlerts.toLocaleString()} alertas`}
                                             icon={<Wrench />}
-                                            color="bg-amber-100 text-amber-600"
+                                            color="bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400"
                                             isActive={filterAction === 'Revisión Config/Instalación'}
                                             onClick={() => setFilterAction('Revisión Config/Instalación')}
                                         />
@@ -2033,7 +2032,7 @@ export default function TracklogDashboard() {
                                             value={stats.logical.toLocaleString()}
                                             subtext={`${stats.logicalAlerts.toLocaleString()} alertas`}
                                             icon={<CheckCircle />}
-                                            color="bg-blue-100 text-blue-600"
+                                            color="bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400"
                                             isActive={filterAction === 'Mantenimiento Lógico'}
                                             onClick={() => setFilterAction('Mantenimiento Lógico')}
                                         />
@@ -2043,9 +2042,9 @@ export default function TracklogDashboard() {
                                 {/* DASHBOARD RESUMIDO */}
                                 <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                     {/* Top Flotas */}
-                                    <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                                        <h3 className="text-base font-bold text-slate-800 mb-6 flex items-center gap-2">
-                                            <Truck className="w-5 h-5 text-slate-400" /> Flotas con Mayor Incidencia
+                                    <div className="lg:col-span-2 bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800">
+                                        <h3 className="text-base font-bold text-slate-800 dark:text-zinc-200 mb-6 flex items-center gap-2">
+                                            <Truck className="w-5 h-5 text-slate-400 dark:text-zinc-500" /> Flotas con Mayor Incidencia
                                         </h3>
                                         <div className="h-64" style={{ minWidth: 0 }}>
                                             <ResponsiveContainer width="100%" height="100%">
@@ -2053,7 +2052,7 @@ export default function TracklogDashboard() {
                                                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
                                                     <XAxis type="number" hide />
                                                     <YAxis dataKey="name" type="category" width={150} style={{ fontSize: '11px', fontWeight: 600, fill: '#475569' }} />
-                                                    <RechartsTooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }} />
+                                                    <RechartsTooltip cursor={{ fill: isDarkMode ? '#27272a' : '#f8fafc' }} contentStyle={{ backgroundColor: isDarkMode ? '#18181b' : '#ffffff', borderColor: isDarkMode ? '#27272a' : '#e2e8f0' }} />
                                                     <Bar dataKey="value" fill="#3b82f6" radius={[0, 4, 4, 0]} barSize={20}>
                                                         {stats.fleetData.map((_, index) => (
                                                             <Cell key={`cell-${index}`} fill={index < 3 ? '#ef4444' : '#cbd5e1'} />
@@ -2070,9 +2069,9 @@ export default function TracklogDashboard() {
                                     </div>
 
                                     {/* Distribución */}
-                                    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                                        <h3 className="text-base font-bold text-slate-800 mb-6 flex items-center gap-2">
-                                            <AlertOctagon className="w-5 h-5 text-slate-400" /> Carga de Trabajo
+                                    <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800">
+                                        <h3 className="text-base font-bold text-slate-800 dark:text-zinc-200 mb-6 flex items-center gap-2">
+                                            <AlertOctagon className="w-5 h-5 text-slate-400 dark:text-zinc-500" /> Carga de Trabajo
                                         </h3>
                                         <div className="h-64 flex items-center justify-center" style={{ minWidth: 0 }}>
                                             <ResponsiveContainer width="100%" height="100%">
@@ -2101,9 +2100,9 @@ export default function TracklogDashboard() {
                                 </section>
 
                                 {/* GRAFICO DE TIEMPO (NUEVO) */}
-                                <section className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                                    <h3 className="text-base font-bold text-slate-800 mb-6 flex items-center gap-2">
-                                        <Activity className="w-5 h-5 text-slate-400" /> Tendencia de Fallas (Diario)
+                                <section className="bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800">
+                                    <h3 className="text-base font-bold text-slate-800 dark:text-zinc-200 mb-6 flex items-center gap-2">
+                                        <Activity className="w-5 h-5 text-slate-400 dark:text-zinc-500" /> Tendencia de Fallas (Diario)
                                     </h3>
                                     <div className="h-72 w-full overflow-x-auto pb-4 custom-scrollbar">
                                         <div style={{ minWidth: `${Math.max(100, stats.trendData.length * 50)}px`, height: '100%', minHeight: '288px' }}>
@@ -2119,7 +2118,7 @@ export default function TracklogDashboard() {
                                                     <YAxis style={{ fontSize: '11px', fill: '#64748b' }} />
                                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                                     <RechartsTooltip
-                                                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                                                        contentStyle={{ backgroundColor: isDarkMode ? '#18181b' : '#ffffff', borderColor: isDarkMode ? '#27272a' : '#e2e8f0' }}
                                                         labelStyle={{ color: '#64748b', marginBottom: '0.5rem' }}
                                                     />
                                                     <Area type="monotone" dataKey="count" stroke="#3b82f6" fillOpacity={1} fill="url(#colorCount)" name="Alertas" />
@@ -2130,8 +2129,8 @@ export default function TracklogDashboard() {
                                 </section>
 
                                 {/* Mensaje para ir a registros */}
-                                <section className="bg-blue-50 border border-blue-200 rounded-xl p-6 text-center">
-                                    <p className="text-blue-800 mb-3">
+                                <section className="bg-blue-50 dark:bg-blue-900/40 border border-blue-200 dark:border-blue-800 rounded-xl p-6 text-center">
+                                    <p className="text-blue-800 dark:text-blue-400 mb-3">
                                         Para ver el detalle de los registros, ve a la pestaña <strong>"Registros"</strong>
                                     </p>
                                     <button
@@ -2151,17 +2150,17 @@ export default function TracklogDashboard() {
                             activeTab === 'records' && (
                                 <div className="space-y-6">
                                     {/* BARRA DE BÚSQUEDA Y FILTROS */}
-                                    <section className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                                    <section className="bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800">
                                         <div className="flex justify-between items-center mb-4">
-                                            <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
-                                                <Search className="w-5 h-5 text-slate-400" /> Buscar Registros
+                                            <h3 className="text-base font-bold text-slate-800 dark:text-zinc-200 flex items-center gap-2">
+                                                <Search className="w-5 h-5 text-slate-400 dark:text-zinc-500" /> Buscar Registros
                                             </h3>
-                                            <div className="flex bg-slate-100 rounded-lg p-1">
+                                            <div className="flex bg-slate-100 dark:bg-zinc-800 rounded-lg p-1">
                                                 <button
                                                     onClick={() => { setViewMode('alerts'); setCurrentPage(1); }}
                                                     className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${viewMode === 'alerts'
-                                                        ? 'bg-white text-blue-600 shadow-sm border border-slate-200'
-                                                        : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200'
+                                                        ? 'bg-white dark:bg-zinc-900 text-blue-600 dark:text-blue-400 shadow-sm border border-slate-200 dark:border-zinc-800'
+                                                        : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-200 dark:bg-zinc-800'
                                                         }`}
                                                 >
                                                     Por Alerta
@@ -2169,8 +2168,8 @@ export default function TracklogDashboard() {
                                                 <button
                                                     onClick={() => { setViewMode('devices'); setCurrentPage(1); }}
                                                     className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${viewMode === 'devices'
-                                                        ? 'bg-white text-blue-600 shadow-sm border border-slate-200'
-                                                        : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200'
+                                                        ? 'bg-white dark:bg-zinc-900 text-blue-600 dark:text-blue-400 shadow-sm border border-slate-200 dark:border-zinc-800'
+                                                        : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-200 dark:bg-zinc-800'
                                                         }`}
                                                 >
                                                     Por Equipo
@@ -2181,7 +2180,7 @@ export default function TracklogDashboard() {
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
                                             {/* Filtro de FECHAS (Rango) - CON REACT-DATEPICKER */}
                                             <div className="lg:col-span-2 relative z-50">
-                                                <label className="block text-sm font-medium text-slate-700 mb-1">Rango de Fechas</label>
+                                                <label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">Rango de Fechas</label>
                                                 <div className="relative">
                                                     <DatePicker
                                                         selectsRange={true}
@@ -2197,7 +2196,7 @@ export default function TracklogDashboard() {
                                                         isClearable={true}
                                                         placeholderText="Selecciona un rango de fechas..."
                                                         dateFormat="dd/MM/yyyy"
-                                                        className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-blue-500 shadow-sm"
+                                                        className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg text-sm text-slate-600 dark:text-zinc-400 focus:outline-none focus:border-blue-500 shadow-sm"
                                                         wrapperClassName="w-full"
                                                     />
                                                 </div>
@@ -2205,9 +2204,9 @@ export default function TracklogDashboard() {
 
                                             {/* Filtro por Flota */}
                                             <div>
-                                                <label className="block text-sm font-medium text-slate-700 mb-1">Flota</label>
+                                                <label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">Flota</label>
                                                 <select
-                                                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-blue-500"
+                                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg text-sm text-slate-600 dark:text-zinc-400 focus:outline-none focus:border-blue-500"
                                                     value={filterFleet}
                                                     onChange={(e) => setFilterFleet(e.target.value)}
                                                     aria-label="Filtrar por flota"
@@ -2221,9 +2220,9 @@ export default function TracklogDashboard() {
 
                                             {/* Filtro por Severidad */}
                                             <div>
-                                                <label className="block text-sm font-medium text-slate-700 mb-1">Severidad</label>
+                                                <label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">Severidad</label>
                                                 <select
-                                                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-blue-500"
+                                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg text-sm text-slate-600 dark:text-zinc-400 focus:outline-none focus:border-blue-500"
                                                     value={filterSeverity}
                                                     onChange={(e) => setFilterSeverity(e.target.value)}
                                                     aria-label="Filtrar por severidad"
@@ -2237,9 +2236,9 @@ export default function TracklogDashboard() {
 
                                             {/* Filtro por Componente */}
                                             <div>
-                                                <label className="block text-sm font-medium text-slate-700 mb-1">Tipo de Disco</label>
+                                                <label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">Tipo de Disco</label>
                                                 <select
-                                                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-blue-500"
+                                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg text-sm text-slate-600 dark:text-zinc-400 focus:outline-none focus:border-blue-500"
                                                     value={filterComponent}
                                                     onChange={(e) => setFilterComponent(e.target.value)}
                                                     aria-label="Filtrar por tipo de disco"
@@ -2253,9 +2252,9 @@ export default function TracklogDashboard() {
 
                                             {/* Filtro por Ejecutivo Postventa */}
                                             <div>
-                                                <label className="block text-sm font-medium text-slate-700 mb-1">Ejecutivo Postventa</label>
+                                                <label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">Ejecutivo Postventa</label>
                                                 <select
-                                                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-blue-500"
+                                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg text-sm text-slate-600 dark:text-zinc-400 focus:outline-none focus:border-blue-500"
                                                     value={filterPv}
                                                     onChange={(e) => setFilterPv(e.target.value)}
                                                     aria-label="Filtrar por ejecutivo postventa"
@@ -2269,9 +2268,9 @@ export default function TracklogDashboard() {
 
                                             {/* Filtro por Modelo */}
                                             <div>
-                                                <label className="block text-sm font-medium text-slate-700 mb-1">Modelo MDVR</label>
+                                                <label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">Modelo MDVR</label>
                                                 <select
-                                                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-blue-500"
+                                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg text-sm text-slate-600 dark:text-zinc-400 focus:outline-none focus:border-blue-500"
                                                     value={filterModel}
                                                     onChange={(e) => setFilterModel(e.target.value)}
                                                     aria-label="Filtrar por modelo"
@@ -2285,11 +2284,11 @@ export default function TracklogDashboard() {
 
                                             {/* Buscador de Texto */}
                                             <div className="lg:col-span-3">
-                                                <label className="block text-sm font-medium text-slate-700 mb-1">Buscar texto</label>
+                                                <label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">Buscar texto</label>
                                                 <input
                                                     type="text"
                                                     placeholder="Buscar placa, error o diagnóstico..."
-                                                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white dark:bg-zinc-900 transition-all"
                                                     value={searchTerm}
                                                     onChange={(e) => setSearchTerm(e.target.value)}
                                                 />
@@ -2307,7 +2306,7 @@ export default function TracklogDashboard() {
                                             </button>
                                             <button
                                                 onClick={resetFilters}
-                                                className="flex items-center gap-2 px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg font-medium transition-colors"
+                                                className="flex items-center gap-2 px-4 py-2.5 bg-slate-200 dark:bg-zinc-800 hover:bg-slate-300 text-slate-700 dark:text-zinc-300 rounded-lg font-medium transition-colors"
                                             >
                                                 Limpiar Filtros
                                             </button>
@@ -2322,33 +2321,33 @@ export default function TracklogDashboard() {
 
                                     {/* RESULTADOS */}
                                     {!hasSearched ? (
-                                        <section className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
-                                            <div className="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <section className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800 p-12 text-center">
+                                            <div className="bg-slate-50 dark:bg-zinc-900 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
                                                 <Filter className="w-10 h-10 text-slate-300" />
                                             </div>
-                                            <h3 className="text-xl font-bold text-slate-800 mb-2">Listo para buscar</h3>
-                                            <p className="text-slate-500 max-w-md mx-auto">
+                                            <h3 className="text-xl font-bold text-slate-800 dark:text-zinc-200 mb-2">Listo para buscar</h3>
+                                            <p className="text-slate-500 dark:text-zinc-400 max-w-md mx-auto">
                                                 Utiliza los filtros de arriba y presiona <strong>Buscar</strong> para ver los registros.
                                             </p>
                                         </section>
                                     ) : filteredData.length === 0 ? (
-                                        <section className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
-                                            <div className="bg-amber-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <section className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800 p-12 text-center">
+                                            <div className="bg-amber-50 dark:bg-amber-900/40 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
                                                 <AlertTriangle className="w-10 h-10 text-amber-400" />
                                             </div>
-                                            <h3 className="text-xl font-bold text-slate-800 mb-2">Sin resultados</h3>
-                                            <p className="text-slate-500 max-w-md mx-auto">
+                                            <h3 className="text-xl font-bold text-slate-800 dark:text-zinc-200 mb-2">Sin resultados</h3>
+                                            <p className="text-slate-500 dark:text-zinc-400 max-w-md mx-auto">
                                                 No se encontraron registros que coincidan con los filtros seleccionados.
                                             </p>
                                         </section>
                                     ) : (
-                                        <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                                        <section className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800 overflow-hidden">
                                             {/* Info de resultados */}
-                                            <div className="bg-slate-50 px-6 py-3 border-b border-slate-200 flex justify-between items-center">
-                                                <span className="text-sm text-slate-600">
+                                            <div className="bg-slate-50 dark:bg-zinc-900 px-6 py-3 border-b border-slate-200 dark:border-zinc-800 flex justify-between items-center">
+                                                <span className="text-sm text-slate-600 dark:text-zinc-400">
                                                     Mostrando <strong>{((currentPage - 1) * RECORDS_PER_PAGE) + 1}</strong> - <strong>{Math.min(currentPage * RECORDS_PER_PAGE, currentDataSource.length)}</strong> de <strong>{currentDataSource.length.toLocaleString()}</strong> {viewMode === 'devices' ? 'equipos' : 'registros'}
                                                 </span>
-                                                <span className="text-sm text-slate-500">
+                                                <span className="text-sm text-slate-500 dark:text-zinc-400">
                                                     Rango: <strong>{dateRange.start || 'Inicio'}</strong> - <strong>{dateRange.end || 'Fin'}</strong>
                                                 </span>
 
@@ -2359,7 +2358,7 @@ export default function TracklogDashboard() {
                                             <div className="overflow-x-auto">
                                                 {viewMode === 'alerts' ? (
                                                     <table className="w-full text-sm text-left">
-                                                        <thead className="bg-slate-50 text-slate-500 font-semibold uppercase text-xs">
+                                                        <thead className="bg-slate-50 dark:bg-zinc-900 text-slate-500 dark:text-zinc-400 font-semibold uppercase text-xs">
                                                             <tr>
                                                                 <th className="px-6 py-4">Dispositivo</th>
                                                                 <th className="px-6 py-4">Detalle Error</th>
@@ -2370,43 +2369,43 @@ export default function TracklogDashboard() {
                                                         </thead>
                                                         <tbody className="divide-y divide-slate-100">
                                                             {(paginatedData as ProcessedData[]).map((row) => (
-                                                                <tr key={row.id} className="hover:bg-slate-50 transition-colors group">
+                                                                <tr key={row.id} className="hover:bg-slate-50 dark:bg-zinc-900 transition-colors group">
                                                                     <td className="px-6 py-4">
-                                                                        <div className="font-bold text-slate-900">{row.DeviceName}</div>
-                                                                        <div className="text-xs text-slate-500 flex flex-col gap-0.5 mt-0.5">
+                                                                        <div className="font-bold text-slate-900 dark:text-zinc-100">{row.DeviceName}</div>
+                                                                        <div className="text-xs text-slate-500 dark:text-zinc-400 flex flex-col gap-0.5 mt-0.5">
                                                                             <span className="flex items-center gap-1"><Truck className="w-3 h-3" /> {row.Fleet}</span>
-                                                                            <span className="font-mono text-slate-400">{row.ID}</span>
+                                                                            <span className="font-mono text-slate-400 dark:text-zinc-500">{row.ID}</span>
                                                                         </div>
                                                                     </td>
                                                                     <td className="px-6 py-4 max-w-xs">
                                                                         <div className="flex items-center gap-2 mb-1">
                                                                             <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${row.component === 'SSD/HDD' ? 'bg-purple-50 text-purple-700 border-purple-100' :
                                                                                 row.component === 'SD/Firebox' ? 'bg-cyan-50 text-cyan-700 border-cyan-100' :
-                                                                                    'bg-slate-100 text-slate-600 border-slate-200'
+                                                                                    'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 border-slate-200 dark:border-zinc-800'
                                                                                 }`}>
                                                                                 {row.component}
                                                                             </span>
-                                                                            <span className="text-xs font-mono text-slate-500">{row.DiskType}</span>
+                                                                            <span className="text-xs font-mono text-slate-500 dark:text-zinc-400">{row.DiskType}</span>
                                                                         </div>
-                                                                        <div className="text-slate-600 truncate group-hover:whitespace-normal group-hover:overflow-visible text-xs leading-relaxed" title={row.DiskDetails}>
+                                                                        <div className="text-slate-600 dark:text-zinc-400 truncate group-hover:whitespace-normal group-hover:overflow-visible text-xs leading-relaxed" title={row.DiskDetails}>
                                                                             {row.DiskDetails.replace(/State:/g, '')}
                                                                         </div>
                                                                     </td>
                                                                     <td className="px-6 py-4">
-                                                                        <div className={`text-sm font-medium ${row.diagnosis.includes("ALERTA") ? 'text-red-600' : 'text-slate-700'}`}>
+                                                                        <div className={`text-sm font-medium ${row.diagnosis.includes("ALERTA") ? 'text-red-600 dark:text-red-400' : 'text-slate-700 dark:text-zinc-300'}`}>
                                                                             {row.diagnosis}
                                                                         </div>
                                                                     </td>
                                                                     <td className="px-6 py-4 text-center">
-                                                                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${row.severity === 'Alta' ? 'bg-red-100 text-red-700' :
-                                                                            row.severity === 'Media' ? 'bg-amber-100 text-amber-700' :
-                                                                                'bg-blue-100 text-blue-700'
+                                                                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${row.severity === 'Alta' ? 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-400' :
+                                                                            row.severity === 'Media' ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400' :
+                                                                                'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400'
                                                                             }`}>
                                                                             {row.severity}
                                                                         </span>
                                                                     </td>
                                                                     <td className="px-6 py-4 text-right">
-                                                                        <span className="font-bold text-slate-800 text-xs">
+                                                                        <span className="font-bold text-slate-800 dark:text-zinc-200 text-xs">
                                                                             {row.action}
                                                                         </span>
                                                                     </td>
@@ -2416,14 +2415,14 @@ export default function TracklogDashboard() {
                                                     </table>
                                                 ) : (
                                                     <table className="w-full text-sm text-left">
-                                                        <thead className="bg-slate-50 text-slate-500 font-semibold uppercase text-xs">
+                                                        <thead className="bg-slate-50 dark:bg-zinc-900 text-slate-500 dark:text-zinc-400 font-semibold uppercase text-xs">
                                                             <tr>
                                                                 <th className="px-4 py-4 w-10">
                                                                     <input
                                                                         type="checkbox"
                                                                         aria-label="Seleccionar todos los equipos"
                                                                         title="Seleccionar todo"
-                                                                        className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                                                        className="w-4 h-4 rounded border-slate-300 dark:border-zinc-700 text-blue-600 dark:text-blue-400 focus:ring-blue-500"
                                                                         onChange={toggleSelectAll}
                                                                         checked={(paginatedData as DeviceGroup[]).length > 0 && (paginatedData as DeviceGroup[]).every(g => selectedIds.has(g.equipment))}
                                                                     />
@@ -2437,57 +2436,57 @@ export default function TracklogDashboard() {
                                                         </thead>
                                                         <tbody className="divide-y divide-slate-100">
                                                             {(paginatedData as DeviceGroup[]).map((group, idx) => (
-                                                                <tr key={idx} className={`hover:bg-slate-50 transition-colors ${selectedIds.has(group.equipment) ? 'bg-blue-50/30' : ''}`}>
+                                                                <tr key={idx} className={`hover:bg-slate-50 dark:bg-zinc-900 transition-colors ${selectedIds.has(group.equipment) ? 'bg-blue-50/30' : ''}`}>
                                                                     <td className="px-4 py-4">
                                                                         <input
                                                                             type="checkbox"
                                                                             aria-label={"Seleccionar equipo " + group.equipment}
                                                                             title={"Seleccionar " + group.equipment}
-                                                                            className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                                                            className="w-4 h-4 rounded border-slate-300 dark:border-zinc-700 text-blue-600 dark:text-blue-400 focus:ring-blue-500"
                                                                             checked={selectedIds.has(group.equipment)}
                                                                             onChange={() => toggleSelection(group.equipment)}
                                                                         />
                                                                     </td>
                                                                     <td className="px-6 py-4">
-                                                                        <div className="font-bold text-slate-900">{group.equipment}</div>
-                                                                        <div className="text-xs text-slate-500 flex flex-col gap-0.5 mt-0.5">
+                                                                        <div className="font-bold text-slate-900 dark:text-zinc-100">{group.equipment}</div>
+                                                                        <div className="text-xs text-slate-500 dark:text-zinc-400 flex flex-col gap-0.5 mt-0.5">
                                                                             <span className="flex items-center gap-1"><Truck className="w-3 h-3" /> {group.fleet}</span>
-                                                                            <span className="text-slate-400">{group.model}</span>
+                                                                            <span className="text-slate-400 dark:text-zinc-500">{group.model}</span>
 
                                                                         </div>
                                                                     </td>
                                                                     <td className="px-6 py-4 text-center">
                                                                         <div className="inline-flex flex-col items-center">
-                                                                            <span className="text-lg font-bold text-slate-700">{group.totalAlerts}</span>
+                                                                            <span className="text-lg font-bold text-slate-700 dark:text-zinc-300">{group.totalAlerts}</span>
                                                                             {group.highSeverityCount > 0 && (
-                                                                                <span className="text-[10px] text-red-600 font-bold bg-red-50 px-1.5 rounded">
+                                                                                <span className="text-[10px] text-red-600 dark:text-red-400 font-bold bg-red-50 dark:bg-red-900/40 px-1.5 rounded">
                                                                                     {group.highSeverityCount} Críticas
                                                                                 </span>
                                                                             )}
                                                                         </div>
                                                                     </td>
                                                                     <td className="px-6 py-4">
-                                                                        <div className={`text-sm font-medium ${group.maxSeverity === 'Alta' ? 'text-red-700' : 'text-slate-700'}`}>
+                                                                        <div className={`text-sm font-medium ${group.maxSeverity === 'Alta' ? 'text-red-700 dark:text-red-400' : 'text-slate-700 dark:text-zinc-300'}`}>
                                                                             {group.worstDiagnosis}
                                                                         </div>
-                                                                        <div className="text-xs text-slate-400 mt-1">
+                                                                        <div className="text-xs text-slate-400 dark:text-zinc-500 mt-1">
                                                                             {group.component} - {group.diskType}
                                                                         </div>
                                                                     </td>
                                                                     <td className="px-6 py-4 text-center">
-                                                                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${group.maxSeverity === 'Alta' ? 'bg-red-100 text-red-700' :
-                                                                            group.maxSeverity === 'Media' ? 'bg-amber-100 text-amber-700' :
-                                                                                'bg-blue-100 text-blue-700'
+                                                                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${group.maxSeverity === 'Alta' ? 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-400' :
+                                                                            group.maxSeverity === 'Media' ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400' :
+                                                                                'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400'
                                                                             }`}>
                                                                             {group.maxSeverity}
                                                                         </span>
                                                                     </td>
                                                                     <td className="px-6 py-4 text-right">
-                                                                        <span className="font-bold text-slate-800 text-xs block">
+                                                                        <span className="font-bold text-slate-800 dark:text-zinc-200 text-xs block">
                                                                             {group.suggestedAction}
                                                                         </span>
                                                                         {group.pv && group.pv !== 'Sin Asignar' && (
-                                                                            <span className="text-[10px] text-slate-400 block mt-1">
+                                                                            <span className="text-[10px] text-slate-400 dark:text-zinc-500 block mt-1">
                                                                                 PV: {group.pv}
                                                                             </span>
                                                                         )}
@@ -2501,11 +2500,11 @@ export default function TracklogDashboard() {
 
                                             {/* Paginación */}
                                             {totalPages > 1 && (
-                                                <div className="bg-slate-50 p-4 border-t border-slate-200 flex justify-center items-center gap-2">
+                                                <div className="bg-slate-50 dark:bg-zinc-900 p-4 border-t border-slate-200 dark:border-zinc-800 flex justify-center items-center gap-2">
                                                     <button
                                                         onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                                         disabled={currentPage === 1}
-                                                        className="p-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        className="p-2 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-slate-100 dark:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed"
                                                         aria-label="Página anterior"
                                                     >
                                                         <ChevronLeft className="w-4 h-4" />
@@ -2529,7 +2528,7 @@ export default function TracklogDashboard() {
                                                                     onClick={() => setCurrentPage(pageNum)}
                                                                     className={`w-10 h-10 rounded-lg font-medium text-sm transition-colors ${currentPage === pageNum
                                                                         ? 'bg-blue-600 text-white'
-                                                                        : 'bg-white border border-slate-200 hover:bg-slate-100 text-slate-600'
+                                                                        : 'bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400'
                                                                         }`}
                                                                 >
                                                                     {pageNum}
@@ -2541,13 +2540,13 @@ export default function TracklogDashboard() {
                                                     <button
                                                         onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                                         disabled={currentPage === totalPages}
-                                                        className="p-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        className="p-2 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-slate-100 dark:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed"
                                                         aria-label="Página siguiente"
                                                     >
                                                         <ChevronRight className="w-4 h-4" />
                                                     </button>
 
-                                                    <span className="text-sm text-slate-500 ml-4">
+                                                    <span className="text-sm text-slate-500 dark:text-zinc-400 ml-4">
                                                         Página {currentPage} de {totalPages}
                                                     </span>
                                                 </div>
@@ -2561,20 +2560,20 @@ export default function TracklogDashboard() {
                         {/* TAB: SEGUIMIENTO CORRECTIVO */}
                         {activeTab === 'tracking' && (
                             <div className="space-y-8">
-                                <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
+                                <div className="bg-blue-50 dark:bg-blue-900/40 border border-blue-200 dark:border-blue-800 rounded-xl p-6 mb-6">
                                     <h3 className="text-xl font-bold text-blue-900 mb-2">Campaña de Reparación Correctiva</h3>
-                                    <p className="text-blue-700">
+                                    <p className="text-blue-700 dark:text-blue-400">
                                         Seguimiento de los 10 equipos más críticos (Top 5 por Macro-grupo) que requieren cambio urgente de unidad de almacenamiento.
                                         Estos equipos presentan fallas L1 recurrentes.
                                     </p>
                                     {hasSearched && (
-                                        <div className="mt-4 flex items-center justify-between bg-white/60 p-3 rounded-lg border border-blue-200">
-                                            <span className="text-sm text-blue-800 font-bold flex items-center gap-2">
+                                        <div className="mt-4 flex items-center justify-between bg-white dark:bg-zinc-900/60 p-3 rounded-lg border border-blue-200 dark:border-blue-800">
+                                            <span className="text-sm text-blue-800 dark:text-blue-400 font-bold flex items-center gap-2">
                                                 <Filter className="w-4 h-4" /> Filtros activos (Registros) afectando resultados
                                             </span>
                                             <button
                                                 onClick={resetFilters}
-                                                className="text-xs bg-white border border-blue-200 text-blue-600 px-3 py-1.5 rounded-md hover:bg-blue-50 font-bold shadow-sm"
+                                                className="text-xs bg-white dark:bg-zinc-900 border border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 px-3 py-1.5 rounded-md hover:bg-blue-50 dark:bg-blue-900/40 font-bold shadow-sm"
                                             >
                                                 Limpiar Filtros Globales
                                             </button>
@@ -2584,12 +2583,12 @@ export default function TracklogDashboard() {
 
                                 {/* Selector de Macro-grupo */}
                                 <div className="flex justify-center mb-6">
-                                    <div className="flex bg-slate-200 rounded-lg p-1">
+                                    <div className="flex bg-slate-200 dark:bg-zinc-800 rounded-lg p-1">
                                         <button
                                             onClick={() => setTrackingFilter('all')}
                                             className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${trackingFilter === 'all'
-                                                ? 'bg-white text-blue-600 shadow-sm'
-                                                : 'text-slate-500 hover:text-slate-700'
+                                                ? 'bg-white dark:bg-zinc-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                                                : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300'
                                                 }`}
                                         >
                                             Ver Todo
@@ -2597,8 +2596,8 @@ export default function TracklogDashboard() {
                                         <button
                                             onClick={() => setTrackingFilter('yanacocha')}
                                             className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${trackingFilter === 'yanacocha'
-                                                ? 'bg-white text-blue-600 shadow-sm'
-                                                : 'text-slate-500 hover:text-slate-700'
+                                                ? 'bg-white dark:bg-zinc-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                                                : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300'
                                                 }`}
                                         >
                                             Yanacocha
@@ -2606,8 +2605,8 @@ export default function TracklogDashboard() {
                                         <button
                                             onClick={() => setTrackingFilter('repsol')}
                                             className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${trackingFilter === 'repsol'
-                                                ? 'bg-white text-blue-600 shadow-sm'
-                                                : 'text-slate-500 hover:text-slate-700'
+                                                ? 'bg-white dark:bg-zinc-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                                                : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300'
                                                 }`}
                                         >
                                             Repsol
@@ -2617,8 +2616,8 @@ export default function TracklogDashboard() {
 
                                 {/* GRAFICOS DE SEGUIMIENTO (Solo si se selecciona una flota específica) */}
                                 {trackingFilter !== 'all' && (
-                                    <div className="mb-8 bg-white rounded-xl border border-slate-200 shadow-sm p-6 animate-in fade-in slide-in-from-bottom-4">
-                                        <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-6">
+                                    <div className="mb-8 bg-white dark:bg-zinc-900 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm p-6 animate-in fade-in slide-in-from-bottom-4">
+                                        <h4 className="text-sm font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-wider mb-6">
                                             Progreso de Reparación - {trackingFilter === 'yanacocha' ? 'Yanacocha' : 'Repsol'}
                                         </h4>
 
@@ -2717,7 +2716,7 @@ export default function TracklogDashboard() {
                                             const trendChartData = trendPoints;
 
                                             if (top5.length === 0) return (
-                                                <div className="text-center text-slate-400 py-4 italic">No hay datos suficientes para gráficos</div>
+                                                <div className="text-center text-slate-400 dark:text-zinc-500 py-4 italic">No hay datos suficientes para gráficos</div>
                                             );
 
                                             return (
@@ -2732,39 +2731,39 @@ export default function TracklogDashboard() {
                                                                             <Cell key={`cell-${index}`} fill={entry.color} strokeWidth={0} />
                                                                         ))}
                                                                     </Pie>
-                                                                    <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                                                                    <RechartsTooltip contentStyle={{ backgroundColor: isDarkMode ? '#18181b' : '#ffffff', borderColor: isDarkMode ? '#27272a' : '#e2e8f0' }} />
                                                                 </PieChart>
                                                             </ResponsiveContainer>
                                                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                                                 <div className="text-center">
-                                                                    <span className="block text-3xl font-bold text-slate-800">{top5.length}</span>
-                                                                    <span className="text-[10px] text-slate-500 font-bold uppercase">Equipos</span>
+                                                                    <span className="block text-3xl font-bold text-slate-800 dark:text-zinc-200">{top5.length}</span>
+                                                                    <span className="text-[10px] text-slate-500 dark:text-zinc-400 font-bold uppercase">Equipos</span>
                                                                 </div>
                                                             </div>
                                                         </div>
 
                                                         {/* Status Boxes */}
                                                         <div className="grid grid-cols-3 gap-4">
-                                                            <div className="bg-slate-50 rounded-lg p-4 text-center border border-slate-100">
-                                                                <div className="text-2xl font-bold text-slate-700">{stats.pendiente}</div>
-                                                                <div className="text-xs text-slate-500 font-bold mt-1">Pendientes</div>
+                                                            <div className="bg-slate-50 dark:bg-zinc-900 rounded-lg p-4 text-center border border-slate-100 dark:border-zinc-800">
+                                                                <div className="text-2xl font-bold text-slate-700 dark:text-zinc-300">{stats.pendiente}</div>
+                                                                <div className="text-xs text-slate-500 dark:text-zinc-400 font-bold mt-1">Pendientes</div>
                                                             </div>
-                                                            <div className="bg-amber-50 rounded-lg p-4 text-center border border-amber-100">
-                                                                <div className="text-2xl font-bold text-amber-600">{stats.proceso}</div>
+                                                            <div className="bg-amber-50 dark:bg-amber-900/40 rounded-lg p-4 text-center border border-amber-100">
+                                                                <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">{stats.proceso}</div>
                                                                 <div className="text-xs text-amber-600/80 font-bold mt-1">En Gestión</div>
                                                             </div>
-                                                            <div className="bg-emerald-50 rounded-lg p-4 text-center border border-emerald-100">
-                                                                <div className="text-2xl font-bold text-emerald-600">{stats.reparado}</div>
+                                                            <div className="bg-emerald-50 dark:bg-emerald-900/40 rounded-lg p-4 text-center border border-emerald-100">
+                                                                <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{stats.reparado}</div>
                                                                 <div className="text-xs text-emerald-600/80 font-bold mt-1">Reparados</div>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     {/* Trend Chart */}
-                                                    <div className="pt-6 border-t border-slate-100">
+                                                    <div className="pt-6 border-t border-slate-100 dark:border-zinc-800">
                                                         <div className="flex justify-between items-center mb-4 px-2">
-                                                            <h5 className="text-xs font-bold text-slate-400 uppercase">Tendencia de Fallas Críticas (L1)</h5>
-                                                            <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${selectedTrackingDevice ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-500'}`}>
+                                                            <h5 className="text-xs font-bold text-slate-400 dark:text-zinc-500 uppercase">Tendencia de Fallas Críticas (L1)</h5>
+                                                            <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${selectedTrackingDevice ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400' : 'bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400'}`}>
                                                                 {selectedTrackingDevice ? `${selectedTrackingDevice}: ` : 'Total: '}
                                                                 {totalAlarmsCount} {totalAlarmsCount === 1 ? 'Alarma' : 'Alarmas'}
                                                             </span>
@@ -2781,7 +2780,7 @@ export default function TracklogDashboard() {
                                                                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                                                     <XAxis dataKey="date" tickFormatter={(v) => v.substring(0, 5)} tick={{ fontSize: 10 }} tickLine={false} axisLine={false} minTickGap={10} interval="preserveStartEnd" />
                                                                     <YAxis tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
-                                                                    <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                                                                    <RechartsTooltip contentStyle={{ backgroundColor: isDarkMode ? '#18181b' : '#ffffff', borderColor: isDarkMode ? '#27272a' : '#e2e8f0' }} />
                                                                     <Area type="monotone" dataKey="count" stroke="#ef4444" strokeWidth={2} fillOpacity={1} fill="url(#colorCount)" />
                                                                 </AreaChart>
                                                             </ResponsiveContainer>
@@ -2840,23 +2839,23 @@ export default function TracklogDashboard() {
                         {/* TAB: SEGUIMIENTO GENERAL */}
                         {activeTab === 'general-tracking' && (
                             <div className="space-y-8">
-                                <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 mb-6">
-                                    <h3 className="text-xl font-bold text-slate-900 mb-2">Seguimiento General - Todos los Equipos</h3>
-                                    <p className="text-slate-700 mb-4">
+                                <div className="bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl p-6 mb-6">
+                                    <h3 className="text-xl font-bold text-slate-900 dark:text-zinc-100 mb-2">Seguimiento General - Todos los Equipos</h3>
+                                    <p className="text-slate-700 dark:text-zinc-300 mb-4">
                                         Vista global de todos los equipos ordenados por cantidad de fallas (de mayor a menor).
                                         Ideal para priorizar reparaciones urgentes independientemente de la flota.
                                     </p>
 
                                     {/* Filtro de Nivel */}
                                     <div className="flex items-center gap-3 mt-4 relative z-10">
-                                        <span className="text-sm font-bold text-slate-600">Filtrar por nivel:</span>
-                                        <div className="flex bg-white rounded-lg border border-slate-200 p-1">
+                                        <span className="text-sm font-bold text-slate-600 dark:text-zinc-400">Filtrar por nivel:</span>
+                                        <div className="flex bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 p-1">
                                             <button
                                                 type="button"
                                                 onClick={() => setGeneralSeverityFilter('all')}
                                                 className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalSeverityFilter === 'all'
                                                     ? 'bg-slate-600 text-white shadow-sm'
-                                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
                                                     }`}
                                             >
                                                 Todas
@@ -2866,7 +2865,7 @@ export default function TracklogDashboard() {
                                                 onClick={() => setGeneralSeverityFilter('L1')}
                                                 className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalSeverityFilter === 'L1'
                                                     ? 'bg-red-500 text-white shadow-sm'
-                                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
                                                     }`}
                                             >
                                                 L1 (Críticas)
@@ -2876,7 +2875,7 @@ export default function TracklogDashboard() {
                                                 onClick={() => setGeneralSeverityFilter('L2')}
                                                 className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalSeverityFilter === 'L2'
                                                     ? 'bg-amber-500 text-white shadow-sm'
-                                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
                                                     }`}
                                             >
                                                 L2 (Config)
@@ -2886,7 +2885,7 @@ export default function TracklogDashboard() {
                                                 onClick={() => setGeneralSeverityFilter('L3')}
                                                 className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalSeverityFilter === 'L3'
                                                     ? 'bg-blue-500 text-white shadow-sm'
-                                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
                                                     }`}
                                             >
                                                 L3 (Lógicas)
@@ -2896,14 +2895,14 @@ export default function TracklogDashboard() {
 
                                     {/* Filtro de Estado de Reparación */}
                                     <div className="flex items-center gap-3 mt-3 relative z-10">
-                                        <span className="text-sm font-bold text-slate-600">Filtrar por estado:</span>
-                                        <div className="flex bg-white rounded-lg border border-slate-200 p-1">
+                                        <span className="text-sm font-bold text-slate-600 dark:text-zinc-400">Filtrar por estado:</span>
+                                        <div className="flex bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 p-1">
                                             <button
                                                 type="button"
                                                 onClick={() => setGeneralStatusFilter('all')}
                                                 className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalStatusFilter === 'all'
                                                     ? 'bg-slate-600 text-white shadow-sm'
-                                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
                                                     }`}
                                             >
                                                 Todos
@@ -2912,8 +2911,8 @@ export default function TracklogDashboard() {
                                                 type="button"
                                                 onClick={() => setGeneralStatusFilter('Pendiente')}
                                                 className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalStatusFilter === 'Pendiente'
-                                                    ? 'bg-slate-500 text-white shadow-sm'
-                                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                                                    ? 'bg-slate-50 dark:bg-zinc-9000 text-white shadow-sm'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
                                                     }`}
                                             >
                                                 Pendiente
@@ -2923,7 +2922,7 @@ export default function TracklogDashboard() {
                                                 onClick={() => setGeneralStatusFilter('En Proceso')}
                                                 className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalStatusFilter === 'En Proceso'
                                                     ? 'bg-amber-500 text-white shadow-sm'
-                                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
                                                     }`}
                                             >
                                                 En Proceso
@@ -2933,7 +2932,7 @@ export default function TracklogDashboard() {
                                                 onClick={() => setGeneralStatusFilter('Validando')}
                                                 className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalStatusFilter === 'Validando'
                                                     ? 'bg-blue-500 text-white shadow-sm'
-                                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
                                                     }`}
                                             >
                                                 Validando
@@ -2943,7 +2942,7 @@ export default function TracklogDashboard() {
                                                 onClick={() => setGeneralStatusFilter('Reparado')}
                                                 className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalStatusFilter === 'Reparado'
                                                     ? 'bg-emerald-500 text-white shadow-sm'
-                                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
                                                     }`}
                                             >
                                                 Reparado
@@ -2953,14 +2952,14 @@ export default function TracklogDashboard() {
 
                                     {/* Filtro de Tipo de Disco */}
                                     <div className="flex items-center gap-3 mt-3 relative z-10">
-                                        <span className="text-sm font-bold text-slate-600">Filtrar por disco:</span>
-                                        <div className="flex bg-white rounded-lg border border-slate-200 p-1">
+                                        <span className="text-sm font-bold text-slate-600 dark:text-zinc-400">Filtrar por disco:</span>
+                                        <div className="flex bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 p-1">
                                             <button
                                                 type="button"
                                                 onClick={() => setGeneralComponentFilter('all')}
                                                 className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalComponentFilter === 'all'
                                                     ? 'bg-slate-600 text-white shadow-sm'
-                                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
                                                     }`}
                                             >
                                                 Todos
@@ -2970,7 +2969,7 @@ export default function TracklogDashboard() {
                                                 onClick={() => setGeneralComponentFilter('ssd')}
                                                 className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalComponentFilter === 'ssd'
                                                     ? 'bg-slate-600 text-white shadow-sm'
-                                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
                                                     }`}
                                             >
                                                 SSD / HDD
@@ -2980,7 +2979,7 @@ export default function TracklogDashboard() {
                                                 onClick={() => setGeneralComponentFilter('sd')}
                                                 className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalComponentFilter === 'sd'
                                                     ? 'bg-slate-600 text-white shadow-sm'
-                                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
                                                     }`}
                                             >
                                                 SD / Firebox
@@ -2990,7 +2989,7 @@ export default function TracklogDashboard() {
                                                 onClick={() => setGeneralComponentFilter('other')}
                                                 className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalComponentFilter === 'other'
                                                     ? 'bg-slate-600 text-white shadow-sm'
-                                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
                                                     }`}
                                             >
                                                 Otros
@@ -3000,8 +2999,8 @@ export default function TracklogDashboard() {
                                 </div>
 
                                 {/* GRAFICOS DE SEGUIMIENTO GENERAL */}
-                                <div className="mb-8 bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-                                    <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-6">
+                                <div className="mb-8 bg-white dark:bg-zinc-900 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm p-6">
+                                    <h4 className="text-sm font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-wider mb-6">
                                         Progreso de Reparación - General
                                     </h4>
 
@@ -3126,7 +3125,7 @@ export default function TracklogDashboard() {
                                         const trendChartData = trendPoints;
 
                                         if (allEquipment.length === 0) return (
-                                            <div className="text-center text-slate-400 py-4 italic">No hay datos suficientes para gráficos</div>
+                                            <div className="text-center text-slate-400 dark:text-zinc-500 py-4 italic">No hay datos suficientes para gráficos</div>
                                         );
 
                                         return (
@@ -3141,41 +3140,41 @@ export default function TracklogDashboard() {
                                                                         <Cell key={`cell-${index}`} fill={entry.color} strokeWidth={0} />
                                                                     ))}
                                                                 </Pie>
-                                                                <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                                                                <RechartsTooltip contentStyle={{ backgroundColor: isDarkMode ? '#18181b' : '#ffffff', borderColor: isDarkMode ? '#27272a' : '#e2e8f0' }} />
                                                             </PieChart>
                                                         </ResponsiveContainer>
                                                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                                             <div className="text-center">
-                                                                <span className="block text-3xl font-bold text-slate-800">{filteredEquipment.length}</span>
-                                                                <span className="text-[10px] text-slate-500 font-bold uppercase">Equipos</span>
+                                                                <span className="block text-3xl font-bold text-slate-800 dark:text-zinc-200">{filteredEquipment.length}</span>
+                                                                <span className="text-[10px] text-slate-500 dark:text-zinc-400 font-bold uppercase">Equipos</span>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     {/* Status Boxes */}
                                                     <div className="grid grid-cols-3 gap-4">
-                                                        <div className="bg-slate-50 rounded-lg p-4 text-center border border-slate-100">
-                                                            <div className="text-2xl font-bold text-slate-700">{stats.pendiente}</div>
-                                                            <div className="text-xs text-slate-500 font-bold mt-1">Pendientes</div>
+                                                        <div className="bg-slate-50 dark:bg-zinc-900 rounded-lg p-4 text-center border border-slate-100 dark:border-zinc-800">
+                                                            <div className="text-2xl font-bold text-slate-700 dark:text-zinc-300">{stats.pendiente}</div>
+                                                            <div className="text-xs text-slate-500 dark:text-zinc-400 font-bold mt-1">Pendientes</div>
                                                         </div>
-                                                        <div className="bg-amber-50 rounded-lg p-4 text-center border border-amber-100">
-                                                            <div className="text-2xl font-bold text-amber-600">{stats.proceso}</div>
+                                                        <div className="bg-amber-50 dark:bg-amber-900/40 rounded-lg p-4 text-center border border-amber-100">
+                                                            <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">{stats.proceso}</div>
                                                             <div className="text-xs text-amber-600/80 font-bold mt-1">En Gestión</div>
                                                         </div>
-                                                        <div className="bg-emerald-50 rounded-lg p-4 text-center border border-emerald-100">
-                                                            <div className="text-2xl font-bold text-emerald-600">{stats.reparado}</div>
+                                                        <div className="bg-emerald-50 dark:bg-emerald-900/40 rounded-lg p-4 text-center border border-emerald-100">
+                                                            <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{stats.reparado}</div>
                                                             <div className="text-xs text-emerald-600/80 font-bold mt-1">Reparados</div>
                                                         </div>
                                                     </div>
                                                 </div>
 
                                                 {/* Trend Chart */}
-                                                <div className="pt-6 border-t border-slate-100">
+                                                <div className="pt-6 border-t border-slate-100 dark:border-zinc-800">
                                                     <div className="flex justify-between items-center mb-4 px-2">
-                                                        <h5 className="text-xs font-bold text-slate-400 uppercase">
+                                                        <h5 className="text-xs font-bold text-slate-400 dark:text-zinc-500 uppercase">
                                                             Tendencia de Fallas {generalSeverityFilter === 'all' ? '' : `- Severidad ${generalSeverityFilter}`}
                                                         </h5>
-                                                        <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${selectedTrackingDevice ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-500'}`}>
+                                                        <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${selectedTrackingDevice ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400' : 'bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400'}`}>
                                                             {selectedTrackingDevice ? `${selectedTrackingDevice}: ` : 'Total: '}
                                                             {totalAlarmsCount} {totalAlarmsCount === 1 ? 'Alarma' : 'Alarmas'}
                                                         </span>
@@ -3192,7 +3191,7 @@ export default function TracklogDashboard() {
                                                                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                                                 <XAxis dataKey="date" tickFormatter={(v) => v.substring(0, 5)} tick={{ fontSize: 10 }} tickLine={false} axisLine={false} minTickGap={10} interval="preserveStartEnd" />
                                                                 <YAxis tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
-                                                                <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                                                                <RechartsTooltip contentStyle={{ backgroundColor: isDarkMode ? '#18181b' : '#ffffff', borderColor: isDarkMode ? '#27272a' : '#e2e8f0' }} />
                                                                 <Area type="monotone" dataKey="count" stroke="#3b82f6" strokeWidth={2} fillOpacity={1} fill="url(#colorCountGeneral)" />
                                                             </AreaChart>
                                                         </ResponsiveContainer>
@@ -3228,7 +3227,7 @@ export default function TracklogDashboard() {
                                 <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900/90 backdrop-blur-md text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-6 z-50 animate-in fade-in slide-in-from-bottom-4">
                                     <div className="flex flex-col">
                                         <span className="font-bold text-sm">{selectedIds.size} equipos seleccionados</span>
-                                        <span className="text-[10px] text-slate-400">Listos para orden de trabajo</span>
+                                        <span className="text-[10px] text-slate-400 dark:text-zinc-500">Listos para orden de trabajo</span>
                                     </div>
 
                                     <div className="h-8 w-px bg-slate-700 mx-2"></div>
