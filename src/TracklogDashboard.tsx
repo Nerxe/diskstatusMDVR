@@ -6,7 +6,7 @@ import {
 import {
     AlertTriangle, HardDrive, CheckCircle, Search,
     Wrench, Truck, AlertOctagon, Download, Upload, Filter, Database,
-    LayoutDashboard, Table, ChevronLeft, ChevronRight, RefreshCw, FileText, X, Activity, Hammer, ExternalLink
+    LayoutDashboard, Table, ChevronLeft, ChevronRight, RefreshCw, FileText, X, Activity, Hammer, ExternalLink, Sun, Moon
 } from 'lucide-react';
 import { generateWorkOrderPDF } from './utils/pdfGenerator';
 import { YANACOCHA_FLEETS, REPSOL_FLEETS, TRACKLOG_INTERNAL_FLEETS } from './utils/fleets';
@@ -486,14 +486,14 @@ const CommentInput = ({
 const KpiCard = ({ title, value, icon, color, subtext, onClick, isActive }: any) => (
     <div
         onClick={onClick}
-        className={`bg-white p-5 rounded-xl shadow-sm border transition-all cursor-pointer flex items-center justify-between
-      ${isActive ? 'border-blue-500 ring-1 ring-blue-500 bg-blue-50/50' : 'border-slate-200 hover:border-blue-300 hover:shadow-md'}
+        className={`bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border transition-all cursor-pointer flex items-center justify-between
+      ${isActive ? 'border-blue-500 ring-1 ring-blue-500 bg-blue-50/50 dark:bg-blue-900/40' : 'border-slate-200 dark:border-slate-700 hover:border-blue-300 hover:shadow-md'}
     `}
     >
         <div>
-            <p className="text-slate-500 text-xs font-bold uppercase tracking-wide mb-1">{title}</p>
-            <h3 className="text-3xl font-bold text-slate-800">{value}</h3>
-            {subtext && <p className="text-xs text-slate-400 mt-1">{subtext}</p>}
+            <p className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wide mb-1">{title}</p>
+            <h3 className="text-3xl font-bold text-slate-800 dark:text-white">{value}</h3>
+            {subtext && <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{subtext}</p>}
         </div>
         <div className={`p-3 rounded-lg ${color} bg-opacity-20`}>
             {React.cloneElement(icon, { className: `w-6 h-6 ${color.replace('bg-', 'text-').replace('/20', '')}` })}
@@ -940,7 +940,7 @@ const TabButton = ({ active, onClick, icon, label }: { active: boolean; onClick:
         onClick={onClick}
         className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all ${active
             ? 'bg-blue-600 text-white shadow-md'
-            : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
             }`}
     >
         {icon}
@@ -972,6 +972,22 @@ export default function TracklogDashboard() {
     const [lastUpdate, setLastUpdate] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<TabType>('dashboard');
     const [trackingFilter, setTrackingFilter] = useState<'all' | 'yanacocha' | 'repsol'>('all');
+
+    // Modo Oscuro
+    const [isDarkMode, setIsDarkMode] = useState(() => {
+        const saved = localStorage.getItem('theme');
+        return saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    });
+
+    useEffect(() => {
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        }
+    }, [isDarkMode]);
 
     // Estado para Seguimiento Correctivo
     const [repairData, setRepairData] = useState<Record<string, RepairTracking>>({});
@@ -1735,10 +1751,10 @@ export default function TracklogDashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 font-sans text-slate-900 dark:text-slate-100 transition-colors">
 
             {/* HEADER DE GESTIÓN */}
-            <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+            <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50 transition-colors">
                 <div className="max-w-7xl mx-auto px-6 py-4">
                     <div className="flex justify-between items-center">
 
@@ -1748,18 +1764,18 @@ export default function TracklogDashboard() {
                                 <Database className="w-6 h-6 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-xl font-bold text-slate-900 tracking-tight leading-none">TRACKLOG DISK MANAGER</h1>
+                                <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight leading-none">TRACKLOG DISK MANAGER</h1>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-xs font-medium text-slate-500">Gestión de Almacenamiento MDVR</span>
+                                    <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Gestión de Almacenamiento MDVR</span>
                                     {lastUpdate && (
-                                        <span className="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-200">
+                                        <span className="text-[10px] bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
                                             Actualizado: {lastUpdate}
                                         </span>
                                     )}
-                                    <div className="flex bg-slate-200 rounded-lg p-0.5 mr-2">
+                                    <div className="flex bg-slate-200 dark:bg-slate-700 rounded-lg p-0.5 mr-2">
                                         <button
                                             onClick={() => setScopeFilter('customer')}
-                                            className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${scopeFilter === 'customer' ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                                            className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${scopeFilter === 'customer' ? 'bg-white dark:bg-slate-600 text-blue-700 dark:text-blue-300 shadow-sm' : 'text-slate-500 dark:text-slate-300 hover:text-slate-700 dark:hover:text-white'}`}
                                         >
                                             Clientes
                                         </button>
@@ -1836,6 +1852,17 @@ export default function TracklogDashboard() {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Dark Mode Toggle */}
+                        <div className="flex items-center ml-4">
+                            <button
+                                onClick={() => setIsDarkMode(!isDarkMode)}
+                                className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors shadow-sm border border-slate-200 dark:border-slate-700"
+                                title={isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+                            >
+                                {isDarkMode ? <Sun className="w-5 h-5 text-amber-500" /> : <Moon className="w-5 h-5 text-slate-600" />}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -1843,7 +1870,7 @@ export default function TracklogDashboard() {
             {/* TABS NAVIGATION */}
             {!isLoading && data.length > 0 && (
                 <>
-                    <div className="bg-slate-100 border-b border-slate-200">
+                    <div className="bg-slate-100 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700 transition-colors">
                         <div className="max-w-7xl mx-auto px-6 py-3">
                             <div className="flex gap-2">
                                 <TabButton
