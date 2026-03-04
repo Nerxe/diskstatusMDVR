@@ -299,8 +299,9 @@ const processCSV = (csvText: string, mdvrMap?: Map<string, MdvrDetails>, fleetMa
         });
     }
 
-    // DEDUPLICACIÓN: Eliminar registros duplicados
+    // DEDUPLICACIÓN: Eliminar registros duplicados (Desactivado temporalmente a petición del usuario)
     // Clave única: DeviceName + Date + DiskType + DiskDetails
+    /*
     const seen = new Set<string>();
     const deduplicated = result.filter(item => {
         const key = `${item.DeviceName}|${item.Date}|${item.DiskType}|${item.DiskDetails}`;
@@ -310,10 +311,10 @@ const processCSV = (csvText: string, mdvrMap?: Map<string, MdvrDetails>, fleetMa
         seen.add(key);
         return true; // Único, mantener
     });
-
-
-
     return deduplicated;
+    */
+
+    return result; // Retorna el conteo bruto de filas sin limpiar duplicados
 };
 
 
