@@ -144,7 +144,8 @@ const processCSV = (csvText: string, mdvrMap?: Map<string, MdvrDetails>, fleetMa
     // Empezamos en 1 para saltar el header dada la estructura del CSV
     for (let i = 1; i < rows.length; i++) {
         const row = rows[i];
-        if (row.length < 5) continue;
+        // Filtrar filas corruptas o incompletas (el CSV válido tiene 10 columnas, índices 0 al 9)
+        if (row.length < 10) continue;
 
         // Mapeo basado en la NUEVA estructura (Enero 2026):
         // 0: Device Name (ID)
