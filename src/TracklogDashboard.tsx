@@ -3092,14 +3092,18 @@ export default function TracklogDashboard() {
                                             { name: 'Reparado', value: stats.reparado, color: '#10b981' },
                                         ].filter(d => d.value > 0);
 
-                                        // Tendencia - usar todos los equipos (sin filtrar por severidad en el set, el filtro se aplica en filteredAlarms)
-                                        const allEquipmentSet = new Set(allEquipment.map(d => d.equipment));
+                                        // Tendencia - construir set de equipos usando tanto ID como DeviceName para robustez
+                                        const allEquipmentNames = new Set(allEquipment.map(d => d.equipment));
+                                        const allEquipmentIds = new Set(allEquipment.filter(d => d.id).map(d => d.id));
 
-                                        const filteredAlarms = scopedData.filter(d => {
-                                            // Filtro por dispositivo
+                                        // Fuente de datos idéntica a groupedData para consistencia
+                                        const trendSource = hasSearched ? filteredData : scopedData;
+
+                                        const filteredAlarms = trendSource.filter(d => {
+                                            // Filtro por dispositivo (match por nombre O por ID para cubrir agrupación)
                                             const matchesDevice = selectedTrackingDevice
                                                 ? d.DeviceName === selectedTrackingDevice
-                                                : allEquipmentSet.has(d.DeviceName);
+                                                : (allEquipmentNames.has(d.DeviceName) || (d.ID && allEquipmentIds.has(d.ID)));
 
                                             // Filtro por nivel
                                             const matchesLevel = generalSeverityFilter === 'all'
@@ -3116,7 +3120,11 @@ export default function TracklogDashboard() {
                                             return matchesDevice && matchesLevel && matchesDisk;
                                         });
 
-                                        const totalAlarmsCount = filteredAlarms.length;
+                                        // Total de alarmas: derivado de groupedData para coincidir 1:1 con la tabla
+                                        const totalAlarmsCount = selectedTrackingDevice
+                                            ? filteredAlarms.length
+                                            : filteredEquipment.reduce((sum, d) =>
+                                                sum + (generalSeverityFilter === 'all' ? d.totalAlerts : d.highSeverityCount), 0);
 
                                         const dailyTrend = filteredAlarms.reduce((acc: any, curr) => {
                                             const dateStr = curr.Date.split(' ')[0];
@@ -3206,9 +3214,18 @@ export default function TracklogDashboard() {
                                                         <h5 className="text-xs font-bold text-slate-400 dark:text-zinc-500 uppercase">
                                                             Tendencia de Fallas {generalSeverityFilter === 'all' ? '' : `- Severidad ${generalSeverityFilter}`}
                                                         </h5>
-                                                        <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${selectedTrackingDevice ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400' : 'bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400'}`}>
+                                                        <span className={`text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1.5 ${selectedTrackingDevice ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400' : 'bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400'}`}>
                                                             {selectedTrackingDevice ? `${selectedTrackingDevice}: ` : 'Total: '}
-                                                            {totalAlarmsCount} {totalAlarmsCount === 1 ? 'Alarma' : 'Alarmas'}
+                                                            {totalAlarmsCount} {generalSeverityFilter === 'all' ? 'Alarmas' : `Fallas ${generalSeverityFilter}`}
+                                                            {selectedTrackingDevice && (
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => setSelectedTrackingDevice(null)}
+                                                                    className="ml-1 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full w-4 h-4 flex items-center justify-center text-blue-500 dark:text-blue-300 font-bold"
+                                                                    title="Quitar selección de equipo"
+                                                                    aria-label="Quitar selección de equipo"
+                                                                >×</button>
+                                                            )}
                                                         </span>
                                                     </div>
                                                     <div className="h-48 w-full">
