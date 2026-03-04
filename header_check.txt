@@ -1,0 +1,2 @@
+Device Name (ID),Alarm Type,Fleet,Alarm Status,Begin Time,Start position,End Time,End position,Start details,End Details,Start Speed,End Speed,Reporting time,Alarm duration,Re-upload,Process User,Process Time,Process memo,Remark;;;;;
+"CAG-717_EVO4(9053071085),Storage Error,NUMAY,Alarm End,21/01/2026 23:58:54,""-78.502609,-6.98914"",21/01/2026 23:58:54,""-78.502609,-6.98914"",NO:sd1 "; State:L1_Damage ; satellites:6,,11.04 km/h,11.04 km/h,21/01/2026 23:58:55,0 s,No,,,,Pending;;;
