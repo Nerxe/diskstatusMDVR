@@ -63,7 +63,8 @@ interface RepairTracking {
     deviceId: string;
     macroGroup: 'Yanacocha' | 'Repsol' | 'General';
     initialAlerts: number;
-    status: 'Pendiente' | 'En Proceso' | 'Validando' | 'Reparado';
+    status: 'Pendiente' | 'Revisión Remota' | 'En Proceso' | 'Validando' | 'Reparado';
+    workType: 'Pendiente' | 'Cambio' | 'Formateo' | 'Configuración';
     repairDate?: string;
     notes?: string;
 
@@ -81,7 +82,8 @@ interface RepairTracking {
 type TabType = 'dashboard' | 'records' | 'tracking' | 'general-tracking';
 
 interface DeviceGroup {
-    equipment: string;
+    equipment: string; // Ahora es el ID (10 dígitos) como clave principal
+    allPlates: string[]; // Todas las placas/nombres de vehículo asociados a este ID
     fleet: string;
     model: string;
     pv: string;
@@ -587,9 +589,10 @@ const DeviceDetailsModal = ({
                                 <div className="text-xs text-slate-400 dark:text-zinc-500 uppercase font-bold mb-1">Estado de Reparación</div>
                                 <div className={`inline-flex px-3 py-1 rounded text-sm font-bold border
                                     ${repairData?.status === 'Pendiente' ? 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 border-slate-300 dark:border-zinc-700' :
-                                        repairData?.status === 'En Proceso' ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-800' :
-                                            repairData?.status === 'Validando' ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400 border-blue-300 dark:border-blue-800' :
-                                                'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800'}`}>
+                                        repairData?.status === 'Revisión Remota' ? 'bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-400 border-purple-300 dark:border-purple-800' :
+                                            repairData?.status === 'En Proceso' ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-800' :
+                                                repairData?.status === 'Validando' ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400 border-blue-300 dark:border-blue-800' :
+                                                    'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800'}`}>
                                     {repairData?.status || 'Pendiente'}
                                 </div>
                             </div>
@@ -680,6 +683,7 @@ interface TrackingRowProps {
     item: any;
     repairData: Record<string, RepairTracking>;
     onUpdateStatus: (id: string, status: any, alerts: number) => void;
+    onUpdateWorkType: (id: string, workType: RepairTracking['workType']) => void;
     onAddComment: (id: string, text: string) => void;
     selectedDevice?: string | null;
     onSelectDevice?: (id: string | null) => void;
@@ -691,17 +695,17 @@ const TrackingRow: React.FC<TrackingRowProps> = ({
     item,
     repairData,
     onUpdateStatus,
+    onUpdateWorkType,
     onAddComment,
     selectedDevice,
     onSelectDevice,
-    showAll,
     onViewDetails
 }) => {
     const tracking = repairData[item.equipment];
     const status = tracking?.status || 'Pendiente';
+    const workType = tracking?.workType || 'Pendiente';
     const [isExpanded, setIsExpanded] = React.useState(false);
-    const { name } = extractEquipmentId(item.equipment);
-    const useId = item.id;
+    const useId = item.id || item.equipment;
 
     return (
         <React.Fragment>
@@ -726,11 +730,19 @@ const TrackingRow: React.FC<TrackingRowProps> = ({
                             className="cursor-pointer flex-1"
                             onClick={() => onSelectDevice && onSelectDevice(item.equipment === selectedDevice ? null : item.equipment)}
                         >
-                            <div className="font-bold text-slate-900 dark:text-zinc-100">{name}</div>
-                            {/* Mostrar ID solo si es Seguimiento General (showAll=true) y existe ID */}
-                            {showAll && useId && (
-                                <div className="text-[10px] text-slate-400 dark:text-zinc-500 font-mono">
-                                    ID: {useId}
+                            <div className="font-bold text-lg text-slate-900 dark:text-zinc-100 font-mono">{useId}</div>
+                            {/* Mostrar todas las placas como badges */}
+                            {item.allPlates && item.allPlates.length > 0 && (
+                                <div className="flex flex-wrap gap-1 mt-0.5">
+                                    {item.allPlates.map((plate: string, idx: number) => (
+                                        <span key={idx} className={`inline-flex items-center text-[9px] px-1.5 py-0.5 rounded border ${
+                                            idx === 0
+                                                ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800 font-bold'
+                                                : 'bg-amber-50 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800'
+                                        }`}>
+                                            {idx === 0 ? '🚛' : '🔄'} {plate}
+                                        </span>
+                                    ))}
                                 </div>
                             )}
                             <div className="text-xs text-slate-500 dark:text-zinc-400">{item.fleet}</div>
@@ -742,20 +754,41 @@ const TrackingRow: React.FC<TrackingRowProps> = ({
                         {item.highSeverityCount}
                     </span>
                 </td>
+                <td className="px-4 py-3 text-center">
+                    <select
+                        aria-label="Tipo de trabajo"
+                        className={`text-xs font-bold py-1 px-2 rounded border focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer
+                            ${workType === 'Pendiente' ? 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 border-slate-300 dark:border-zinc-700' :
+                                workType === 'Cambio' ? 'bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-400 border-rose-300 dark:border-rose-800' :
+                                    workType === 'Formateo' ? 'bg-cyan-100 dark:bg-cyan-900/50 text-cyan-700 dark:text-cyan-400 border-cyan-300 dark:border-cyan-800' :
+                                        'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-400 border-indigo-300 dark:border-indigo-800'}
+                        `}
+                        value={workType}
+                        onChange={(e) => onUpdateWorkType(item.equipment, e.target.value as RepairTracking['workType'])}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Cambio">Cambio</option>
+                        <option value="Formateo">Formateo</option>
+                        <option value="Configuración">Configuración</option>
+                    </select>
+                </td>
                 <td className="px-4 py-3 text-right">
                     <select
                         aria-label="Estado de reparación"
                         className={`text-xs font-bold py-1 px-2 rounded border focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer
                             ${status === 'Pendiente' ? 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 border-slate-300 dark:border-zinc-700' :
-                                status === 'En Proceso' ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-800' :
-                                    status === 'Validando' ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400 border-blue-300 dark:border-blue-800' :
-                                        'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800'}
+                                status === 'Revisión Remota' ? 'bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-400 border-purple-300 dark:border-purple-800' :
+                                    status === 'En Proceso' ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-800' :
+                                        status === 'Validando' ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400 border-blue-300 dark:border-blue-800' :
+                                            'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800'}
                         `}
                         value={status}
                         onChange={(e) => onUpdateStatus(item.equipment, e.target.value, item.highSeverityCount)}
                         onClick={(e) => e.stopPropagation()}
                     >
                         <option value="Pendiente">Pendiente</option>
+                        <option value="Revisión Remota">Revisión Remota</option>
                         <option value="En Proceso">En Proceso</option>
                         <option value="Validando">Validando</option>
                         <option value="Reparado">Reparado</option>
@@ -766,7 +799,7 @@ const TrackingRow: React.FC<TrackingRowProps> = ({
             {/* Fila de Comentarios (Expandible) */}
             {isExpanded && (
                 <tr className="bg-slate-50 dark:bg-zinc-900/50">
-                    <td colSpan={3} className="px-4 py-3 border-b border-slate-100 dark:border-zinc-800">
+                    <td colSpan={4} className="px-4 py-3 border-b border-slate-100 dark:border-zinc-800">
                         <div className="pl-6 space-y-3">
                             <div className="flex gap-2">
                                 <button
@@ -793,24 +826,26 @@ const TrackingRow: React.FC<TrackingRowProps> = ({
 };
 
 // Componente Auxiliar para Columna de Seguimiento
-const TrackingColumn = ({ title, color, data, repairData, onUpdateStatus, onAddComment, selectedDevice, onSelectDevice, onViewDetails, showAll = false, statusFilter = 'all' }: {
+const TrackingColumn = ({ title, color, data, repairData, onUpdateStatus, onUpdateWorkType, onAddComment, selectedDevice, onSelectDevice, onViewDetails, showAll = false, statusFilter = 'all', workTypeFilter = 'all' }: {
     title: string,
     color: 'blue' | 'orange',
     data: any[],
     repairData: Record<string, RepairTracking>,
     onUpdateStatus: (id: string, status: any, alerts: number) => void,
+    onUpdateWorkType: (id: string, workType: RepairTracking['workType']) => void,
     onAddComment: (deviceId: string, commentText: string) => void,
     selectedDevice?: string | null,
     onSelectDevice?: (device: string | null) => void,
     onViewDetails?: (device: string) => void,
     showAll?: boolean,
-    statusFilter?: 'all' | 'Pendiente' | 'En Proceso' | 'Validando' | 'Reparado'
+    statusFilter?: 'all' | 'Pendiente' | 'Revisión Remota' | 'En Proceso' | 'Validando' | 'Reparado',
+    workTypeFilter?: 'all' | 'Pendiente' | 'Cambio' | 'Formateo' | 'Configuración'
 }) => {
     // Estado de paginación
     const [currentPage, setCurrentPage] = React.useState(0);
 
-    // Estado de búsqueda (solo para showAll)
-
+    // Estado de búsqueda por placa o ID
+    const [columnSearchTerm, setColumnSearchTerm] = React.useState('');
 
     // Filtrar y ordenar con useMemo para evitar re-renders
     const items = React.useMemo(() => {
@@ -818,7 +853,17 @@ const TrackingColumn = ({ title, color, data, repairData, onUpdateStatus, onAddC
             .filter((d: any) => showAll ? d.totalAlerts > 0 : d.highSeverityCount > 1)
             .sort((a: any, b: any) => showAll ? b.totalAlerts - a.totalAlerts : b.highSeverityCount - a.highSeverityCount);
 
-
+        // Aplicar búsqueda por placa o ID
+        if (columnSearchTerm.trim()) {
+            const term = columnSearchTerm.toLowerCase().trim();
+            filtered = filtered.filter((d: any) => {
+                // Buscar por ID (equipment ahora es el ID)
+                const matchesId = d.equipment?.toLowerCase().includes(term) || d.id?.toLowerCase().includes(term);
+                // Buscar en todas las placas asociadas
+                const matchesPlate = d.allPlates?.some((plate: string) => plate.toLowerCase().includes(term));
+                return matchesId || matchesPlate;
+            });
+        }
 
         // Aplicar filtro de estado si no es 'all'
         if (statusFilter !== 'all') {
@@ -828,13 +873,21 @@ const TrackingColumn = ({ title, color, data, repairData, onUpdateStatus, onAddC
             });
         }
 
+        // Aplicar filtro de tipo de trabajo
+        if (workTypeFilter !== 'all') {
+            filtered = filtered.filter((d: any) => {
+                const wt = repairData[d.equipment]?.workType || 'Pendiente';
+                return wt === workTypeFilter;
+            });
+        }
+
         // Si no es showAll, limitar a Top 5
         if (!showAll) {
             filtered = filtered.slice(0, 5);
         }
 
         return filtered;
-    }, [data, showAll, statusFilter, repairData]);
+    }, [data, showAll, statusFilter, workTypeFilter, repairData, columnSearchTerm]);
 
     // Paginación para showAll
     const ITEMS_PER_PAGE = 50;
@@ -851,9 +904,33 @@ const TrackingColumn = ({ title, color, data, repairData, onUpdateStatus, onAddC
 
     return (
         <div className={`rounded-xl border ${borderColor} shadow-sm overflow-hidden bg-white dark:bg-zinc-900`}>
-            {/* Search Bar and Pagination (only for showAll) */}
+            {/* Search Bar and Pagination */}
             {showAll && (
-                <div className="px-6 py-3 border-b border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900">
+                <div className="px-6 py-3 border-b border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900 space-y-3">
+                    {/* Search Input */}
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-zinc-500" />
+                        <input
+                            type="text"
+                            value={columnSearchTerm}
+                            onChange={(e) => {
+                                setColumnSearchTerm(e.target.value);
+                                setCurrentPage(0); // Reset pagination on search
+                            }}
+                            placeholder="Buscar por placa (ej. ABC-123) o ID (ej. 9087654321)..."
+                            className="w-full pl-9 pr-8 py-2 text-sm border border-slate-200 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                        />
+                        {columnSearchTerm && (
+                            <button
+                                onClick={() => setColumnSearchTerm('')}
+                                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 dark:text-zinc-500 hover:text-slate-600"
+                                title="Limpiar búsqueda"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        )}
+                    </div>
+
                     {/* Pagination Controls */}
                     {totalPages > 1 && (
                         <div className="flex items-center justify-between text-xs">
@@ -899,6 +976,7 @@ const TrackingColumn = ({ title, color, data, repairData, onUpdateStatus, onAddC
                     <tr>
                         <th className="px-4 py-3">Equipo</th>
                         <th className="px-4 py-3 text-center">Fallas L1</th>
+                        <th className="px-4 py-3 text-center">Trabajo</th>
                         <th className="px-4 py-3 text-right">Estado</th>
                     </tr>
                 </thead>
@@ -909,6 +987,7 @@ const TrackingColumn = ({ title, color, data, repairData, onUpdateStatus, onAddC
                             item={item}
                             repairData={repairData}
                             onUpdateStatus={onUpdateStatus}
+                            onUpdateWorkType={onUpdateWorkType}
                             onAddComment={onAddComment}
                             selectedDevice={selectedDevice}
                             onSelectDevice={onSelectDevice}
@@ -999,7 +1078,8 @@ export default function TracklogDashboard() {
     const [generalSeverityFilter, setGeneralSeverityFilter] = useState<'all' | 'L1' | 'L2' | 'L3'>('all');
 
     // Estado para filtro de estado de reparación en Seguimiento General
-    const [generalStatusFilter, setGeneralStatusFilter] = useState<'all' | 'Pendiente' | 'En Proceso' | 'Validando' | 'Reparado'>('all');
+    const [generalStatusFilter, setGeneralStatusFilter] = useState<'all' | 'Pendiente' | 'Revisión Remota' | 'En Proceso' | 'Validando' | 'Reparado'>('all');
+    const [generalWorkTypeFilter, setGeneralWorkTypeFilter] = useState<'all' | 'Pendiente' | 'Cambio' | 'Formateo' | 'Configuración'>('all');
     const [generalComponentFilter, setGeneralComponentFilter] = useState<'all' | 'ssd' | 'sd' | 'other'>('all');
 
     // Cargar datos de reparación persistentes
@@ -1013,6 +1093,55 @@ export default function TracklogDashboard() {
             }
         }
     }, []);
+
+    // Migración automática de repairData: claves de placa → ID
+    useEffect(() => {
+        if (data.length === 0 || Object.keys(repairData).length === 0) return;
+
+        // Construir mapa placa → ID desde los datos procesados
+        const plateToId = new Map<string, string>();
+        data.forEach(d => {
+            if (d.ID && d.DeviceName) {
+                plateToId.set(d.DeviceName, d.ID);
+            }
+        });
+
+        let needsMigration = false;
+        const migrated: Record<string, RepairTracking> = {};
+
+        Object.entries(repairData).forEach(([key, value]) => {
+            // Si la clave ya parece ser un ID (solo dígitos, ~10 chars), mantenerla
+            if (/^\d{8,12}$/.test(key)) {
+                migrated[key] = value;
+            } else if (plateToId.has(key)) {
+                // La clave es un nombre de placa, migrar al ID
+                const id = plateToId.get(key)!;
+                needsMigration = true;
+                // Si ya existe una entrada con ese ID, hacer merge (conservar la más reciente)
+                if (migrated[id]) {
+                    const existing = migrated[id];
+                    const existingDate = new Date(existing.lastModifiedDate).getTime();
+                    const newDate = new Date(value.lastModifiedDate).getTime();
+                    if (newDate > existingDate) {
+                        migrated[id] = { ...value, deviceId: id, comments: [...existing.comments, ...value.comments] };
+                    } else {
+                        migrated[id] = { ...existing, comments: [...existing.comments, ...value.comments] };
+                    }
+                } else {
+                    migrated[id] = { ...value, deviceId: id };
+                }
+            } else {
+                // Clave desconocida, mantenerla por seguridad
+                migrated[key] = value;
+            }
+        });
+
+        if (needsMigration) {
+            console.log('Migrating repairData keys from plate names to IDs...');
+            setRepairData(migrated);
+            localStorage.setItem('repair_tracking_db', JSON.stringify(migrated));
+        }
+    }, [data]); // Solo ejecutar cuando data cambie
 
     // Helper: Generate unique ID for comments
     const generateCommentId = () => `comment_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -1055,6 +1184,7 @@ export default function TracklogDashboard() {
                 macroGroup,
                 initialAlerts: existing?.initialAlerts || alerts,
                 status,
+                workType: existing?.workType || 'Pendiente' as const,
                 repairDate: status === 'Reparado' ? now : existing?.repairDate,
                 notes: existing?.notes,
 
@@ -1073,27 +1203,91 @@ export default function TracklogDashboard() {
         localStorage.setItem('repair_tracking_db', JSON.stringify(updated));
     };
 
-    // Add user comment to equipment
-    const addComment = (deviceId: string, commentText: string, author: string = 'Usuario') => {
+    // Actualizar tipo de trabajo
+    const updateWorkType = (deviceId: string, workType: RepairTracking['workType']) => {
         const existing = repairData[deviceId];
-        if (!existing) return;
+        const now = new Date().toISOString();
 
-        const newComment: Comment = {
-            id: generateCommentId(),
-            text: commentText,
-            author,
-            timestamp: new Date().toISOString(),
-            type: 'user'
-        };
+        const newComments = existing?.comments || [];
+
+        if (existing && existing.workType !== workType) {
+            newComments.push(createSystemComment(
+                `Tipo de trabajo cambiado de "${existing.workType || 'Pendiente'}" a "${workType}"`
+            ));
+        }
+
+        if (!existing) {
+            newComments.push(createSystemComment(
+                `Equipo agregado al seguimiento con tipo de trabajo: ${workType}`
+            ));
+        }
 
         const updated = {
             ...repairData,
             [deviceId]: {
                 ...existing,
+                deviceId,
+                macroGroup: existing?.macroGroup || 'General' as const,
+                initialAlerts: existing?.initialAlerts || 0,
+                status: existing?.status || 'Pendiente' as const,
+                workType,
+                comments: newComments,
+                priority: existing?.priority || 'Media' as const,
+                lastModifiedBy: 'Usuario',
+                lastModifiedDate: now,
+                createdDate: existing?.createdDate || now
+            }
+        };
+        setRepairData(updated);
+        localStorage.setItem('repair_tracking_db', JSON.stringify(updated));
+    };
+
+    // Add user comment to equipment
+    const addComment = (deviceId: string, commentText: string, author: string = 'Usuario') => {
+        const now = new Date().toISOString();
+        const existing = repairData[deviceId];
+
+        const newComment: Comment = {
+            id: generateCommentId(),
+            text: commentText,
+            author,
+            timestamp: now,
+            type: 'user'
+        };
+
+        let updatedEntry: RepairTracking;
+
+        if (existing) {
+            // Ya existe una entrada, solo agregar el comentario
+            updatedEntry = {
+                ...existing,
                 comments: [...existing.comments, newComment],
                 lastModifiedBy: author,
-                lastModifiedDate: new Date().toISOString()
-            }
+                lastModifiedDate: now
+            };
+        } else {
+            // No existe entrada: crear una nueva con estado "Pendiente"
+            updatedEntry = {
+                deviceId,
+                macroGroup: 'General',
+                initialAlerts: 0,
+                status: 'Pendiente',
+                workType: 'Pendiente',
+                notes: undefined,
+                comments: [newComment],
+                priority: 'Media',
+                assignedTo: undefined,
+                estimatedCompletionDate: undefined,
+                actualCompletionDate: undefined,
+                lastModifiedBy: author,
+                lastModifiedDate: now,
+                createdDate: now
+            };
+        }
+
+        const updated = {
+            ...repairData,
+            [deviceId]: updatedEntry
         };
 
         setRepairData(updated);
@@ -1191,6 +1385,7 @@ export default function TracklogDashboard() {
     const [filterPv, setFilterPv] = useState<string>('all');
     const [filterModel, setFilterModel] = useState<string>('all');
     const [hasSearched, setHasSearched] = useState(false);
+    const [recordsStatusFilter, setRecordsStatusFilter] = useState<'all' | 'Pendiente' | 'Revisión Remota' | 'En Proceso' | 'Validando' | 'Reparado'>('all');
 
     // Paginación
     const [currentPage, setCurrentPage] = useState(1);
@@ -1212,15 +1407,15 @@ export default function TracklogDashboard() {
         setSelectedIds(newSet);
     };
 
-    // Handler para "Seleccionar Todo" (de la página actual)
+    // Handler para "Seleccionar Todo" (de todos los resultados filtrados en todas las páginas)
     const toggleSelectAll = () => {
         const newSet = new Set(selectedIds);
-        const allSelected = (paginatedData as DeviceGroup[]).every(item => newSet.has(item.equipment));
+        const allSelected = groupedData.every(item => newSet.has(item.equipment));
 
         if (allSelected) {
-            (paginatedData as DeviceGroup[]).forEach(item => newSet.delete(item.equipment));
+            groupedData.forEach(item => newSet.delete(item.equipment));
         } else {
-            (paginatedData as DeviceGroup[]).forEach(item => newSet.add(item.equipment));
+            groupedData.forEach(item => newSet.add(item.equipment));
         }
         setSelectedIds(newSet);
     };
@@ -1228,7 +1423,7 @@ export default function TracklogDashboard() {
     // Handler Generar PDF
     const handleGeneratePDF = () => {
         const selectedItems = groupedData.filter(g => selectedIds.has(g.equipment));
-        generateWorkOrderPDF(selectedItems);
+        generateWorkOrderPDF(selectedItems, repairData);
     };
 
 
@@ -1239,15 +1434,24 @@ export default function TracklogDashboard() {
     // Funciones de Respaldo (Backup)
     const handleExportBackup = () => {
         const dataStr = JSON.stringify(repairData, null, 2);
-        const blob = new Blob([dataStr], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
+
+        // Copiar al portapapeles directamente (soluciona el problema de descargas ocultas)
+        navigator.clipboard.writeText(dataStr).then(() => {
+            alert('¡Copia de seguridad copiada al portapapeles exitosamente!\n\n(Para importar tu avance en Chrome normal: crea un archivo de texto, pega el contenido que acabas de copiar, guárdalo como .json e impórtalo ahí).');
+        }).catch(err => {
+            console.error('Error al copiar al portapapeles: ', err);
+        });
+
+        // Intentar descargar también usando Data URI
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
         const exportFileDefaultName = `tracklog_repair_backup_${new Date().toISOString().split('T')[0]}.json`;
 
         const linkElement = document.createElement('a');
-        linkElement.href = url;
+        linkElement.href = dataUri;
         linkElement.download = exportFileDefaultName;
+        document.body.appendChild(linkElement);
         linkElement.click();
-        URL.revokeObjectURL(url);
+        document.body.removeChild(linkElement);
     };
 
     const handleImportBackup = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -1628,9 +1832,10 @@ export default function TracklogDashboard() {
         if (!hasSearched) return [];
 
         return scopedData.filter(item => {
-            // Buscador Texto
+            // Buscador Texto (por placa, ID, detalles o diagnóstico)
             const matchesSearch = !searchTerm ||
                 item.DeviceName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (item.ID && item.ID.toLowerCase().includes(searchTerm.toLowerCase())) ||
                 item.DiskDetails.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 item.diagnosis.toLowerCase().includes(searchTerm.toLowerCase());
 
@@ -1675,12 +1880,14 @@ export default function TracklogDashboard() {
         const source = hasSearched ? filteredData : scopedData;
 
         source.forEach(item => {
-            const key = item.ID || item.DeviceName; // Agrupar por ID si existe, sino por nombre (igual que Dashboard)
+            // CLAVE: Agrupar por ID (único y permanente) en lugar de DeviceName (placa, que puede cambiar)
+            const key = item.ID || item.DeviceName;
 
             if (!groups.has(key)) {
                 groups.set(key, {
                     id: item.ID || '',
-                    equipment: item.DeviceName,
+                    equipment: key, // Ahora la clave principal es el ID
+                    allPlates: [item.DeviceName], // Inicializar con la primera placa
                     fleet: item.Fleet,
                     model: item.model,
                     pv: item.pvName,
@@ -1692,6 +1899,12 @@ export default function TracklogDashboard() {
                     component: item.component,
                     diskType: item.DiskType
                 });
+            } else {
+                // Acumular placas distintas asociadas a este ID
+                const group = groups.get(key)!;
+                if (!group.allPlates.includes(item.DeviceName)) {
+                    group.allPlates.push(item.DeviceName);
+                }
             }
 
             const group = groups.get(key)!;
@@ -1720,9 +1933,14 @@ export default function TracklogDashboard() {
                 return sevOrder[b.maxSeverity] - sevOrder[a.maxSeverity];
             }
             return b.totalAlerts - a.totalAlerts;
+        }).filter(group => {
+            // Filtro por estado de reparación (solo en vista de equipos)
+            if (recordsStatusFilter === 'all') return true;
+            const status = repairData[group.equipment]?.status || 'Pendiente';
+            return status === recordsStatusFilter;
         });
 
-    }, [filteredData, viewMode, scopedData, hasSearched]);
+    }, [filteredData, viewMode, scopedData, hasSearched, recordsStatusFilter, repairData]);
 
     // Paginación (Dinámica según el modo)
     const currentDataSource = viewMode === 'devices' ? groupedData : filteredData;
@@ -1749,6 +1967,7 @@ export default function TracklogDashboard() {
         setDateRange({ start: '', end: '' });
         setFilterPv('all');
         setFilterModel('all');
+        setRecordsStatusFilter('all');
         setHasSearched(false);
         setCurrentPage(1);
     };
@@ -2327,6 +2546,75 @@ export default function TracklogDashboard() {
                                             </div>
                                         </div>
 
+                                        {/* Filtro por Estado de Reparación (solo en vista de equipos) */}
+                                        {viewMode === 'devices' && (
+                                            <div className="flex items-center gap-3 mb-4">
+                                                <span className="text-sm font-bold text-slate-600 dark:text-zinc-400">Estado:</span>
+                                                <div className="flex bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 p-1 flex-wrap gap-0.5">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setRecordsStatusFilter('all')}
+                                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${recordsStatusFilter === 'all'
+                                                            ? 'bg-slate-600 text-white shadow-sm'
+                                                            : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800'
+                                                            }`}
+                                                    >
+                                                        Todos
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setRecordsStatusFilter('Pendiente')}
+                                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${recordsStatusFilter === 'Pendiente'
+                                                            ? 'bg-slate-500 text-white shadow-sm'
+                                                            : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800'
+                                                            }`}
+                                                    >
+                                                        Pendiente
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setRecordsStatusFilter('Revisión Remota')}
+                                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${recordsStatusFilter === 'Revisión Remota'
+                                                            ? 'bg-purple-500 text-white shadow-sm'
+                                                            : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800'
+                                                            }`}
+                                                    >
+                                                        Rev. Remota
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setRecordsStatusFilter('En Proceso')}
+                                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${recordsStatusFilter === 'En Proceso'
+                                                            ? 'bg-amber-500 text-white shadow-sm'
+                                                            : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800'
+                                                            }`}
+                                                    >
+                                                        En Proceso
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setRecordsStatusFilter('Validando')}
+                                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${recordsStatusFilter === 'Validando'
+                                                            ? 'bg-blue-500 text-white shadow-sm'
+                                                            : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800'
+                                                            }`}
+                                                    >
+                                                        Validando
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setRecordsStatusFilter('Reparado')}
+                                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${recordsStatusFilter === 'Reparado'
+                                                            ? 'bg-emerald-500 text-white shadow-sm'
+                                                            : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800'
+                                                            }`}
+                                                    >
+                                                        Reparado
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+
                                         {/* Botones de acción */}
                                         <div className="flex gap-3">
                                             <button
@@ -2456,7 +2744,7 @@ export default function TracklogDashboard() {
                                                                         title="Seleccionar todo"
                                                                         className="w-4 h-4 rounded border-slate-300 dark:border-zinc-700 text-blue-600 dark:text-blue-400 focus:ring-blue-500"
                                                                         onChange={toggleSelectAll}
-                                                                        checked={(paginatedData as DeviceGroup[]).length > 0 && (paginatedData as DeviceGroup[]).every(g => selectedIds.has(g.equipment))}
+                                                                        checked={groupedData.length > 0 && groupedData.every(g => selectedIds.has(g.equipment))}
                                                                     />
                                                                 </th>
                                                                 <th className="px-6 py-4">Equipo / Flota</th>
@@ -2480,7 +2768,21 @@ export default function TracklogDashboard() {
                                                                         />
                                                                     </td>
                                                                     <td className="px-6 py-4">
-                                                                        <div className="font-bold text-slate-900 dark:text-zinc-100">{group.equipment}</div>
+                                                                        <div className="font-bold text-slate-900 dark:text-zinc-100">{group.allPlates?.[0] || group.equipment}</div>
+                                                                        {group.id && (
+                                                                            <div className="text-[10px] text-slate-400 dark:text-zinc-500 font-mono mt-0.5">
+                                                                                ID: {group.id || group.equipment}
+                                                                            </div>
+                                                                        )}
+                                                                        {group.allPlates && group.allPlates.length > 1 && (
+                                                                            <div className="flex flex-wrap gap-1 mt-0.5">
+                                                                                {group.allPlates.slice(1).map((plate, pIdx) => (
+                                                                                    <span key={pIdx} className="inline-flex items-center text-[9px] bg-amber-50 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 px-1.5 py-0.5 rounded border border-amber-200 dark:border-amber-800">
+                                                                                        🔄 {plate}
+                                                                                    </span>
+                                                                                ))}
+                                                                            </div>
+                                                                        )}
                                                                         <div className="text-xs text-slate-500 dark:text-zinc-400 flex flex-col gap-0.5 mt-0.5">
                                                                             <span className="flex items-center gap-1"><Truck className="w-3 h-3" /> {group.fleet}</span>
                                                                             <span className="text-slate-400 dark:text-zinc-500">{group.model}</span>
@@ -2671,6 +2973,7 @@ export default function TracklogDashboard() {
                                             // Calcular estadísticas sobre estos 5
                                             const stats = {
                                                 pendiente: 0,
+                                                revisionRemota: 0,
                                                 proceso: 0,
                                                 reparado: 0
                                             };
@@ -2678,12 +2981,14 @@ export default function TracklogDashboard() {
                                             top5.forEach(d => {
                                                 const status = repairData[d.equipment]?.status || 'Pendiente';
                                                 if (status === 'Pendiente') stats.pendiente++;
+                                                else if (status === 'Revisión Remota') stats.revisionRemota++;
                                                 else if (status === 'Reparado') stats.reparado++;
                                                 else stats.proceso++; // En Proceso / Validando
                                             });
 
                                             const chartData = [
                                                 { name: 'Pendiente', value: stats.pendiente, color: '#94a3b8' },
+                                                { name: 'Rev. Remota', value: stats.revisionRemota, color: '#a855f7' },
                                                 { name: 'En Proceso', value: stats.proceso, color: '#f59e0b' },
                                                 { name: 'Reparado', value: stats.reparado, color: '#10b981' },
                                             ].filter(d => d.value > 0);
@@ -2693,12 +2998,12 @@ export default function TracklogDashboard() {
                                             const top5EquipmentSet = new Set(top5.map(d => d.equipment));
 
                                             const filteredAlarms = scopedData.filter(d => {
-                                                // Si hay un dispositivo seleccionado, mostrar solo ese
+                                                // Si hay un dispositivo seleccionado, mostrar solo ese (por ID o por DeviceName)
                                                 if (selectedTrackingDevice) {
-                                                    return d.DeviceName === selectedTrackingDevice && d.severity === 'Alta';
+                                                    return (d.ID === selectedTrackingDevice || d.DeviceName === selectedTrackingDevice) && d.severity === 'Alta';
                                                 }
-                                                // Si no, mostrar solo los del Top 5
-                                                return top5EquipmentSet.has(d.DeviceName) && d.severity === 'Alta';
+                                                // Si no, mostrar solo los del Top 5 (usando ID como clave)
+                                                return (top5EquipmentSet.has(d.ID) || top5EquipmentSet.has(d.DeviceName)) && d.severity === 'Alta';
                                             });
 
                                             const totalAlarmsCount = filteredAlarms.length; // Total real de alarmas
@@ -2775,10 +3080,14 @@ export default function TracklogDashboard() {
                                                         </div>
 
                                                         {/* Status Boxes */}
-                                                        <div className="grid grid-cols-3 gap-4">
+                                                        <div className="grid grid-cols-4 gap-4">
                                                             <div className="bg-slate-50 dark:bg-zinc-900 rounded-lg p-4 text-center border border-slate-100 dark:border-zinc-800">
                                                                 <div className="text-2xl font-bold text-slate-700 dark:text-zinc-300">{stats.pendiente}</div>
                                                                 <div className="text-xs text-slate-500 dark:text-zinc-400 font-bold mt-1">Pendientes</div>
+                                                            </div>
+                                                            <div className="bg-purple-50 dark:bg-purple-900/40 rounded-lg p-4 text-center border border-purple-100">
+                                                                <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{stats.revisionRemota}</div>
+                                                                <div className="text-xs text-purple-600/80 font-bold mt-1">Rev. Remota</div>
                                                             </div>
                                                             <div className="bg-amber-50 dark:bg-amber-900/40 rounded-lg p-4 text-center border border-amber-100">
                                                                 <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">{stats.proceso}</div>
@@ -2838,6 +3147,7 @@ export default function TracklogDashboard() {
                                             )}
                                             repairData={repairData}
                                             onUpdateStatus={(id: string, status: any, alerts: number) => updateRepairStatus(id, status, 'Yanacocha', alerts)}
+                                            onUpdateWorkType={updateWorkType}
                                             onAddComment={addComment}
                                             selectedDevice={selectedTrackingDevice}
                                             onSelectDevice={setSelectedTrackingDevice}
@@ -2856,6 +3166,7 @@ export default function TracklogDashboard() {
                                             )}
                                             repairData={repairData}
                                             onUpdateStatus={(id: string, status: any, alerts: number) => updateRepairStatus(id, status, 'Repsol', alerts)}
+                                            onUpdateWorkType={updateWorkType}
                                             onAddComment={addComment}
                                             selectedDevice={selectedTrackingDevice}
                                             onSelectDevice={setSelectedTrackingDevice}
@@ -2943,11 +3254,21 @@ export default function TracklogDashboard() {
                                                 type="button"
                                                 onClick={() => setGeneralStatusFilter('Pendiente')}
                                                 className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalStatusFilter === 'Pendiente'
-                                                    ? 'bg-slate-50 dark:bg-zinc-9000 text-white shadow-sm'
+                                                    ? 'bg-slate-500 text-white shadow-sm'
                                                     : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
                                                     }`}
                                             >
                                                 Pendiente
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setGeneralStatusFilter('Revisión Remota')}
+                                                className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalStatusFilter === 'Revisión Remota'
+                                                    ? 'bg-purple-500 text-white shadow-sm'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
+                                                    }`}
+                                            >
+                                                Rev. Remota
                                             </button>
                                             <button
                                                 type="button"
@@ -3028,6 +3349,63 @@ export default function TracklogDashboard() {
                                             </button>
                                         </div>
                                     </div>
+
+                                    {/* Filtro de Tipo de Trabajo */}
+                                    <div className="flex items-center gap-3 mt-3 relative z-10">
+                                        <span className="text-sm font-bold text-slate-600 dark:text-zinc-400">Filtrar por trabajo:</span>
+                                        <div className="flex bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 p-1">
+                                            <button
+                                                type="button"
+                                                onClick={() => setGeneralWorkTypeFilter('all')}
+                                                className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalWorkTypeFilter === 'all'
+                                                    ? 'bg-slate-600 text-white shadow-sm'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
+                                                    }`}
+                                            >
+                                                Todos
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setGeneralWorkTypeFilter('Pendiente')}
+                                                className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalWorkTypeFilter === 'Pendiente'
+                                                    ? 'bg-slate-500 text-white shadow-sm'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
+                                                    }`}
+                                            >
+                                                Pendiente
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setGeneralWorkTypeFilter('Cambio')}
+                                                className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalWorkTypeFilter === 'Cambio'
+                                                    ? 'bg-rose-500 text-white shadow-sm'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
+                                                    }`}
+                                            >
+                                                Cambio
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setGeneralWorkTypeFilter('Formateo')}
+                                                className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalWorkTypeFilter === 'Formateo'
+                                                    ? 'bg-cyan-500 text-white shadow-sm'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
+                                                    }`}
+                                            >
+                                                Formateo
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setGeneralWorkTypeFilter('Configuración')}
+                                                className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer ${generalWorkTypeFilter === 'Configuración'
+                                                    ? 'bg-indigo-500 text-white shadow-sm'
+                                                    : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:bg-zinc-900'
+                                                    }`}
+                                            >
+                                                Configuración
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {/* GRAFICOS DE SEGUIMIENTO GENERAL */}
@@ -3048,7 +3426,7 @@ export default function TracklogDashboard() {
                                             : allEquipment.filter(d => {
                                                 // Verificar si el equipo tiene alarmas del nivel seleccionado
                                                 const hasMatchingLevel = scopedData.some(alarm =>
-                                                    alarm.DeviceName === d.equipment && alarm.level === generalSeverityFilter
+                                                    (alarm.DeviceName === d.equipment || (alarm.ID && alarm.ID === d.equipment)) && alarm.level === generalSeverityFilter
                                                 );
                                                 return hasMatchingLevel;
                                             });
@@ -3075,6 +3453,7 @@ export default function TracklogDashboard() {
                                         // Calcular estadísticas sobre los equipos filtrados
                                         const stats = {
                                             pendiente: 0,
+                                            revisionRemota: 0,
                                             proceso: 0,
                                             reparado: 0
                                         };
@@ -3082,12 +3461,14 @@ export default function TracklogDashboard() {
                                         filteredEquipment.forEach(d => {
                                             const status = repairData[d.equipment]?.status || 'Pendiente';
                                             if (status === 'Pendiente') stats.pendiente++;
+                                            else if (status === 'Revisión Remota') stats.revisionRemota++;
                                             else if (status === 'Reparado') stats.reparado++;
                                             else stats.proceso++; // En Proceso / Validando
                                         });
 
                                         const chartData = [
                                             { name: 'Pendiente', value: stats.pendiente, color: '#94a3b8' },
+                                            { name: 'Rev. Remota', value: stats.revisionRemota, color: '#a855f7' },
                                             { name: 'En Proceso', value: stats.proceso, color: '#f59e0b' },
                                             { name: 'Reparado', value: stats.reparado, color: '#10b981' },
                                         ].filter(d => d.value > 0);
@@ -3102,7 +3483,7 @@ export default function TracklogDashboard() {
                                         const filteredAlarms = trendSource.filter(d => {
                                             // Filtro por dispositivo (match por nombre O por ID para cubrir agrupación)
                                             const matchesDevice = selectedTrackingDevice
-                                                ? d.DeviceName === selectedTrackingDevice
+                                                ? (d.ID === selectedTrackingDevice || d.DeviceName === selectedTrackingDevice)
                                                 : (allEquipmentNames.has(d.DeviceName) || (d.ID && allEquipmentIds.has(d.ID)));
 
                                             // Filtro por nivel
@@ -3192,10 +3573,14 @@ export default function TracklogDashboard() {
                                                     </div>
 
                                                     {/* Status Boxes */}
-                                                    <div className="grid grid-cols-3 gap-4">
+                                                    <div className="grid grid-cols-4 gap-4">
                                                         <div className="bg-slate-50 dark:bg-zinc-900 rounded-lg p-4 text-center border border-slate-100 dark:border-zinc-800">
                                                             <div className="text-2xl font-bold text-slate-700 dark:text-zinc-300">{stats.pendiente}</div>
                                                             <div className="text-xs text-slate-500 dark:text-zinc-400 font-bold mt-1">Pendientes</div>
+                                                        </div>
+                                                        <div className="bg-purple-50 dark:bg-purple-900/40 rounded-lg p-4 text-center border border-purple-100">
+                                                            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{stats.revisionRemota}</div>
+                                                            <div className="text-xs text-purple-600/80 font-bold mt-1">Rev. Remota</div>
                                                         </div>
                                                         <div className="bg-amber-50 dark:bg-amber-900/40 rounded-lg p-4 text-center border border-amber-100">
                                                             <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">{stats.proceso}</div>
@@ -3256,15 +3641,43 @@ export default function TracklogDashboard() {
                                     <TrackingColumn
                                         title="Todos los Equipos (Ordenados por Fallas)"
                                         color="blue"
-                                        data={groupedData.sort((a, b) => b.highSeverityCount - a.highSeverityCount)}
+                                        data={(() => {
+                                            let filtered = [...groupedData]
+                                                .filter(d => d.totalAlerts > 0);
+
+                                            // Aplicar filtro de nivel (igual que en el gráfico)
+                                            if (generalSeverityFilter !== 'all') {
+                                                filtered = filtered.filter(d => {
+                                                    const hasMatchingLevel = scopedData.some(alarm =>
+                                                        (alarm.DeviceName === d.equipment || (alarm.ID && alarm.ID === d.equipment)) && alarm.level === generalSeverityFilter
+                                                    );
+                                                    return hasMatchingLevel;
+                                                });
+                                            }
+
+                                            // Aplicar filtro de tipo de disco (igual que en el gráfico)
+                                            if (generalComponentFilter !== 'all') {
+                                                filtered = filtered.filter(d => {
+                                                    const matchesComponent =
+                                                        generalComponentFilter === 'ssd' ? d.component === 'SSD/HDD' :
+                                                            generalComponentFilter === 'sd' ? d.component === 'SD/Firebox' :
+                                                                d.component === 'Otros';
+                                                    return matchesComponent;
+                                                });
+                                            }
+
+                                            return filtered.sort((a, b) => b.highSeverityCount - a.highSeverityCount);
+                                        })()}
                                         repairData={repairData}
                                         onUpdateStatus={(id: string, status: any, alerts: number) => updateRepairStatus(id, status, 'General', alerts)}
+                                        onUpdateWorkType={updateWorkType}
                                         onAddComment={addComment}
                                         selectedDevice={selectedTrackingDevice}
                                         onSelectDevice={setSelectedTrackingDevice}
                                         onViewDetails={setViewingDeviceDetails}
                                         showAll={true}
                                         statusFilter={generalStatusFilter}
+                                        workTypeFilter={generalWorkTypeFilter}
                                     />
                                 </div>
                             </div>
@@ -3277,7 +3690,7 @@ export default function TracklogDashboard() {
                                 <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900/90 backdrop-blur-md text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-6 z-50 animate-in fade-in slide-in-from-bottom-4">
                                     <div className="flex flex-col">
                                         <span className="font-bold text-sm">{selectedIds.size} equipos seleccionados</span>
-                                        <span className="text-[10px] text-slate-400 dark:text-zinc-500">Listos para orden de trabajo</span>
+                                        <span className="text-[10px] text-slate-400 dark:text-zinc-500">Listos para informe de supervisión</span>
                                     </div>
 
                                     <div className="h-8 w-px bg-slate-700 mx-2"></div>
@@ -3287,7 +3700,7 @@ export default function TracklogDashboard() {
                                         className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 transition-transform active:scale-95 shadow-lg shadow-blue-500/30"
                                     >
                                         <FileText className="w-4 h-4" />
-                                        Generar Orden PDF
+                                        Generar Informe PDF
                                     </button>
 
                                     <button
@@ -3308,10 +3721,15 @@ export default function TracklogDashboard() {
                     <DeviceDetailsModal
                         isOpen={!!viewingDeviceDetails}
                         onClose={() => setViewingDeviceDetails(null)}
-                        equipment={viewingDeviceDetails}
-                        fleet={data.find(d => d.DeviceName === viewingDeviceDetails)?.Fleet || 'Desconocida'}
+                        equipment={(() => {
+                            // Buscar el grupo correspondiente para mostrar placa + ID
+                            const group = groupedData.find(g => g.equipment === viewingDeviceDetails);
+                            return group ? group.allPlates[0] : viewingDeviceDetails;
+                        })()}
+                        id={viewingDeviceDetails}
+                        fleet={data.find(d => (d.ID || d.DeviceName) === viewingDeviceDetails)?.Fleet || 'Desconocida'}
                         repairData={repairData[viewingDeviceDetails]}
-                        alarms={data.filter(d => d.DeviceName === viewingDeviceDetails)}
+                        alarms={data.filter(d => (d.ID || d.DeviceName) === viewingDeviceDetails)}
                         onAddComment={(text) => addComment(viewingDeviceDetails, text)}
                     />
                 )}

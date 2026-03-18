@@ -22,7 +22,16 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.code-workspace
 
 # Environment variables
 .env
 .env.local
+
+# Large CSV data files (too large for GitHub)
+public/diskAlarm_*.csv
+
+# Dev/debug utility files
+analyze_csv.cjs
+header_check.txt
+resources/

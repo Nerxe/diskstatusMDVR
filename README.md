@@ -1,73 +1,58 @@
-# React + TypeScript + Vite
+# DiskStatus MDVR — Dashboard de Monitoreo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Dashboard interactivo para el monitoreo y seguimiento del estado de discos duros en equipos MDVR (Mobile Digital Video Recorder). Permite visualizar alarmas de disco, realizar seguimiento de mantenimiento preventivo y generar reportes PDF.
 
-Currently, two official plugins are available:
+## Características
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Registros de Alarmas** — Visualización y filtrado de alarmas de disco por equipo, flota y severidad
+- **Seguimiento General** — Tracking del estado de mantenimiento de cada unidad con tipos de trabajo (Cambio, Formateo, Configuración)
+- **Gráficos de Tendencia** — Visualización de tendencias mensuales con Recharts
+- **Generación de PDF** — Exportación de órdenes de trabajo en formato PDF
+- **Backup/Restore** — Exportación e importación de datos de seguimiento en JSON
+- **Modo Oscuro** — Interfaz con soporte para tema claro y oscuro
 
-## React Compiler
+## Tecnologías
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React 19** + **TypeScript**
+- **Vite 7** — Bundler y servidor de desarrollo
+- **Tailwind CSS 4** — Estilos utilitarios
+- **Recharts** — Gráficos y visualizaciones
+- **PapaParse** — Parsing de archivos CSV
+- **jsPDF** — Generación de documentos PDF
+- **Day.js** — Manipulación de fechas
+- **Lucide React** — Iconografía
 
-## Expanding the ESLint configuration
+## Instalación
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Desarrollo
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+## Datos CSV
+
+La aplicación requiere archivos CSV en la carpeta `public/`:
+
+| Archivo | Descripción |
+|---------|-------------|
+| `diskAlarm_<Mes>.csv` | Registros de alarmas de disco por mes |
+| `mdvrDetailsPvModel.csv` | Detalles de equipos MDVR y modelos |
+| `mdvrVideotracklogAll.csv` | Registro de tracklog de video |
+
+> **Nota:** Los archivos `diskAlarm_*.csv` son muy grandes y están excluidos del repositorio vía `.gitignore`. Deben obtenerse por separado.
+
+## Build de Producción
+
+```bash
+npm run build
+npm run preview
+```
+
+## Licencia
+
+Proyecto privado — Uso interno.
