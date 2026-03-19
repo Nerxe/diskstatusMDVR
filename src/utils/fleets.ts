@@ -117,7 +117,6 @@ export const TRACKLOG_INTERNAL_FLEETS = new Set([
     "Averiados_legacy",
     "6.- MAO",
     "MAO",
-    "EVO_DESINSTALADO",
     "INACTIVO",
     "SUSPENDIDO",
     "Default Fleet",

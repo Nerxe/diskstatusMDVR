@@ -6,8 +6,9 @@ import {
 import {
     AlertTriangle, HardDrive, CheckCircle, Search,
     Wrench, Truck, AlertOctagon, Download, Upload, Filter, Database,
-    LayoutDashboard, Table, ChevronLeft, ChevronRight, RefreshCw, FileText, X, Activity, Hammer, ExternalLink, Sun, Moon, Menu
+    LayoutDashboard, Table, ChevronLeft, ChevronRight, RefreshCw, FileText, X, Activity, Hammer, ExternalLink, Sun, Moon, Menu, Globe
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { generateWorkOrderPDF } from './utils/pdfGenerator';
 import { YANACOCHA_FLEETS, REPSOL_FLEETS, TRACKLOG_INTERNAL_FLEETS } from './utils/fleets';
 
@@ -841,6 +842,7 @@ const TrackingColumn = ({ title, color, data, repairData, onUpdateStatus, onUpda
     statusFilter?: 'all' | 'Pendiente' | 'Revisión Remota' | 'En Proceso' | 'Validando' | 'Reparado',
     workTypeFilter?: 'all' | 'Pendiente' | 'Cambio' | 'Formateo' | 'Configuración'
 }) => {
+    const { t } = useTranslation();
     // Estado de paginación
     const [currentPage, setCurrentPage] = React.useState(0);
 
@@ -935,7 +937,7 @@ const TrackingColumn = ({ title, color, data, repairData, onUpdateStatus, onUpda
                     {totalPages > 1 && (
                         <div className="flex items-center justify-between text-xs">
                             <div className="text-slate-500 dark:text-zinc-400">
-                                Mostrando {currentPage * ITEMS_PER_PAGE + 1} - {Math.min((currentPage + 1) * ITEMS_PER_PAGE, items.length)} de {items.length} equipos
+                                {t('showing')} {currentPage * ITEMS_PER_PAGE + 1} - {Math.min((currentPage + 1) * ITEMS_PER_PAGE, items.length)} {t('of')} {items.length} equipos
                             </div>
                             <div className="flex gap-2">
                                 <button
@@ -974,10 +976,10 @@ const TrackingColumn = ({ title, color, data, repairData, onUpdateStatus, onUpda
             <table className="w-full text-sm text-left">
                 <thead className="bg-slate-50 dark:bg-zinc-900 text-slate-500 dark:text-zinc-400 font-semibold uppercase text-xs">
                     <tr>
-                        <th className="px-4 py-3">Equipo</th>
-                        <th className="px-4 py-3 text-center">Fallas L1</th>
-                        <th className="px-4 py-3 text-center">Trabajo</th>
-                        <th className="px-4 py-3 text-right">Estado</th>
+                        <th className="px-4 py-3">{t('th_plate')}</th>
+                        <th className="px-4 py-3 text-center">{t('th_l1')}</th>
+                        <th className="px-4 py-3 text-center">{t('th_work')}</th>
+                        <th className="px-4 py-3 text-right">{t('th_status')}</th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -1047,6 +1049,9 @@ const ALL_MONTHS = [
 ];
 
 export default function TracklogDashboard() {
+    const { t, i18n } = useTranslation();
+    
+    // --- ESTADOS ---
     const [data, setData] = useState<ProcessedData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [lastUpdate, setLastUpdate] = useState<string | null>(null);
@@ -1986,9 +1991,9 @@ export default function TracklogDashboard() {
                                 <Database className="w-6 h-6 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-xl font-bold text-slate-900 dark:text-zinc-100 tracking-tight leading-none">TRACKLOG DISK MANAGER</h1>
+                                <h1 className="text-xl font-bold text-slate-900 dark:text-zinc-100 tracking-tight leading-none">{t('title')}</h1>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-xs font-medium text-slate-500 dark:text-zinc-400">Gestión de Almacenamiento MDVR</span>
+                                    <span className="text-xs font-medium text-slate-500 dark:text-zinc-400">{t('subtitle')}</span>
                                     {lastUpdate && (
                                         <span className="text-[10px] bg-emerald-100 dark:bg-zinc-800 text-emerald-700 dark:text-zinc-300 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-zinc-700">
                                             Actualizado: {lastUpdate}
@@ -1998,8 +2003,22 @@ export default function TracklogDashboard() {
                             </div>
                         </div>
 
-                        {/* Contenedor Derecho: Menú Hamburguesa + Dark Mode */}
+                        {/* Contenedor Derecho: Menú Hamburguesa + Idiomas + Dark Mode */}
                         <div className="flex items-center gap-4">
+                            {/* Language Selector */}
+                            <div className="hidden sm:flex items-center bg-slate-100 dark:bg-zinc-800 rounded-full p-1 shadow-sm border border-slate-200 dark:border-zinc-700">
+                                <Globe className="w-4 h-4 text-slate-500 dark:text-zinc-400 ml-2 mr-1" />
+                                {['es', 'en', 'zh'].map((lang) => (
+                                    <button
+                                        key={lang}
+                                        onClick={() => i18n.changeLanguage(lang)}
+                                        className={`px-3 py-1 text-xs font-bold rounded-full transition-colors ${i18n.language.startsWith(lang) ? 'bg-white dark:bg-zinc-600 text-blue-600 dark:text-blue-400 shadow' : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200'}`}
+                                    >
+                                        {lang.toUpperCase()}
+                                    </button>
+                                ))}
+                            </div>
+
                             {/* Dark Mode Toggle */}
                             <button
                                 onClick={() => setIsDarkMode(!isDarkMode)}
@@ -2127,25 +2146,25 @@ export default function TracklogDashboard() {
                                     active={activeTab === 'dashboard'}
                                     onClick={() => setActiveTab('dashboard')}
                                     icon={<LayoutDashboard className="w-4 h-4" />}
-                                    label="Dashboard"
+                                    label={t('tab_dashboard')}
                                 />
                                 <TabButton
                                     active={activeTab === 'records'}
                                     onClick={() => setActiveTab('records')}
                                     icon={<Table className="w-4 h-4" />}
-                                    label="Registros"
+                                    label={t('tab_records')}
                                 />
                                 <TabButton
                                     active={activeTab === 'tracking'}
                                     onClick={() => setActiveTab('tracking')}
                                     icon={<Hammer className="w-4 h-4" />}
-                                    label="Seguimiento Correctivo"
+                                    label={t('tab_corrective')}
                                 />
                                 <TabButton
                                     active={activeTab === 'general-tracking'}
                                     onClick={() => setActiveTab('general-tracking')}
                                     icon={<Activity className="w-4 h-4" />}
-                                    label="Seguimiento General"
+                                    label={t('tab_general')}
                                 />
                             </div>
                         </div>
@@ -2163,8 +2182,8 @@ export default function TracklogDashboard() {
                             <div className="w-20 h-20 border-4 border-blue-600 rounded-full absolute top-0 left-0 animate-spin border-t-transparent"></div>
                         </div>
                         <div className="mt-8 text-center">
-                            <h2 className="text-xl font-bold text-slate-800 dark:text-zinc-200 mb-2">Cargando Datos...</h2>
-                            <p className="text-slate-500 dark:text-zinc-400">Procesando información de almacenamiento MDVR</p>
+                            <h2 className="text-xl font-bold text-slate-800 dark:text-zinc-200 mb-2">{t('loading')}</h2>
+                            <p className="text-slate-500 dark:text-zinc-400">{t('loading_desc')}</p>
                         </div>
                     </div>
                 ) : data.length === 0 ? (
@@ -2172,15 +2191,15 @@ export default function TracklogDashboard() {
                         <div className="bg-red-50 dark:bg-red-900/40 p-6 rounded-full mb-6 ring-8 ring-red-50/50">
                             <AlertTriangle className="w-16 h-16 text-red-400" />
                         </div>
-                        <h2 className="text-2xl font-bold text-slate-800 dark:text-zinc-200 mb-2">Error al Cargar Datos</h2>
+                        <h2 className="text-2xl font-bold text-slate-800 dark:text-zinc-200 mb-2">{t('error_loading')}</h2>
                         <p className="text-slate-500 dark:text-zinc-400 max-w-md mb-8">
-                            No se pudo cargar la base de datos. Verifique que el archivo CSV esté disponible.
+                            {t('error_desc')}
                         </p>
                         <button
                             onClick={() => window.location.reload()}
                             className="px-8 py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-500 font-bold shadow-lg shadow-blue-200 transition-all"
                         >
-                            Reintentar
+                            {t('retry')}
                         </button>
                     </div>
                 ) : (
@@ -2252,36 +2271,36 @@ export default function TracklogDashboard() {
 
                                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                                         <KpiCard
-                                            title="Total Equipos"
+                                            title={t('kpi_total')}
                                             value={stats.totalDevices.toLocaleString()}
-                                            subtext={`${stats.totalAlerts.toLocaleString()} alertas`}
+                                            subtext={`${stats.totalAlerts.toLocaleString()} ${t('alerts')}`}
                                             icon={<HardDrive />}
                                             color="bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400"
                                             isActive={filterAction === null}
                                             onClick={() => setFilterAction(null)}
                                         />
                                         <KpiCard
-                                            title="L1 - Reemplazo Físico"
+                                            title={t('kpi_l1')}
                                             value={stats.critical.toLocaleString()}
-                                            subtext={`${stats.criticalAlerts.toLocaleString()} alertas`}
+                                            subtext={`${stats.criticalAlerts.toLocaleString()} ${t('alerts')}`}
                                             icon={<AlertTriangle />}
                                             color="bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400"
                                             isActive={filterAction === 'Reemplazo Físico'}
                                             onClick={() => setFilterAction('Reemplazo Físico')}
                                         />
                                         <KpiCard
-                                            title="L2 - Revisión Config"
+                                            title={t('kpi_l2')}
                                             value={stats.review.toLocaleString()}
-                                            subtext={`${stats.reviewAlerts.toLocaleString()} alertas`}
+                                            subtext={`${stats.reviewAlerts.toLocaleString()} ${t('alerts')}`}
                                             icon={<Wrench />}
                                             color="bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400"
                                             isActive={filterAction === 'Revisión Config/Instalación'}
                                             onClick={() => setFilterAction('Revisión Config/Instalación')}
                                         />
                                         <KpiCard
-                                            title="L3 - Mante. Lógico"
+                                            title={t('kpi_l3')}
                                             value={stats.logical.toLocaleString()}
-                                            subtext={`${stats.logicalAlerts.toLocaleString()} alertas`}
+                                            subtext={`${stats.logicalAlerts.toLocaleString()} ${t('alerts')}`}
                                             icon={<CheckCircle />}
                                             color="bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400"
                                             isActive={filterAction === 'Mantenimiento Lógico'}
@@ -2295,7 +2314,7 @@ export default function TracklogDashboard() {
                                     {/* Top Flotas */}
                                     <div className="lg:col-span-2 bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800">
                                         <h3 className="text-base font-bold text-slate-800 dark:text-zinc-200 mb-6 flex items-center gap-2">
-                                            <Truck className="w-5 h-5 text-slate-400 dark:text-zinc-500" /> Flotas con Mayor Incidencia
+                                            <Truck className="w-5 h-5 text-slate-400 dark:text-zinc-500" /> {t('chart_top_fleets')}
                                         </h3>
                                         <div className="h-64" style={{ minWidth: 0 }}>
                                             <ResponsiveContainer width="100%" height="100%">
@@ -2431,7 +2450,7 @@ export default function TracklogDashboard() {
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
                                             {/* Filtro de FECHAS (Rango) - CON REACT-DATEPICKER */}
                                             <div className="lg:col-span-2 relative z-50">
-                                                <label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">Rango de Fechas</label>
+                                                <label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">{t('date_range')}</label>
                                                 <div className="relative">
                                                     <DatePicker
                                                         selectsRange={true}
@@ -2455,7 +2474,7 @@ export default function TracklogDashboard() {
 
                                             {/* Filtro por Flota */}
                                             <div>
-                                                <label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">Flota</label>
+                                                <label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">{t('fleet')}</label>
                                                 <select
                                                     className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg text-sm text-slate-600 dark:text-zinc-400 focus:outline-none focus:border-blue-500"
                                                     value={filterFleet}
@@ -2471,7 +2490,7 @@ export default function TracklogDashboard() {
 
                                             {/* Filtro por Severidad */}
                                             <div>
-                                                <label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">Severidad</label>
+                                                <label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">{t('severity')}</label>
                                                 <select
                                                     className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg text-sm text-slate-600 dark:text-zinc-400 focus:outline-none focus:border-blue-500"
                                                     value={filterSeverity}
@@ -2519,7 +2538,7 @@ export default function TracklogDashboard() {
 
                                             {/* Filtro por Modelo */}
                                             <div>
-                                                <label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">Modelo MDVR</label>
+                                                <label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">{t('model')} MDVR</label>
                                                 <select
                                                     className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg text-sm text-slate-600 dark:text-zinc-400 focus:outline-none focus:border-blue-500"
                                                     value={filterModel}
@@ -2538,7 +2557,7 @@ export default function TracklogDashboard() {
                                                 <label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">Buscar texto</label>
                                                 <input
                                                     type="text"
-                                                    placeholder="Buscar placa, error o diagnóstico..."
+                                                    placeholder={t('search_placeholder')}
                                                     className="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white dark:bg-zinc-900 transition-all"
                                                     value={searchTerm}
                                                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -2628,7 +2647,7 @@ export default function TracklogDashboard() {
                                                 onClick={resetFilters}
                                                 className="flex items-center gap-2 px-4 py-2.5 bg-slate-200 dark:bg-zinc-800 hover:bg-slate-300 text-slate-700 dark:text-zinc-300 rounded-lg font-medium transition-colors"
                                             >
-                                                Limpiar Filtros
+                                                {t('clear_filters')}
                                             </button>
                                             {hasSearched && filteredData.length > 0 && (
                                                 <button className="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-medium transition-colors ml-auto">
@@ -2665,7 +2684,7 @@ export default function TracklogDashboard() {
                                             {/* Info de resultados */}
                                             <div className="bg-slate-50 dark:bg-zinc-900 px-6 py-3 border-b border-slate-200 dark:border-zinc-800 flex justify-between items-center">
                                                 <span className="text-sm text-slate-600 dark:text-zinc-400">
-                                                    Mostrando <strong>{((currentPage - 1) * RECORDS_PER_PAGE) + 1}</strong> - <strong>{Math.min(currentPage * RECORDS_PER_PAGE, currentDataSource.length)}</strong> de <strong>{currentDataSource.length.toLocaleString()}</strong> {viewMode === 'devices' ? 'equipos' : 'registros'}
+                                                    {t('showing')} <strong>{((currentPage - 1) * RECORDS_PER_PAGE) + 1}</strong> - <strong>{Math.min(currentPage * RECORDS_PER_PAGE, currentDataSource.length)}</strong> {t('of')} <strong>{currentDataSource.length.toLocaleString()}</strong> {viewMode === 'devices' ? 'equipos' : 'registros'}
                                                 </span>
                                                 <span className="text-sm text-slate-500 dark:text-zinc-400">
                                                     Rango: <strong>{dateRange.start || 'Inicio'}</strong> - <strong>{dateRange.end || 'Fin'}</strong>
@@ -2680,11 +2699,11 @@ export default function TracklogDashboard() {
                                                     <table className="w-full text-sm text-left">
                                                         <thead className="bg-slate-50 dark:bg-zinc-900 text-slate-500 dark:text-zinc-400 font-semibold uppercase text-xs">
                                                             <tr>
-                                                                <th className="px-6 py-4">Dispositivo</th>
-                                                                <th className="px-6 py-4">Detalle Error</th>
-                                                                <th className="px-6 py-4">Diagnóstico</th>
-                                                                <th className="px-6 py-4 text-center">Severidad</th>
-                                                                <th className="px-6 py-4 text-right">Acción</th>
+                                                                <th className="px-6 py-4">{t('th_device')}</th>
+                                                                <th className="px-6 py-4">{t('th_detail')}</th>
+                                                                <th className="px-6 py-4">{t('th_diagnosis')}</th>
+                                                                <th className="px-6 py-4 text-center">{t('th_severity')}</th>
+                                                                <th className="px-6 py-4 text-right">{t('th_action')}</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody className="divide-y divide-slate-100">
@@ -2747,11 +2766,11 @@ export default function TracklogDashboard() {
                                                                         checked={groupedData.length > 0 && groupedData.every(g => selectedIds.has(g.equipment))}
                                                                     />
                                                                 </th>
-                                                                <th className="px-6 py-4">Equipo / Flota</th>
-                                                                <th className="px-6 py-4 text-center">Total Alertas</th>
-                                                                <th className="px-6 py-4">Diagnóstico Principal (Peor Caso)</th>
-                                                                <th className="px-6 py-4 text-center">Severidad Max</th>
-                                                                <th className="px-6 py-4 text-right">Acción Sugerida</th>
+                                                                <th className="px-6 py-4">{t('th_equipment_fleet')}</th>
+                                                                <th className="px-6 py-4 text-center">{t('th_total_alerts')}</th>
+                                                                <th className="px-6 py-4">{t('th_main_diagnosis')}</th>
+                                                                <th className="px-6 py-4 text-center">{t('th_max_severity')}</th>
+                                                                <th className="px-6 py-4 text-right">{t('th_suggested_action')}</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody className="divide-y divide-slate-100">
@@ -2909,7 +2928,7 @@ export default function TracklogDashboard() {
                                                 onClick={resetFilters}
                                                 className="text-xs bg-white dark:bg-zinc-900 border border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 px-3 py-1.5 rounded-md hover:bg-blue-50 dark:bg-blue-900/40 font-bold shadow-sm"
                                             >
-                                                Limpiar Filtros Globales
+                                                {t('clear_filters')}
                                             </button>
                                         </div>
                                     )}
