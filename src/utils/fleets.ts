@@ -100,7 +100,6 @@ export const REPSOL_FLEETS = new Set([
 
 // Falta agregar el listado de FLOTAS NO CLIENTES
 export const TRACKLOG_INTERNAL_FLEETS = new Set([
-    "TRACKLOG",
     "1.- Prestamo/Soporte",
     "Prestamo Arequipa",
     "Prestamo Cajamarca",
@@ -118,7 +117,6 @@ export const TRACKLOG_INTERNAL_FLEETS = new Set([
     "6.- MAO",
     "MAO",
     "INACTIVO",
-    "SUSPENDIDO",
     "Default Fleet",
     "IBEROAMERICANO_INACTIVO"
 ]);

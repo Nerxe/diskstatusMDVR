@@ -6,19 +6,30 @@ import {
 import {
     AlertTriangle, HardDrive, CheckCircle, Search,
     Wrench, Truck, AlertOctagon, Download, Upload, Filter, Database,
-    LayoutDashboard, Table, ChevronLeft, ChevronRight, RefreshCw, FileText, X, Activity, Hammer, ExternalLink, Sun, Moon, Menu, Globe
+    LayoutDashboard, Table, ChevronLeft, ChevronRight, FileText, X, Activity, Hammer, ExternalLink, Sun, Moon, Menu, Globe,
+    Lock, Unlock
 } from 'lucide-react';
+import { supabase } from './lib/supabase';
 import { useTranslation } from 'react-i18next';
 import { generateWorkOrderPDF } from './utils/pdfGenerator';
 import { YANACOCHA_FLEETS, REPSOL_FLEETS, TRACKLOG_INTERNAL_FLEETS } from './utils/fleets';
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 // Importar estilos personalizados para que coincidan con Tailwind si es necesario, 
 // o usar className.
 
 
 // --- DEFINICIÓN DE TIPOS ---
+interface TrendData {
+    alarm_date: string;
+    fleet: string;
+    level: string;
+    severity: string;
+    total_alerts: number;
+}
+
 
 interface RawData {
     DeviceName: string;
@@ -28,7 +39,9 @@ interface RawData {
     DiskDetails: string;
     Speed: string;
     Date: string;
+    AlarmStatus: string;
     ReUpload: string;
+    RawDetails: string;
 }
 
 interface ProcessedData extends RawData {
@@ -42,6 +55,7 @@ interface ProcessedData extends RawData {
     model: string;
     pv: string;
     pvName: string;
+    _total_alerts?: number;
 }
 
 interface MdvrDetails {
@@ -199,9 +213,11 @@ const processCSV = (csvText: string, mdvrMap?: Map<string, MdvrDetails>, fleetMa
             Fleet: fleet,
             DiskType: diskType,
             DiskDetails: diskState,
+            AlarmStatus: sanitize(row[3]) || '',
             Speed: sanitize(row[7]) || '0',         // Speed en columna 7
             Date: sanitize(row[4]) || '',           // Begin Time en columna 4
-            ReUpload: sanitize(row[9]) || 'No'      // Re-upload en columna 9
+            ReUpload: sanitize(row[9]) || 'No',      // Re-upload en columna 9
+            RawDetails: rawDetails
         };
 
         // --- Reglas de Negocio ---
@@ -736,11 +752,10 @@ const TrackingRow: React.FC<TrackingRowProps> = ({
                             {item.allPlates && item.allPlates.length > 0 && (
                                 <div className="flex flex-wrap gap-1 mt-0.5">
                                     {item.allPlates.map((plate: string, idx: number) => (
-                                        <span key={idx} className={`inline-flex items-center text-[9px] px-1.5 py-0.5 rounded border ${
-                                            idx === 0
+                                        <span key={idx} className={`inline-flex items-center text-[9px] px-1.5 py-0.5 rounded border ${idx === 0
                                                 ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800 font-bold'
                                                 : 'bg-amber-50 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800'
-                                        }`}>
+                                            }`}>
                                             {idx === 0 ? '🚛' : '🔄'} {plate}
                                         </span>
                                     ))}
@@ -904,6 +919,40 @@ const TrackingColumn = ({ title, color, data, repairData, onUpdateStatus, onUpda
     const borderColor = color === 'blue' ? 'border-blue-200 dark:border-blue-800' : 'border-orange-200 dark:border-orange-800';
     const textColor = color === 'blue' ? 'text-blue-800 dark:text-blue-400' : 'text-orange-800 dark:text-orange-400';
 
+    const handleExportCSV = () => {
+        const headers = ['Equipo', 'Fallas L1', 'TRABAJO', 'ESTADO'];
+        const csvRows = [headers.join(',')];
+
+        items.forEach((item: any) => {
+            const rd = repairData[item.equipment] || {};
+            const workType = rd.workType || 'Pendiente';
+            const status = rd.status || 'Pendiente';
+
+            const row = [
+                `"${item.equipment}"`,
+                item.highSeverityCount || 0,
+                `"${workType}"`,
+                `"${status}"`
+            ];
+            csvRows.push(row.join(','));
+        });
+
+        const csvString = csvRows.join('\n');
+        // Usar BOM para que Excel lea los acentos correctamente
+        const blob = new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), csvString], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+
+        const safeTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `Seguimiento_${safeTitle}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div className={`rounded-xl border ${borderColor} shadow-sm overflow-hidden bg-white dark:bg-zinc-900`}>
             {/* Search Bar and Pagination */}
@@ -964,13 +1013,24 @@ const TrackingColumn = ({ title, color, data, repairData, onUpdateStatus, onUpda
             )}
 
             {/* Title Header */}
-            <div className={`px-6 py-4 border-b ${borderColor} ${bgColor}`}>
+            <div className={`px-6 py-4 border-b ${borderColor} ${bgColor} flex justify-between items-center`}>
                 <h3 className={`font-bold ${textColor} flex items-center gap-2`}>
                     {title}
-                    <span className="bg-white dark:bg-zinc-900 px-2 py-0.5 rounded text-xs border border-slate-200 dark:border-zinc-800 text-slate-500 dark:text-zinc-400">
+                    <span className="bg-white dark:bg-zinc-900 px-2 py-0.5 rounded text-xs border border-slate-200 dark:border-zinc-800 text-slate-500 dark:text-zinc-400 hidden sm:inline-block">
                         {showAll ? `${items.length} Equipos` : 'Top 5 Críticos'}
                     </span>
                 </h3>
+                <button
+                    onClick={handleExportCSV}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded border transition-colors text-xs font-bold shadow-sm ${color === 'blue'
+                            ? 'bg-white dark:bg-zinc-900 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40'
+                            : 'bg-white dark:bg-zinc-900 border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-900/40'
+                        }`}
+                    title="Exportar a CSV"
+                >
+                    <Download className="w-4 h-4" />
+                    CSV
+                </button>
             </div>
 
             <table className="w-full text-sm text-left">
@@ -1050,9 +1110,54 @@ const ALL_MONTHS = [
 
 export default function TracklogDashboard() {
     const { t, i18n } = useTranslation();
-    
+
+    // --- ESTADOS DE AUTENTICACION Y MODO ADMIN ---
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [loginPassword, setLoginPassword] = useState('');
+    const [loginError, setLoginError] = useState('');
+
+    // Check auth session
+    useEffect(() => {
+        const checkSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            setIsAdmin(!!session);
+        };
+        checkSession();
+
+        const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+            setIsAdmin(!!session);
+        });
+
+        return () => {
+            authListener.subscription.unsubscribe();
+        };
+    }, []);
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoginError('');
+        const { error } = await supabase.auth.signInWithPassword({
+            email: 'investigacion@tracklog.pe',
+            password: loginPassword,
+        });
+
+        if (error) {
+            setLoginError('Contraseña incorrecta o hubo un error');
+        } else {
+            setShowLoginModal(false);
+            setLoginPassword('');
+        }
+    };
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+    };
+
     // --- ESTADOS ---
     const [data, setData] = useState<ProcessedData[]>([]);
+    const [trendRows, setTrendRows] = useState<TrendData[]>([]);
+
     const [isLoading, setIsLoading] = useState(true);
     const [lastUpdate, setLastUpdate] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<TabType>('dashboard');
@@ -1087,16 +1192,55 @@ export default function TracklogDashboard() {
     const [generalWorkTypeFilter, setGeneralWorkTypeFilter] = useState<'all' | 'Pendiente' | 'Cambio' | 'Formateo' | 'Configuración'>('all');
     const [generalComponentFilter, setGeneralComponentFilter] = useState<'all' | 'ssd' | 'sd' | 'other'>('all');
 
-    // Cargar datos de reparación persistentes
+    // Cargar datos de reparación persistentes desde Supabase
     useEffect(() => {
-        const saved = localStorage.getItem('repair_tracking_db');
-        if (saved) {
-            try {
-                setRepairData(JSON.parse(saved));
-            } catch (e) {
-                console.error("Error cargando tracking DB", e);
+        const fetchTrackingData = async () => {
+            const { data, error } = await supabase.from('repair_tracking').select('*');
+            if (error) {
+                console.error("Error cargando tracking DB", error);
+                return;
             }
-        }
+            if (data) {
+                const db: Record<string, RepairTracking> = {};
+                data.forEach(row => {
+                    db[row.device_id] = {
+                        deviceId: row.device_id,
+                        macroGroup: row.macro_group,
+                        initialAlerts: row.initial_alerts,
+                        status: row.status,
+                        workType: row.work_type,
+                        repairDate: row.repair_date,
+                        notes: row.notes,
+                        comments: row.comments || [],
+                        priority: row.priority,
+                        assignedTo: row.assigned_to,
+                        estimatedCompletionDate: row.estimated_completion_date,
+                        actualCompletionDate: row.actual_completion_date,
+                        lastModifiedBy: row.last_modified_by,
+                        lastModifiedDate: row.last_modified_date,
+                        createdDate: row.created_date
+                    };
+                });
+                setRepairData(db);
+            }
+        };
+
+        fetchTrackingData();
+
+        const subscription = supabase
+            .channel('table-db-changes')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'repair_tracking' },
+                () => {
+                    fetchTrackingData();
+                }
+            )
+            .subscribe();
+
+        return () => {
+            subscription.unsubscribe();
+        };
     }, []);
 
     // Migración automática de repairData: claves de placa → ID
@@ -1161,7 +1305,13 @@ export default function TracklogDashboard() {
     });
 
     // Guardar cambios en reparación
-    const updateRepairStatus = (deviceId: string, status: RepairTracking['status'], macroGroup: 'Yanacocha' | 'Repsol' | 'General', alerts: number) => {
+    const updateRepairStatus = async (deviceId: string, status: RepairTracking['status'], macroGroup: 'Yanacocha' | 'Repsol' | 'General', alerts: number) => {
+        if (!isAdmin) {
+            alert("No tienes permisos para modificar el estado. Debes iniciar como Administrador.");
+            setShowLoginModal(true);
+            return;
+        }
+
         const existing = repairData[deviceId];
         const now = new Date().toISOString();
 
@@ -1182,34 +1332,61 @@ export default function TracklogDashboard() {
             ));
         }
 
+        const newEntry = {
+            deviceId,
+            macroGroup,
+            initialAlerts: existing?.initialAlerts || alerts,
+            status,
+            workType: existing?.workType || 'Pendiente' as const,
+            repairDate: status === 'Reparado' ? now : existing?.repairDate,
+            notes: existing?.notes,
+
+            comments: newComments,
+            priority: existing?.priority || 'Media',
+            assignedTo: existing?.assignedTo,
+            estimatedCompletionDate: existing?.estimatedCompletionDate,
+            actualCompletionDate: status === 'Reparado' ? now : existing?.actualCompletionDate,
+            lastModifiedBy: 'Usuario', // TODO: Get from auth system
+            lastModifiedDate: now,
+            createdDate: existing?.createdDate || now
+        };
+
         const updated = {
             ...repairData,
-            [deviceId]: {
-                deviceId,
-                macroGroup,
-                initialAlerts: existing?.initialAlerts || alerts,
-                status,
-                workType: existing?.workType || 'Pendiente' as const,
-                repairDate: status === 'Reparado' ? now : existing?.repairDate,
-                notes: existing?.notes,
-
-                // New fields with defaults
-                comments: newComments,
-                priority: existing?.priority || 'Media', // Default priority
-                assignedTo: existing?.assignedTo,
-                estimatedCompletionDate: existing?.estimatedCompletionDate,
-                actualCompletionDate: status === 'Reparado' ? now : existing?.actualCompletionDate,
-                lastModifiedBy: 'Usuario', // TODO: Get from auth system
-                lastModifiedDate: now,
-                createdDate: existing?.createdDate || now
-            }
+            [deviceId]: newEntry
         };
         setRepairData(updated);
-        localStorage.setItem('repair_tracking_db', JSON.stringify(updated));
+        
+        // Supabase DB UPSERT
+        const { error } = await supabase.from('repair_tracking').upsert({
+            device_id: newEntry.deviceId,
+            macro_group: newEntry.macroGroup,
+            initial_alerts: newEntry.initialAlerts,
+            status: newEntry.status,
+            work_type: newEntry.workType,
+            repair_date: newEntry.repairDate,
+            notes: newEntry.notes,
+            comments: newEntry.comments,
+            priority: newEntry.priority,
+            assigned_to: newEntry.assignedTo,
+            estimated_completion_date: newEntry.estimatedCompletionDate,
+            actual_completion_date: newEntry.actualCompletionDate,
+            last_modified_by: newEntry.lastModifiedBy,
+            last_modified_date: newEntry.lastModifiedDate,
+            created_date: newEntry.createdDate
+        });
+        
+        if (error) console.error("Error updating status in Supabase:", error);
     };
 
     // Actualizar tipo de trabajo
-    const updateWorkType = (deviceId: string, workType: RepairTracking['workType']) => {
+    const updateWorkType = async (deviceId: string, workType: RepairTracking['workType']) => {
+        if (!isAdmin) {
+            alert("No tienes permisos para modificar el tipo de trabajo. Debes iniciar como Administrador.");
+            setShowLoginModal(true);
+            return;
+        }
+
         const existing = repairData[deviceId];
         const now = new Date().toISOString();
 
@@ -1227,28 +1404,56 @@ export default function TracklogDashboard() {
             ));
         }
 
+        const newEntry = {
+            ...existing,
+            deviceId,
+            macroGroup: existing?.macroGroup || 'General' as const,
+            initialAlerts: existing?.initialAlerts || 0,
+            status: existing?.status || 'Pendiente' as const,
+            workType,
+            comments: newComments,
+            priority: existing?.priority || 'Media' as const,
+            lastModifiedBy: 'Usuario',
+            lastModifiedDate: now,
+            createdDate: existing?.createdDate || now
+        };
+
         const updated = {
             ...repairData,
-            [deviceId]: {
-                ...existing,
-                deviceId,
-                macroGroup: existing?.macroGroup || 'General' as const,
-                initialAlerts: existing?.initialAlerts || 0,
-                status: existing?.status || 'Pendiente' as const,
-                workType,
-                comments: newComments,
-                priority: existing?.priority || 'Media' as const,
-                lastModifiedBy: 'Usuario',
-                lastModifiedDate: now,
-                createdDate: existing?.createdDate || now
-            }
+            [deviceId]: newEntry
         };
         setRepairData(updated);
-        localStorage.setItem('repair_tracking_db', JSON.stringify(updated));
+        
+        // Supabase DB UPSERT
+        const { error } = await supabase.from('repair_tracking').upsert({
+            device_id: newEntry.deviceId,
+            macro_group: newEntry.macroGroup,
+            initial_alerts: newEntry.initialAlerts,
+            status: newEntry.status,
+            work_type: newEntry.workType,
+            repair_date: newEntry.repairDate,
+            notes: newEntry.notes,
+            comments: newEntry.comments,
+            priority: newEntry.priority,
+            assigned_to: newEntry.assignedTo,
+            estimated_completion_date: newEntry.estimatedCompletionDate,
+            actual_completion_date: newEntry.actualCompletionDate,
+            last_modified_by: newEntry.lastModifiedBy,
+            last_modified_date: newEntry.lastModifiedDate,
+            created_date: newEntry.createdDate
+        });
+        
+        if (error) console.error("Error updating work type in Supabase:", error);
     };
 
     // Add user comment to equipment
-    const addComment = (deviceId: string, commentText: string, author: string = 'Usuario') => {
+    const addComment = async (deviceId: string, commentText: string, author: string = 'Usuario') => {
+        if (!isAdmin) {
+            alert("No tienes permisos para añadir comentarios. Debes iniciar como Administrador.");
+            setShowLoginModal(true);
+            return;
+        }
+
         const now = new Date().toISOString();
         const existing = repairData[deviceId];
 
@@ -1296,7 +1501,27 @@ export default function TracklogDashboard() {
         };
 
         setRepairData(updated);
-        localStorage.setItem('repair_tracking_db', JSON.stringify(updated));
+        
+        // Supabase DB UPSERT
+        const { error } = await supabase.from('repair_tracking').upsert({
+            device_id: updatedEntry.deviceId,
+            macro_group: updatedEntry.macroGroup,
+            initial_alerts: updatedEntry.initialAlerts,
+            status: updatedEntry.status,
+            work_type: updatedEntry.workType,
+            repair_date: updatedEntry.repairDate,
+            notes: updatedEntry.notes,
+            comments: updatedEntry.comments,
+            priority: updatedEntry.priority,
+            assigned_to: updatedEntry.assignedTo,
+            estimated_completion_date: updatedEntry.estimatedCompletionDate,
+            actual_completion_date: updatedEntry.actualCompletionDate,
+            last_modified_by: updatedEntry.lastModifiedBy,
+            last_modified_date: updatedEntry.lastModifiedDate,
+            created_date: updatedEntry.createdDate
+        });
+        
+        if (error) console.error("Error adding comment to Supabase:", error);
     };
 
     // Update priority
@@ -1382,14 +1607,132 @@ export default function TracklogDashboard() {
     const [dateRange, setDateRange] = useState<{ start: string; end: string }>({ start: '', end: '' });
     const [selectedMonths, setSelectedMonths] = useState<string[]>(['January', 'February', 'March']); // Default months
 
-    const [availableMonths, setAvailableMonths] = useState<{ id: string, label: string, file: string }[]>([
-        { id: 'January', label: 'Enero', file: '/diskAlarm_January.csv' },
-        { id: 'February', label: 'Febrero', file: '/diskAlarm_February.csv' },
-        { id: 'March', label: 'Marzo', file: '/diskAlarm_March.csv' },
+    const [availableMonths, setAvailableMonths] = useState<{ id: string, name: string, file: string }[]>([
+        { id: 'January', name: 'Enero', file: '/diskAlarm_January.csv' },
+        { id: 'February', name: 'Febrero', file: '/diskAlarm_February.csv' },
+        { id: 'March', name: 'Marzo', file: '/diskAlarm_March.csv' },
     ]);
     const [filterPv, setFilterPv] = useState<string>('all');
     const [filterModel, setFilterModel] = useState<string>('all');
     const [hasSearched, setHasSearched] = useState(false);
+
+    // --- ESTADOS PARA SERVER-SIDE PAGINATION ---
+    const [serverRecords, setServerRecords] = useState<ProcessedData[]>([]);
+    const [serverTotalCount, setServerTotalCount] = useState(0);
+    const [_isSearching, setIsSearching] = useState(false);
+
+    const parseDateParam = (dateStr: string) => {
+        if (!dateStr) return null;
+        const parts = dateStr.split('/');
+        if (parts.length === 3) {
+            return `${parts[2]}-${parts[1]}-${parts[0]}`; // YYYY-MM-DD
+        }
+        return dateStr;
+    }
+
+    const fetchDetailedRecords = async (pageToLoad = 1) => {
+        setIsSearching(true);
+        setHasSearched(true);
+        setCurrentPage(pageToLoad);
+        
+        try {
+            let query = supabase.from('raw_alarms').select('*', { count: 'exact' });
+
+            // 1. Buscador de Texto (Dispositivo, detalles o diagnóstico)
+            if (searchTerm) {
+                query = query.or(`device_name.ilike.%${searchTerm}%,device_id_code.ilike.%${searchTerm}%,start_details.ilike.%${searchTerm}%,diagnosis.ilike.%${searchTerm}%`);
+            }
+
+            // 2. Filtros Simples
+            if (filterFleet !== 'all') query = query.eq('fleet', filterFleet);
+            if (filterSeverity !== 'all') query = query.eq('severity', filterSeverity);
+            if (filterComponent !== 'all') {
+                const compMap = { 'ssd': 'SSD/HDD', 'sd': 'SD/Firebox', 'other': 'Otros' };
+                query = query.eq('component', compMap[filterComponent as keyof typeof compMap]);
+            }
+
+            // 3. Rango de Fechas
+            if (dateRange.start) {
+                const startDate = parseDateParam(dateRange.start);
+                if (startDate) query = query.gte('begin_time', `${startDate} 00:00:00`);
+            }
+            if (dateRange.end) {
+                const endDate = parseDateParam(dateRange.end);
+                if (endDate) query = query.lte('begin_time', `${endDate} 23:59:59`);
+            }
+
+            // 4. Filtros Locales Avanzados (PV y Modalidad) usando mapeo inverso
+            if (filterPv !== 'all' || filterModel !== 'all') {
+                const validDevices = data.filter(d => 
+                    (filterPv === 'all' || d.pvName === filterPv) &&
+                    (filterModel === 'all' || d.model === filterModel)
+                ).map(d => d.DeviceName);
+                
+                if (validDevices.length === 0) {
+                    setServerRecords([]);
+                    setServerTotalCount(0);
+                    setIsSearching(false);
+                    return;
+                }
+                
+                // Supabase in() restriction: prevent huge arrays
+                query = query.in('device_name', validDevices.slice(0, 100));
+            }
+
+            // Paginación
+            const startIdx = (pageToLoad - 1) * RECORDS_PER_PAGE;
+            const endIdx = startIdx + RECORDS_PER_PAGE - 1;
+            
+            query = query.range(startIdx, endIdx).order('begin_time', { ascending: false });
+
+            const { data: rawRes, count, error } = await query;
+            
+            if (error) throw error;
+
+            if (rawRes && count !== null) {
+                setServerTotalCount(count);
+                
+                // Map raw db to ProcessedData for rendering
+                const mappedRecords = rawRes.map((row, index) => {
+                    const d = new Date(row.begin_time);
+                    const localeDateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;
+
+                    return {
+                        id: index,
+                        DeviceName: row.device_name,
+                        ID: row.device_id_code || '',
+                        Fleet: row.fleet || 'General',
+                        DiskType: 'From Table',
+                        DiskDetails: row.start_details || '',
+                        Speed: '0',
+                        Date: localeDateStr,
+                        ReUpload: 'No',
+                        RawDetails: '',
+                        AlarmStatus: '',
+                        speedVal: 0,
+                        component: row.component || 'Otros',
+                        action: row.action || '',
+                        severity: row.severity || 'Baja',
+                        level: row.level || 'NA',
+                        diagnosis: row.diagnosis || '',
+                        _total_alerts: 1,
+                        model: 'Dynamic',
+                        pv: 'Dynamic',
+                        pvName: 'Dynamic'
+                    };
+                });
+                
+                setServerRecords(mappedRecords);
+            }
+
+        } catch (err) {
+            console.error('Error fetching paginated records:', err);
+            alert('Error al consultar la base de datos.');
+        } finally {
+            setIsSearching(false);
+        }
+    };
+
     const [recordsStatusFilter, setRecordsStatusFilter] = useState<'all' | 'Pendiente' | 'Revisión Remota' | 'En Proceso' | 'Validando' | 'Reparado'>('all');
 
     // Paginación
@@ -1436,262 +1779,247 @@ export default function TracklogDashboard() {
 
 
 
-    // Funciones de Respaldo (Backup)
-    const handleExportBackup = () => {
-        const dataStr = JSON.stringify(repairData, null, 2);
+    // Funciones de Respaldo eliminadas (ya no son necesarias por Supabase)
 
-        // Copiar al portapapeles directamente (soluciona el problema de descargas ocultas)
-        navigator.clipboard.writeText(dataStr).then(() => {
-            alert('¡Copia de seguridad copiada al portapapeles exitosamente!\n\n(Para importar tu avance en Chrome normal: crea un archivo de texto, pega el contenido que acabas de copiar, guárdalo como .json e impórtalo ahí).');
-        }).catch(err => {
-            console.error('Error al copiar al portapapeles: ', err);
-        });
-
-        // Intentar descargar también usando Data URI
-        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-        const exportFileDefaultName = `tracklog_repair_backup_${new Date().toISOString().split('T')[0]}.json`;
-
-        const linkElement = document.createElement('a');
-        linkElement.href = dataUri;
-        linkElement.download = exportFileDefaultName;
-        document.body.appendChild(linkElement);
-        linkElement.click();
-        document.body.removeChild(linkElement);
+    const parseDateToISO = (dateStr: string) => {
+        const parts = dateStr.split(/[ \/:\-]/);
+        if (parts.length >= 3) {
+            let y, m, d, h = 0, min = 0, s = 0;
+            if (parts[0].length === 4) {
+                y = parts[0]; m = parts[1]; d = parts[2];
+            } else {
+                d = parts[0]; m = parts[1]; y = parts[2];
+            }
+            if (parts[3]) h = parseInt(parts[3], 10);
+            if (parts[4]) min = parseInt(parts[4], 10);
+            if (parts[5]) s = parseInt(parts[5], 10);
+            return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}T${h.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}Z`;
+        }
+        return new Date().toISOString();
     };
 
-    const handleImportBackup = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const fileReader = new FileReader();
-        if (event.target.files && event.target.files.length > 0) {
-            fileReader.readAsText(event.target.files[0], "UTF-8");
-            event.target.value = ''; // Reset input
-            fileReader.onload = (e) => {
-                try {
-                    if (e.target?.result) {
-                        const parsedData = JSON.parse(e.target.result as string);
-                        // Validación básica
-                        if (typeof parsedData === 'object' && parsedData !== null) {
-                            setRepairData(parsedData);
-                            localStorage.setItem('repair_tracking_db', JSON.stringify(parsedData));
-                            alert('Respaldo cargado exitosamente.');
-                        } else {
-                            alert('El archivo no tiene un formato válido.');
-                        }
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setIsLoading(true);
+        // Permitir que React re-renderice la pantalla de carga antes de procesar el archivo
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        try {
+            if (!isAdmin) {
+                alert("Debes ser administrador para subir archivos.");
+                return;
+            }
+
+            const text = await file.text();
+
+            // Cargar diccionarios auxiliares para enriquecer data (Flotas y MDVRs)
+            const [mdvrRes, fleetRes] = await Promise.all([
+                fetch('/mdvrDetailsPvModel.csv'),
+                fetch('/mdvrVideotracklogAll.csv')
+            ]);
+            let mdvrMap;
+            const fleetMap = new Map();
+            if (mdvrRes.ok) mdvrMap = parseMdvrDetails(await mdvrRes.text());
+            if (fleetRes.ok) {
+                const lines = (await fleetRes.text()).split('\n');
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    const parts = line.split(';');
+                    if (parts.length > 3) {
+                        const rawDevName = parts[0].trim();
+                        const nameMatch = rawDevName.match(/^(.*)\((\d+)\)$/);
+                        const devName = nameMatch ? nameMatch[1].trim() : rawDevName;
+                        if (devName && parts[3]) fleetMap.set(devName, parts[3].trim());
                     }
-                } catch (error) {
-                    console.error("Error parsing JSON", error);
-                    alert('Error al leer el archivo de respaldo.');
                 }
-            };
+            }
+
+            // Usar nuestra misma lógica perfecta para mapear y clasificar L1/L2
+            const processedArray = processCSV(text, mdvrMap, fleetMap);
+
+            if (processedArray.length === 0) {
+                alert("El archivo no contiene filas válidas.");
+                return;
+            }
+
+            // Formatear masivamente a objetos SQL
+            const rawPayload = processedArray.map(item => ({
+                device_name: item.DeviceName || 'Unknown',
+                device_id_code: item.ID || '',
+                alarm_type: 'Disk Status', // Marcador por defecto para diferenciar
+                fleet: item.Fleet,
+                alarm_status: item.AlarmStatus || '',
+                begin_time: parseDateToISO(item.Date),
+                start_details: item.RawDetails || item.DiskDetails || '',
+                speed_val: isNaN(item.speedVal) ? 0 : item.speedVal,
+                component: item.component,
+                action: item.action,
+                severity: item.severity,
+                level: item.level,
+                diagnosis: item.diagnosis
+            }));
+
+            // Deduplicar localmente ANTES de enviar a la Base de Datos
+            const uniqueMap = new Map();
+            rawPayload.forEach(item => {
+                const uniqueKey = `${item.device_name}_${item.begin_time}_${item.alarm_type}_${item.start_details}_${item.alarm_status}`;
+                uniqueMap.set(uniqueKey, item);
+            });
+            const dbPayload = Array.from(uniqueMap.values());
+
+            // Inserción en bloques (Lotes de 1000 para no reventar API limit)
+            const BATCH_SIZE = 1000;
+            let totalInserted = 0;
+
+            for (let i = 0; i < dbPayload.length; i += BATCH_SIZE) {
+                const batch = dbPayload.slice(i, i + BATCH_SIZE);
+                const { error } = await supabase.from('raw_alarms').upsert(batch, {
+                    onConflict: 'device_name, begin_time, alarm_type, start_details, alarm_status'
+                });
+                
+                if (error) {
+                    console.error("Batch insert error:", error);
+                    throw error;
+                }
+                totalInserted += batch.length;
+                await new Promise(r => setTimeout(r, 10)); // Yield repintado DOM
+            }
+
+            // Actualizar last_updated global
+            await supabase.from('system_metadata').upsert({ id: 1, last_updated: new Date().toISOString() });
+
+            // Solicitar a Supabase que recalcule las Vistas Materializadas para que el Dashboard lea lo más reciente de inmediato
+            try {
+                await supabase.rpc('refresh_dashboard_views');
+            } catch(rpcErr) {
+                console.warn("No se pudo refrescar vistas materializadas (tal vez aún no existan):", rpcErr);
+            }
+
+            alert(`¡Carga Incremental Procesada!\nSe pasaron ${totalInserted} registros estructurados directamente a la Base de Datos PostgreSQL.\nDuplicados omitidos automáticamente.`);
+            setIsMobileMenuOpen(false);
+            
+            await loadData(true);
+        } catch (error: any) {
+            console.error("Error batch save:", error);
+            alert("Error crítico subiendo registros SQL: " + (error?.message || JSON.stringify(error)));
+        } finally {
+            setIsLoading(false);
+            const fileInput = document.getElementById('csv-upload') as HTMLInputElement;
+            if (fileInput) fileInput.value = '';
         }
     };
 
-    // 1. CARGA INTELIGENTE DE DATOS
-    const loadData = async (force: boolean = false) => {
+    // 1. CARGA INTELIGENTE DE DATOS DESDE POSTGRES
+    const loadData = async (_force: boolean = false) => {
         setIsLoading(true);
-
-        const CACHE_KEY_DATA = 'tracklog_db_v2';
-        const CACHE_KEY_LAST_MODIFIED = 'tracklog_last_modified';
-        const CACHE_KEY_DATE = 'tracklog_date';
+        await new Promise(resolve => setTimeout(resolve, 100));
 
         try {
-            let currentAvailable = [...availableMonths];
-            let currentSelected = [...selectedMonths];
+            // Mapeo genérico de meses para filtrado SQL simple
+            const monthMap: Record<string, number> = {
+                'January': 1, 'February': 2, 'March': 3, 'April': 4,
+                'May': 5, 'June': 6, 'July': 7, 'August': 8,
+                'September': 9, 'October': 10, 'November': 11, 'December': 12
+            };
+            const selectedNumbers = selectedMonths.map(sm => monthMap[sm]);
 
-            if (force) {
-                console.log("Verificando archivos mensuales disponibles...");
-                const monthChecks = await Promise.all(
-                    ALL_MONTHS.map(async (m) => {
-                        try {
-                            const res = await fetch(`/diskAlarm_${m.id}.csv`, { method: 'HEAD', cache: 'no-cache' });
-                            return { month: m, exists: res.ok };
-                        } catch (e) {
-                            return { month: m, exists: false };
-                        }
-                    })
-                );
-
-                const foundMonths = monthChecks
-                    .filter(mc => mc.exists)
-                    .map(mc => ({ ...mc.month, file: `/diskAlarm_${mc.month.id}.csv` }));
-
-                if (foundMonths.length > 0) {
-                    setAvailableMonths(foundMonths);
-                    currentAvailable = foundMonths;
-
-                    const newlyFound = foundMonths.map(m => m.id).filter(id => !availableMonths.some(am => am.id === id));
-                    if (newlyFound.length > 0) {
-                        currentSelected = Array.from(new Set([...currentSelected, ...newlyFound]));
-                        setSelectedMonths(currentSelected);
-                        console.log("Nuevos meses detectados y seleccionados:", newlyFound);
-                    }
-                }
-            }
-
-            // Paso 1: Verificar si el archivo ha cambiado en el servidor (HEAD Request)
-            let serverLastModified: string | null = null;
-            try {
-                const fallbackFile = currentSelected.length > 0 ? `/diskAlarm_${currentSelected[0]}.csv` : '/diskAlarm_January.csv';
-                const headResponse = await fetch(fallbackFile, { method: 'HEAD' });
-                if (headResponse.ok) {
-                    serverLastModified = headResponse.headers.get('last-modified');
-                }
-            } catch (e) {
-                console.warn("No se pudo verificar fecha del archivo, procediendo con carga estándar", e);
-            }
-
-            // Paso 2: Decidir si usar caché
-            // Usamos caché SI:
-            // - No se forzó la actualización
-            // - Tenemos fecha guardada Y coincide con la del servidor (o el servidor no nos dio fecha)
-            // - Existe data en localStorage
-            const storedLastModified = localStorage.getItem(CACHE_KEY_LAST_MODIFIED);
-
-            // Si el servidor nos dio fecha, y es diferente a la guardada -> NUEVA VERSIÓN DETECTADA
-            const hasNewVersion = serverLastModified && storedLastModified && serverLastModified !== storedLastModified;
-
-            if (!force && !hasNewVersion) {
-                const savedData = localStorage.getItem(CACHE_KEY_DATA);
-                const savedDate = localStorage.getItem(CACHE_KEY_DATE);
-
-                if (savedData) {
-                    try {
-                        const parsed = JSON.parse(savedData);
-                        if (Array.isArray(parsed) && parsed.length > 0) {
-                            console.log("Cargando desde caché (Versión actual)");
-                            setData(parsed);
-                            setLastUpdate(savedDate || 'Recuperado de caché');
-                            setIsLoading(false);
-                            return; // ÉXITO: Datos cargados de caché
-                        }
-                    } catch (e) {
-                        console.error("Error caché local (corrupto)", e);
-                        // Datos corruptos, continuaremos a descargar
-                    }
-                }
-            } else if (hasNewVersion) {
-                console.log("Nueva versión del archivo detectada. Actualizando caché...");
-            }
-
-            // Paso 3: Cargar desde Red
-            // LISTA DE ARCHIVOS DE ALARMAS BASADA EN SELECCIÓN
-            const selectedFiles = currentAvailable
-                .filter(m => currentSelected.includes(m.id))
-                .map(m => m.file);
-
-            if (selectedFiles.length === 0) {
+            if (selectedNumbers.length === 0) {
                 setData([]);
                 setIsLoading(false);
                 return;
             }
 
-            const promises = [
-                ...selectedFiles.map(file => fetch(file)),
-                fetch('/mdvrDetailsPvModel.csv'),
-                fetch('/mdvrVideotracklogAll.csv')
-            ];
+            // A) Obtener alarmas desde SQL
+            
+            // 1. CARGAR RESUMEN GENERAL (Para KPIs y Tabla Principal)
+            const { data: summaryData, error: summaryError } = await supabase
+                .from('view_device_summary')
+                .select('*');
+                
+            if (summaryError) throw summaryError;
 
-            const responses = await Promise.all(promises);
+            // 2. CARGAR TENDENCIAS DIARIAS (Para gráficos lineales)
+            const { data: trendsData, error: trendsError } = await supabase
+                .from('view_daily_trends')
+                .select('*');
+                
+            if (trendsError) throw trendsError;
+            if (trendsData) setTrendRows(trendsData);
 
-            // Separar respuestas
-            const alertResponses = responses.slice(0, selectedFiles.length);
-            const mdvrResponse = responses[selectedFiles.length];
-            const fleetResponse = responses[selectedFiles.length + 1];
+            if (!summaryData) return;
 
-            // Combinar textos de alarmas
-            let fullAlertsText = '';
-            let headerSaved = false;
+            // Filtrar resúmenes por los meses seleccionados (Frontend)
+            const filteredSummary = summaryData.filter(row => {
+                return selectedNumbers.includes(Number(row.month_number));
+            });
 
-            for (const res of alertResponses) {
-                if (res.ok) {
-                    const text = await res.text();
-                    // Validate content: Must not start with HTML tag
-                    if (text.trim().startsWith('<')) {
-                        console.warn(`Archivo ignorado (parece HTML/404): ${alertResponses.indexOf(res)}`);
-                        continue;
-                    }
+            // Convertir el resumen SQL a la interfaz ProcessedData legacy
+            const mappedProcessed = filteredSummary.map((row, index) => {
+                const d = new Date(row.latest_alarm || new Date().toISOString());
+                const localeDateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;
+                
+                return {
+                    id: index,
+                    DeviceName: row.device_name,
+                    ID: row.device_id_code || '',
+                    Fleet: row.fleet || 'General',
+                    DiskType: 'Aggregated',
+                    DiskDetails: 'Dashboard SQL View',
+                    Speed: '0',
+                    Date: localeDateStr,
+                    ReUpload: 'No',
+                    RawDetails: '',
+                    AlarmStatus: '',
+                    speedVal: 0,
+                    component: row.component,
+                    action: row.action,
+                    severity: row.severity,
+                    level: row.level,
+                    diagnosis: 'Consolidado General',
+                    model: '',
+                    pv: '',
+                    pvName: '',
+                    _total_alerts: Number(row.total_alerts)
+                };
+            });
 
-                    if (!headerSaved) {
-                        fullAlertsText += text;
-                        headerSaved = true;
-                    } else {
-                        // Omitir header de archivos subsecuentes (asumiendo que tienen header)
-                        const lines = text.split('\n');
-                        if (lines.length > 1) {
-                            fullAlertsText += '\n' + lines.slice(1).join('\n');
-                        }
-                    }
+            setData(mappedProcessed);
 
-                    // Usar fecha del último archivo modificado
-                    const lastMod = res.headers.get('last-modified');
-                    if (lastMod) serverLastModified = lastMod;
+
+            // D) Validar metadatos y fechas
+            try {
+                const { data: metaData } = await supabase.from('system_metadata').select('last_updated').eq('id', 1).single();
+                if (metaData && metaData.last_updated) {
+                    setLastUpdate(new Date(metaData.last_updated).toLocaleString());
+                } else {
+                    setLastUpdate(new Date().toLocaleString());
                 }
+            } catch (e) {
+                console.warn("Metadatos no disponibles.");
             }
 
-            if (fullAlertsText) {
-                /* const alertsText = await alertsResponse.text(); NO USAR: Ya tenemos fullAlertsText */
+            // Descubrir qué meses están REALMENTE activos en la base de datos para habilitar los botones
+            const existingMonthsInDbNums = Array.from(new Set(
+                (summaryData || []).map(row => Number(row.month_number))
+            ));
+            const newAvailable = ALL_MONTHS
+                .filter(m => existingMonthsInDbNums.includes(monthMap[m.id]))
+                .map(m => ({ id: m.id, name: m.label, file: 'db' }));
 
-                // Actualizar timestamp
-                if (!serverLastModified) {
-                    serverLastModified = new Date().toUTCString();
-                }
-
-                let mdvrMap: Map<string, MdvrDetails> | undefined;
-                if (mdvrResponse.ok) {
-                    const mdvrText = await mdvrResponse.text();
-                    mdvrMap = parseMdvrDetails(mdvrText);
-                }
-
-                // Parsear flota auxiliar
-                let fleetMap = new Map<string, string>();
-                if (fleetResponse.ok) {
-                    const fleetText = await fleetResponse.text();
-                    const lines = fleetText.split('\n');
-                    for (let i = 1; i < lines.length; i++) {
-                        const line = lines[i].trim();
-                        if (!line) continue;
-                        const parts = line.split(';');
-                        // El formato parece ser: Device Name (ID); Node name; ...
-                        if (parts.length > 3) {
-                            const rawDevName = parts[0].trim();
-                            // Normalizar nombre igual que en processCSV: quitar (ID)
-                            const nameMatch = rawDevName.match(/^(.*)\((\d+)\)$/);
-                            const devName = nameMatch ? nameMatch[1].trim() : rawDevName;
-
-                            const fleet = parts[3].trim();
-                            if (devName && fleet) fleetMap.set(devName, fleet);
-                        }
-                    }
-                }
-
-                // Ahora pasando fleetMap a processCSV
-                const processed = processCSV(fullAlertsText, mdvrMap, fleetMap);
-                setData(processed);
-
-                const now = new Date().toLocaleString();
-                setLastUpdate(now);
-
-                // NOTA: Desactivamos caché en localStorage para la data principal
-                // porque >100MB excede el límite del navegador y causa errores.
-                /*
-                try {
-                    localStorage.setItem(CACHE_KEY_DATA, JSON.stringify(processed));
-                    localStorage.setItem(CACHE_KEY_DATE, now);
-                     if (serverLastModified) {
-                        localStorage.setItem(CACHE_KEY_LAST_MODIFIED, serverLastModified);
-                    }
-                } catch (cacheError) {
-                    console.warn("Caché llena u omitida por tamaño:", cacheError);
-                }
-                */
-            }
-        } catch (err) {
-            console.error("Error de red:", err);
+            setAvailableMonths(newAvailable);
+            
+        } catch (err: any) {
+            console.error("Error SQL loadData:", err);
+            alert(`Error técnico contactando a Supabase:\n\n${err?.message || JSON.stringify(err)}\n\n(Detalle: Código ${err?.code || 'N/A'})`);
         } finally {
             setIsLoading(false);
         }
     };
 
-    useEffect(() => {
+        useEffect(() => {
         loadData(false); // Carga inicial desde caché si existe
     }, [selectedMonths]);
 
@@ -1764,7 +2092,7 @@ export default function TracklogDashboard() {
                         d.component === 'Otros'
             );
 
-        const totalAlerts = statsData.length;
+        const totalAlerts = statsData.reduce((sum, d) => sum + (d._total_alerts || 1), 0);
 
         // Contar equipos únicos totales
         const uniqueDevices = new Set(statsData.map(d => d.ID || d.DeviceName));
@@ -1773,15 +2101,15 @@ export default function TracklogDashboard() {
         // Contar equipos únicos por tipo de acción y alertas totales
         const criticalRows = statsData.filter(d => d.action === 'Reemplazo Físico');
         const criticalDevices = new Set(criticalRows.map(d => d.ID || d.DeviceName));
-        const criticalAlerts = criticalRows.length;
+        const criticalAlerts = criticalRows.reduce((sum, d) => sum + (d._total_alerts || 1), 0);
 
         const logicalRows = statsData.filter(d => d.action === 'Mantenimiento Lógico');
         const logicalDevices = new Set(logicalRows.map(d => d.ID || d.DeviceName));
-        const logicalAlerts = logicalRows.length;
+        const logicalAlerts = logicalRows.reduce((sum, d) => sum + (d._total_alerts || 1), 0);
 
         const reviewRows = statsData.filter(d => d.action === 'Revisión Config/Instalación');
         const reviewDevices = new Set(reviewRows.map(d => d.ID || d.DeviceName));
-        const reviewAlerts = reviewRows.length;
+        const reviewAlerts = reviewRows.reduce((sum, d) => sum + (d._total_alerts || 1), 0);
 
         const critical = criticalDevices.size;
         const logical = logicalDevices.size;
@@ -1811,21 +2139,23 @@ export default function TracklogDashboard() {
             .sort((a, b) => b.value - a.value)
             .slice(0, 8); // Top 8
 
-        // Agrupación por Día (Tendencia)
+        // Agrupación por Día (Tendencia) desde la Vista SQL Optimizada
         const trendMap: Record<string, number> = {};
-        scopedData.forEach(d => {
-            if (d.Date) {
-                const day = d.Date.split(' ')[0];
-                // VALIDACIÓN EXTENDIDA: Filtrar basura tipo "satellites:..."
-                const isDate = /^[\d\-\/]+$/.test(day) && day.length >= 8;
-
-                if (day && isDate) {
-                    trendMap[day] = (trendMap[day] || 0) + 1;
-                }
+        trendRows.forEach(row => {
+            // Aplicar el mismo filtro Scope
+            const inInternalSet = TRACKLOG_INTERNAL_FLEETS.has(row.fleet) || row.fleet === 'TRACKLOG';
+            const inScope = scopeFilter === 'all' ? true : (scopeFilter === 'internal' ? inInternalSet : !inInternalSet);
+            
+            // Validar filtros del dashboard 
+            // (action filter not applicable to trend data from view_daily_trends)
+            
+            if (inScope) {
+                trendMap[row.alarm_date] = (trendMap[row.alarm_date] || 0) + Number(row.total_alerts);
             }
         });
         // Convertir a array y ordenar por fecha (ascendente para gráfico lineal)
         const trendData = Object.entries(trendMap)
+
             .map(([date, count]) => ({ date, count }))
             .sort((a, b) => parseDateLocal(a.date) - parseDateLocal(b.date));
 
@@ -1913,22 +2243,25 @@ export default function TracklogDashboard() {
             }
 
             const group = groups.get(key)!;
-            group.totalAlerts++;
+            group.totalAlerts += (item._total_alerts || 1);
 
             // Determinar severidad máxima
-            const severityOrder = { 'Alta': 3, 'Media': 2, 'Baja': 1 };
-            if (severityOrder[item.severity] > severityOrder[group.maxSeverity]) {
-                group.maxSeverity = item.severity;
-                group.worstDiagnosis = item.diagnosis;
-                group.suggestedAction = item.action;
-            } else if (severityOrder[item.severity] === severityOrder[group.maxSeverity]) {
-                // Si es la misma severidad, concatenar diagnóstico si es diferente y no es muy largo
-                if (!group.worstDiagnosis.includes(item.diagnosis) && group.worstDiagnosis.length < 100) {
+            const severityOrder = { 'Alta': 3, 'Media': 2, 'Baja': 1, 'Otro': 0 };
+            const itemSev = item.severity || 'Baja';
+            const groupSev = group.maxSeverity || 'Baja';
+            
+            if ((severityOrder[itemSev as keyof typeof severityOrder] || 0) > (severityOrder[groupSev as keyof typeof severityOrder] || 0)) {
+                group.maxSeverity = itemSev;
+                group.worstDiagnosis = item.diagnosis || '';
+                group.suggestedAction = item.action || '';
+            } else if ((severityOrder[itemSev as keyof typeof severityOrder] || 0) === (severityOrder[groupSev as keyof typeof severityOrder] || 0)) {
+                // Si es la misma severidad, concatenar diagnóstico
+                if (item.diagnosis && group.worstDiagnosis && !group.worstDiagnosis.includes(item.diagnosis) && group.worstDiagnosis.length < 100) {
                     group.worstDiagnosis += " | " + item.diagnosis;
                 }
             }
 
-            if (item.severity === 'Alta') group.highSeverityCount++;
+            if (item.severity === 'Alta') group.highSeverityCount += (item._total_alerts || 1);
         });
 
         return Array.from(groups.values()).sort((a, b) => {
@@ -1949,7 +2282,7 @@ export default function TracklogDashboard() {
 
     // Paginación (Dinámica según el modo)
     const currentDataSource = viewMode === 'devices' ? groupedData : filteredData;
-    const totalPages = Math.ceil(currentDataSource.length / RECORDS_PER_PAGE);
+    const totalPages = Math.ceil((viewMode === 'devices' ? currentDataSource.length : serverTotalCount) / RECORDS_PER_PAGE);
 
     const paginatedData = useMemo(() => {
         const start = (currentPage - 1) * RECORDS_PER_PAGE;
@@ -1964,6 +2297,16 @@ export default function TracklogDashboard() {
     };
 
     // Reset filtros
+
+    // Interceptar cambios de página para el modo alertas
+    const handlePageChange = (newPage: number) => {
+        if (viewMode === 'alerts') {
+            fetchDetailedRecords(newPage);
+        } else {
+            setCurrentPage(newPage);
+        }
+    };
+
     const resetFilters = () => {
         setSearchTerm('');
         setFilterFleet('all');
@@ -2005,6 +2348,27 @@ export default function TracklogDashboard() {
 
                         {/* Contenedor Derecho: Menú Hamburguesa + Idiomas + Dark Mode */}
                         <div className="flex items-center gap-4">
+                            {/* Admin Auth Toggle */}
+                            {isAdmin ? (
+                                <button
+                                    onClick={handleLogout}
+                                    className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-200 dark:hover:bg-emerald-900 transition-colors shadow-sm"
+                                    title="Cerrar sesión de Administrador"
+                                >
+                                    <Unlock className="w-4 h-4" />
+                                    Admin Activo
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => setShowLoginModal(true)}
+                                    className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 border border-slate-200 dark:border-zinc-700 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors shadow-sm"
+                                    title="Desbloquear Modo Administrador"
+                                >
+                                    <Lock className="w-4 h-4" />
+                                    Solo Lectura
+                                </button>
+                            )}
+
                             {/* Language Selector */}
                             <div className="hidden sm:flex items-center bg-slate-100 dark:bg-zinc-800 rounded-full p-1 shadow-sm border border-slate-200 dark:border-zinc-700">
                                 <Globe className="w-4 h-4 text-slate-500 dark:text-zinc-400 ml-2 mr-1" />
@@ -2088,45 +2452,34 @@ export default function TracklogDashboard() {
                                                             : 'bg-slate-50 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 border-slate-200 dark:border-zinc-700 hover:bg-slate-100 dark:hover:bg-zinc-700'
                                                             }`}
                                                     >
-                                                        {month.label}
+                                                        {month.name}
                                                     </button>
                                                 ))}
                                             </div>
-                                            <button
-                                                onClick={() => { loadData(true); setIsMobileMenuOpen(false); }}
-                                                disabled={isLoading}
-                                                className="w-full justify-center flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold transition-colors disabled:opacity-50 shadow-md shadow-blue-500/20"
-                                            >
-                                                <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-                                                {isLoading ? 'Actaulizando...' : 'Forzar Actualización'}
-                                            </button>
                                         </div>
 
-                                        <div className="h-px w-full bg-slate-100 dark:bg-zinc-800" />
-
-                                        {/* Backups */}
-                                        <div className="flex flex-col gap-3">
-                                            <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Respaldo de datos</span>
-                                            <div className="flex items-center gap-2">
-                                                <button
-                                                    onClick={() => { handleExportBackup(); setIsMobileMenuOpen(false); }}
-                                                    className="flex-1 flex items-center justify-center gap-2 bg-slate-100 dark:bg-zinc-800 hover:bg-blue-50 dark:hover:bg-blue-900/40 text-slate-700 dark:text-zinc-300 hover:text-blue-700 dark:hover:text-blue-400 px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 shadow-sm transition-colors text-xs font-bold"
-                                                >
-                                                    <Download className="w-4 h-4" /> Guardar
-                                                </button>
-                                                <label
-                                                    className="flex-1 flex items-center justify-center gap-2 bg-slate-100 dark:bg-zinc-800 hover:bg-blue-50 dark:hover:bg-blue-900/40 text-slate-700 dark:text-zinc-300 hover:text-blue-700 dark:hover:text-blue-400 px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 shadow-sm transition-colors text-xs font-bold cursor-pointer"
-                                                >
-                                                    <Upload className="w-4 h-4" /> Cargar
-                                                    <input
-                                                        type="file"
-                                                        accept=".json"
-                                                        className="hidden"
-                                                        onChange={(e) => { handleImportBackup(e); setIsMobileMenuOpen(false); }}
-                                                    />
-                                                </label>
-                                            </div>
-                                        </div>
+                                        {isAdmin && (
+                                            <>
+                                                <div className="h-px w-full bg-slate-100 dark:bg-zinc-800" />
+                                                
+                                                {/* Upload CSV */}
+                                                <div className="flex flex-col gap-3">
+                                                    <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider text-blue-600">Herramientas de Administrador</span>
+                                                    <label
+                                                        className="w-full justify-center flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold transition-colors cursor-pointer shadow-md shadow-blue-500/20"
+                                                    >
+                                                        <Upload className="w-4 h-4" /> Cargar Nuevo CSV a la Nube (diskAlarm_...)
+                                                        <input
+                                                            type="file"
+                                                            accept=".csv"
+                                                            className="hidden"
+                                                            onChange={handleFileUpload}
+                                                            disabled={isLoading}
+                                                        />
+                                                    </label>
+                                                </div>
+                                            </>
+                                        )}
 
                                     </div>
                                 )}
@@ -2684,7 +3037,7 @@ export default function TracklogDashboard() {
                                             {/* Info de resultados */}
                                             <div className="bg-slate-50 dark:bg-zinc-900 px-6 py-3 border-b border-slate-200 dark:border-zinc-800 flex justify-between items-center">
                                                 <span className="text-sm text-slate-600 dark:text-zinc-400">
-                                                    {t('showing')} <strong>{((currentPage - 1) * RECORDS_PER_PAGE) + 1}</strong> - <strong>{Math.min(currentPage * RECORDS_PER_PAGE, currentDataSource.length)}</strong> {t('of')} <strong>{currentDataSource.length.toLocaleString()}</strong> {viewMode === 'devices' ? 'equipos' : 'registros'}
+                                                    {t('showing')} <strong>{((currentPage - 1) * RECORDS_PER_PAGE) + 1}</strong> - <strong>{Math.min(currentPage * RECORDS_PER_PAGE, viewMode === 'devices' ? currentDataSource.length : serverTotalCount)}</strong> {t('of')} <strong>{(viewMode === 'devices' ? currentDataSource.length : serverTotalCount).toLocaleString()}</strong> {viewMode === 'devices' ? 'equipos' : 'registros'}
                                                 </span>
                                                 <span className="text-sm text-slate-500 dark:text-zinc-400">
                                                     Rango: <strong>{dateRange.start || 'Inicio'}</strong> - <strong>{dateRange.end || 'Fin'}</strong>
@@ -2707,7 +3060,7 @@ export default function TracklogDashboard() {
                                                             </tr>
                                                         </thead>
                                                         <tbody className="divide-y divide-slate-100">
-                                                            {(paginatedData as ProcessedData[]).map((row) => (
+                                                            {serverRecords.map((row) => (
                                                                 <tr key={row.id} className="hover:bg-slate-50 dark:bg-zinc-900 transition-colors group">
                                                                     <td className="px-6 py-4">
                                                                         <div className="font-bold text-slate-900 dark:text-zinc-100">{row.DeviceName}</div>
@@ -2855,7 +3208,7 @@ export default function TracklogDashboard() {
                                             {totalPages > 1 && (
                                                 <div className="bg-slate-50 dark:bg-zinc-900 p-4 border-t border-slate-200 dark:border-zinc-800 flex justify-center items-center gap-2">
                                                     <button
-                                                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                                        onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                                                         disabled={currentPage === 1}
                                                         className="p-2 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-slate-100 dark:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed"
                                                         aria-label="Página anterior"
@@ -2878,7 +3231,7 @@ export default function TracklogDashboard() {
                                                             return (
                                                                 <button
                                                                     key={pageNum}
-                                                                    onClick={() => setCurrentPage(pageNum)}
+                                                                    onClick={() => handlePageChange(pageNum)}
                                                                     className={`w-10 h-10 rounded-lg font-medium text-sm transition-colors ${currentPage === pageNum
                                                                         ? 'bg-blue-600 text-white'
                                                                         : 'bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400'
@@ -2891,7 +3244,7 @@ export default function TracklogDashboard() {
                                                     </div>
 
                                                     <button
-                                                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                                                        onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
                                                         disabled={currentPage === totalPages}
                                                         className="p-2 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-slate-100 dark:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed"
                                                         aria-label="Página siguiente"
@@ -3753,6 +4106,65 @@ export default function TracklogDashboard() {
                     />
                 )}
             </main >
+
+            {/* Modal de Login de Administrador */}
+            {showLoginModal && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+                    <div className="bg-white dark:bg-zinc-900 w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 border border-slate-200 dark:border-zinc-800">
+                        <div className="px-6 py-4 border-b border-slate-200 dark:border-zinc-800 flex justify-between items-center bg-slate-50 dark:bg-zinc-950">
+                            <h3 className="font-bold text-lg text-slate-800 dark:text-zinc-100 flex items-center gap-2">
+                                <Lock className="w-5 h-5 text-blue-600" />
+                                Modo Administrador
+                            </h3>
+                            <button onClick={() => setShowLoginModal(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors rounded-full p-1 hover:bg-slate-200 dark:hover:bg-zinc-800" title="Cerrar modal">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                        <form onSubmit={handleLogin} className="p-6">
+                            <p className="text-sm text-slate-500 dark:text-zinc-400 mb-4">
+                                Ingresa la contraseña para habilitar las funciones de edición y subida de archivos de datos a la nube.
+                            </p>
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-1">
+                                        Contraseña
+                                    </label>
+                                    <input
+                                        type="password"
+                                        value={loginPassword}
+                                        onChange={(e) => setLoginPassword(e.target.value)}
+                                        className="w-full px-4 py-2 bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white transition-shadow"
+                                        placeholder="••••••••"
+                                        autoFocus
+                                    />
+                                </div>
+                                {loginError && (
+                                    <p className="text-xs text-red-500 font-medium bg-red-50 dark:bg-red-900/40 p-2 rounded-md">{loginError}</p>
+                                )}
+                            </div>
+                            <div className="mt-6 flex justify-end gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowLoginModal(false)}
+                                    className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={!loginPassword}
+                                    className="px-4 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors flex items-center gap-2 shadow-sm"
+                                >
+                                    <Unlock className="w-4 h-4" />
+                                    Desbloquear
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            <SpeedInsights />
         </div >
     );
 }
