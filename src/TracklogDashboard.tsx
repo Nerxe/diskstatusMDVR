@@ -1678,7 +1678,7 @@ export default function TracklogDashboard() {
     const [dateRange, setDateRange] = useState<{ start: string; end: string }>({ start: '', end: '' });
     const [selectedMonths, setSelectedMonths] = useState<string[]>([]); // Ya no se usa como trigger principal
 
-    const [availableMonths, setAvailableMonths] = useState<{ id: string, name: string, file: string }[]>([]);
+    // const [availableMonths, setAvailableMonths] = useState<{ id: string, name: string, file: string }[]>([]);
     const [filterPv, setFilterPv] = useState<string>('all');
     const [filterModel, setFilterModel] = useState<string>('all');
     const [hasSearched, setHasSearched] = useState(false);
@@ -2136,8 +2136,8 @@ export default function TracklogDashboard() {
             fromDate.setHours(0, 0, 0, 0);
             toDate.setHours(23, 59, 59, 999);
 
-            const { data: summaryData, error: summaryError } = await queryWithRetry(() =>
-                supabase.rpc('get_device_summary_custom', {
+            const { data: summaryData, error: summaryError } = await queryWithRetry(async () =>
+                await supabase.rpc('get_device_summary_custom', {
                     p_from: fromDate.toISOString(),
                     p_to: toDate.toISOString()
                 })
@@ -2158,8 +2158,8 @@ export default function TracklogDashboard() {
 
             // 2. CARGAR TENDENCIAS DIARIAS (no-fatal)
             try {
-                const { data: trendsData, error: trendsError } = await queryWithRetry(() =>
-                    supabase
+                const { data: trendsData, error: trendsError } = await queryWithRetry(async () =>
+                    await supabase
                         .from('view_daily_trends')
                         .select('*')
                         .gte('alarm_date', dateFrom)
@@ -2169,7 +2169,7 @@ export default function TracklogDashboard() {
                 if (trendsError) {
                     console.warn('Tendencias no disponibles:', trendsError.message);
                 } else if (trendsData) {
-                    setTrendRows(trendsData);
+                    setTrendRows(trendsData as any[]);
                 }
             } catch (trendErr) {
                 console.warn('No se pudieron cargar tendencias:', trendErr);
@@ -2178,7 +2178,7 @@ export default function TracklogDashboard() {
             if (!summaryData) return;
 
             // Convertir el resumen SQL a la interfaz ProcessedData legacy
-            const mappedProcessed = summaryData.map((row: any, index: number) => {
+            const mappedProcessed = (summaryData as any[]).map((row: any, index: number) => {
                 const dd = new Date(row.latest_alarm || new Date().toISOString());
                 const localeDateStr = `${dd.getDate().toString().padStart(2, '0')}/${(dd.getMonth() + 1).toString().padStart(2, '0')}/${dd.getFullYear()} ${dd.getHours().toString().padStart(2, '0')}:${dd.getMinutes().toString().padStart(2, '0')}:${dd.getSeconds().toString().padStart(2, '0')}`;
 
@@ -2221,15 +2221,7 @@ export default function TracklogDashboard() {
                 console.warn("Metadatos no disponibles.");
             }
 
-            // Actualizar availableMonths para compatibilidad legacy
-            const existingMonthNums = Array.from(new Set(
-                (summaryData || []).map((row: any) => Number(row.month_number))
-            ));
-            const newAvailable = ALL_MONTHS
-                .filter(m => existingMonthNums.includes(m.num))
-                .map(m => ({ id: m.id, name: m.label, file: 'db' }));
-            setAvailableMonths(newAvailable);
-
+            // (Legacy update for availableMonths removed)
             setLoadError(null);
 
         } catch (err: any) {

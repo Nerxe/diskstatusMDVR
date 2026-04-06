@@ -1,0 +1,2678 @@
+{
+  "3070264789": {
+    "deviceId": "3070264789",
+    "macroGroup": "General",
+    "initialAlerts": 4762,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1770327352603_jqyqgbd1j",
+        "text": "Equipo agregado al seguimiento con 4762 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-02-05T21:35:52.603Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770327388532_iwrfjdoon",
+        "text": "El equipo reconoce los discos, pero no esta guardando evidencia, reporta fallas L1 Lost y Damage",
+        "author": "Usuario",
+        "timestamp": "2026-02-05T21:36:28.532Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-05T21:36:28.532Z",
+    "createdDate": "2026-02-05T21:35:52.603Z"
+  },
+  "3070391939": {
+    "deviceId": "3070391939",
+    "macroGroup": "General",
+    "initialAlerts": 573,
+    "status": "Validando",
+    "comments": [
+      {
+        "id": "comment_1772646182445_21r9j9vjf",
+        "text": "Equipo agregado al seguimiento con 573 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T17:43:02.445Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772646184954_62xtn6o3r",
+        "text": "Estado cambiado de \"En Proceso\" a \"Validando\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T17:43:04.954Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772654225973_yjzh3phqt",
+        "text": "Se tiene que realizar la espera de la confirmación de que el equipo funciona correctamente",
+        "author": "Usuario",
+        "timestamp": "2026-03-04T19:57:05.973Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-04T19:57:05.987Z",
+    "createdDate": "2026-03-04T17:43:02.445Z"
+  },
+  "3070912908": {
+    "deviceId": "3070912908",
+    "macroGroup": "General",
+    "initialAlerts": 23975,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772724779713_u9mep18ez",
+        "text": "Equipo agregado al seguimiento con 23975 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-05T15:32:59.713Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772724814637_sxry47dhf",
+        "text": "El equipo presenta fallas en la unidad SD o USB",
+        "author": "Usuario",
+        "timestamp": "2026-03-05T15:33:34.637Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-05T15:33:34.637Z",
+    "createdDate": "2026-03-05T15:32:59.713Z"
+  },
+  "3070915505": {
+    "deviceId": "3070915505",
+    "macroGroup": "General",
+    "initialAlerts": 0,
+    "status": "Pendiente",
+    "comments": [
+      {
+        "id": "comment_1772832373077_tvq19xwcs",
+        "text": "Equipo pendiente de revision remota",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:26:13.074Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:26:13.074Z",
+    "createdDate": "2026-03-06T21:26:13.074Z"
+  },
+  "3070927302": {
+    "deviceId": "3070927302",
+    "macroGroup": "General",
+    "initialAlerts": 374,
+    "status": "Validando",
+    "comments": [
+      {
+        "id": "comment_1770149458461_7oj5n1ikh",
+        "text": "Equipo agregado al seguimiento con 374 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-02-03T20:10:58.462Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770149489236_fkfngt26t",
+        "text": "El equipo reporta pocas alertas, las alertas de enero si presentan evidencia, revisar el caso a más detalle",
+        "author": "Usuario",
+        "timestamp": "2026-02-03T20:11:29.236Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-03T20:11:29.236Z",
+    "createdDate": "2026-02-03T20:10:58.461Z"
+  },
+  "9053067125": {
+    "deviceId": "9053067125",
+    "macroGroup": "General",
+    "initialAlerts": 2620,
+    "status": "Revisión Remota",
+    "comments": [
+      {
+        "id": "comment_1772825106621_danwc20mr",
+        "text": "Estado cambiado de \"Pendiente\" a \"Revisión Remota\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T19:25:06.621Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T19:25:06.621Z",
+    "createdDate": "2026-03-06T19:25:06.621Z"
+  },
+  "6063452332": {
+    "deviceId": "6063452332",
+    "macroGroup": "General",
+    "initialAlerts": 3633,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1770053273414_oj0zczzcg",
+        "text": "Estado cambiado de \"Pendiente\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-02-02T17:27:53.415Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770053323564_n6hf1h9bl",
+        "text": "Se requiere intervención en el SSD, el equipo se muestra como estado desconocido, presenta errores de sectores dañados, Integridad del disco muy baja",
+        "author": "Usuario",
+        "timestamp": "2026-02-02T17:28:43.564Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-02T17:28:43.564Z",
+    "createdDate": "2026-02-02T17:27:53.414Z"
+  },
+  "8047138073": {
+    "deviceId": "8047138073",
+    "macroGroup": "General",
+    "initialAlerts": 2461,
+    "status": "Validando",
+    "comments": [
+      {
+        "id": "comment_1770328402996_2nkuq8vf9",
+        "text": "Estado cambiado de \"Pendiente\" a \"Validando\"",
+        "author": "Sistema",
+        "timestamp": "2026-02-05T21:53:22.996Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770328428379_jn87rw3i2",
+        "text": "Las fallas son el disco SD3, el disco duro no presenta fallas recurrentes",
+        "author": "Usuario",
+        "timestamp": "2026-02-05T21:53:48.379Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-05T21:53:48.379Z",
+    "createdDate": "2026-02-05T21:53:22.996Z"
+  },
+  "8045666471": {
+    "deviceId": "8045666471",
+    "macroGroup": "Repsol",
+    "initialAlerts": 1400,
+    "status": "Reparado",
+    "repairDate": "2026-02-08T13:47:38.074Z",
+    "comments": [
+      {
+        "id": "comment_1770558316769_l1oks4v3m",
+        "text": "Estado cambiado de \"Pendiente\" a \"Validando\"",
+        "author": "Sistema",
+        "timestamp": "2026-02-08T13:45:16.769Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770558451722_q6qa983m3",
+        "text": "El equipo no registra fallas en el disco y las alertas muestran evidencia",
+        "author": "Usuario",
+        "timestamp": "2026-02-08T13:47:31.722Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1770558458074_2lhho1isc",
+        "text": "Estado cambiado de \"Validando\" a \"Reparado\"",
+        "author": "Sistema",
+        "timestamp": "2026-02-08T13:47:38.074Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-02-08T13:47:38.074Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-08T13:47:38.074Z",
+    "createdDate": "2026-02-08T13:45:16.769Z"
+  },
+  "8046893561": {
+    "deviceId": "8046893561",
+    "macroGroup": "General",
+    "initialAlerts": 761,
+    "status": "Revisión Remota",
+    "comments": [
+      {
+        "id": "comment_1770557633879_xdwsrieg9",
+        "text": "Estado cambiado de \"Pendiente\" a \"Validando\"",
+        "author": "Sistema",
+        "timestamp": "2026-02-08T13:33:53.879Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770557655369_logyg44ji",
+        "text": "El equipo reporta normalmente evidencias, pero tiene un bajo nivel de alertas DMS",
+        "author": "Usuario",
+        "timestamp": "2026-02-08T13:34:15.369Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1770557738074_qpd9dh59s",
+        "text": "Error: \"NO:HDD ; State:L1_The disk has not recorded for a long time: no recording has been written for more than 2 minutes ; satellites:11\" Es necesario revisar la configuración de grabación",
+        "author": "Usuario",
+        "timestamp": "2026-02-08T13:35:38.074Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1773784160725_dhpavo96z",
+        "text": "Revisar configuración, grabación en el disco",
+        "author": "Usuario",
+        "timestamp": "2026-03-17T21:49:20.725Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1773784167829_npk7xf0ky",
+        "text": "Estado cambiado de \"Validando\" a \"Revisión Remota\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-17T21:49:27.829Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-17T21:49:27.829Z",
+    "createdDate": "2026-02-08T13:33:53.879Z"
+  },
+  "9053657917": {
+    "deviceId": "9053657917",
+    "macroGroup": "Repsol",
+    "initialAlerts": 276,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1770557884916_hx061tapl",
+        "text": "Estado cambiado de \"Pendiente\" a \"Validando\"",
+        "author": "Sistema",
+        "timestamp": "2026-02-08T13:38:04.916Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770557904825_66uo2e7go",
+        "text": "Revisar el estado del disco, revisar si se encuentra correctamente conectado",
+        "author": "Usuario",
+        "timestamp": "2026-02-08T13:38:24.825Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1770558218069_2u619wfoi",
+        "text": "Pocas alertas, revisar tambien la configuración",
+        "author": "Usuario",
+        "timestamp": "2026-02-08T13:43:38.069Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1770558220546_xrway0qad",
+        "text": "Estado cambiado de \"Validando\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-02-08T13:43:40.546Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-08T13:43:40.546Z",
+    "createdDate": "2026-02-08T13:38:04.916Z"
+  },
+  "8046885658": {
+    "deviceId": "8046885658",
+    "macroGroup": "Repsol",
+    "initialAlerts": 250,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1770558858144_9e5mxfmnn",
+        "text": "Estado cambiado de \"Pendiente\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-02-08T13:54:18.144Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770558872433_78gpxoq0c",
+        "text": "Revisar la conexión del disco, requiere intervención",
+        "author": "Usuario",
+        "timestamp": "2026-02-08T13:54:32.433Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-08T13:54:32.433Z",
+    "createdDate": "2026-02-08T13:54:18.144Z"
+  },
+  "6063454643": {
+    "deviceId": "6063454643",
+    "macroGroup": "General",
+    "initialAlerts": 18374,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1769530238368_idigtra0h",
+        "text": "Estado cambiado de \"En Proceso\" a \"Pendiente\"",
+        "author": "Sistema",
+        "timestamp": "2026-01-27T16:10:38.368Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1769530239696_1626b2efp",
+        "text": "Estado cambiado de \"Pendiente\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-01-27T16:10:39.696Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1769534837397_e1msiwhds",
+        "text": "El equipo se encuentra apagado desde el 23/01",
+        "author": "Usuario",
+        "timestamp": "2026-01-27T17:27:17.397Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1770045089275_gez0o4nad",
+        "text": "Se agrego al servidor de Howen",
+        "author": "Usuario",
+        "timestamp": "2026-02-02T15:11:29.275Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772835217217_5da9uwq33",
+        "text": "Es necearia la intervención en físico. EL equopo no reconoce el disco SSD",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T22:13:37.217Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772717812072_xuq64hd6m",
+        "text": "Equipo agregado al seguimiento con 5906 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-05T13:36:52.072Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T22:13:37.217Z",
+    "createdDate": "2026-01-27T16:10:38.368Z"
+  },
+  "6062890573": {
+    "deviceId": "6062890573",
+    "macroGroup": "General",
+    "initialAlerts": 5947,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1769534868884_ei8aztofo",
+        "text": "Equipo agregado al seguimiento con 5947 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-01-27T17:27:48.884Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1769535000586_h0u54yku9",
+        "text": "Equipo con falla total, DMS & ADAS INOPERATIVOS, es necesario intervenir en fisico",
+        "author": "Usuario",
+        "timestamp": "2026-01-27T17:30:00.586Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-01-27T17:30:00.586Z",
+    "createdDate": "2026-01-27T17:27:48.884Z"
+  },
+  "6062892710": {
+    "deviceId": "6062892710",
+    "macroGroup": "General",
+    "initialAlerts": 4531,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1769535022747_lkgwo3hm7",
+        "text": "Equipo agregado al seguimiento con 4531 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-01-27T17:30:22.747Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770050269094_imeah1mgp",
+        "text": "El equipo no esta reconociendo el SSD, solo tiene almacenamiento SD reconocido",
+        "author": "Usuario",
+        "timestamp": "2026-02-02T16:37:49.094Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-02T16:37:49.094Z",
+    "createdDate": "2026-01-27T17:30:22.747Z"
+  },
+  "9050380588": {
+    "deviceId": "9050380588",
+    "macroGroup": "General",
+    "initialAlerts": 2839,
+    "status": "Reparado",
+    "repairDate": "2026-02-02T19:47:20.166Z",
+    "comments": [
+      {
+        "id": "comment_1769615561388_d3vqq0jw7",
+        "text": "Equipo agregado al seguimiento con 2839 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-01-28T15:52:41.388Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1769615646954_bpjzl0pjq",
+        "text": "Se intervino el día 28/01 el equipo, se le limpio la entrada y se coloco nuevamente el disco. Reporta evidencia y cesaron las alertas, ULTIMA ALERTA DE ALMACENAMIENTO ANORMAL: \t\n28/01/2026 10:02:54 NO:hdd ; State:L1_Lost ; satellites:8",
+        "author": "Usuario",
+        "timestamp": "2026-01-28T15:54:06.954Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1769780871376_iazhb7f7b",
+        "text": "Estado cambiado de \"Validando\" a \"Reparado\"",
+        "author": "Sistema",
+        "timestamp": "2026-01-30T13:47:51.376Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770061536617_8uhq7dfh6",
+        "text": "Estado cambiado de \"Reparado\" a \"Validando\"",
+        "author": "Sistema",
+        "timestamp": "2026-02-02T19:45:36.617Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770061640166_br7y8dat8",
+        "text": "Estado cambiado de \"Validando\" a \"Reparado\"",
+        "author": "Sistema",
+        "timestamp": "2026-02-02T19:47:20.166Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-02-02T19:47:20.166Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-02T19:47:20.166Z",
+    "createdDate": "2026-01-28T15:52:41.388Z"
+  },
+  "6063453835": {
+    "deviceId": "6063453835",
+    "macroGroup": "General",
+    "initialAlerts": 5310,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1770059115497_nuoafgdkp",
+        "text": "Equipo agregado al seguimiento con 5310 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-02-02T19:05:15.497Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770059267626_pwpbyocjn",
+        "text": "El equipo tiene Vandalizada la cámara DMS Y ADAS, Deconectado desde el dia 31-01, El disco reporta fallas",
+        "author": "Usuario",
+        "timestamp": "2026-02-02T19:07:47.626Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-02T19:07:47.626Z",
+    "createdDate": "2026-02-02T19:05:15.497Z"
+  },
+  "8045181752": {
+    "deviceId": "8045181752",
+    "macroGroup": "General",
+    "initialAlerts": 5793,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1770060830119_kolkv2qch",
+        "text": "Equipo agregado al seguimiento con 5793 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-02-02T19:33:50.119Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770060851968_11icqrwno",
+        "text": "EL equipo reconoce como dañadas la tarjeda SD y el SSD",
+        "author": "Usuario",
+        "timestamp": "2026-02-02T19:34:11.968Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-02T19:34:11.968Z",
+    "createdDate": "2026-02-02T19:33:50.119Z"
+  },
+  "6063460566": {
+    "deviceId": "6063460566",
+    "macroGroup": "General",
+    "initialAlerts": 5780,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1770144636715_gq7wo93tg",
+        "text": "Equipo agregado al seguimiento con 5780 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-02-03T18:50:36.715Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770145156120_engg0x4zo",
+        "text": "Revisar el disco, no esta siendo correctamente reconocido",
+        "author": "Usuario",
+        "timestamp": "2026-02-03T18:59:16.120Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-03T18:59:16.120Z",
+    "createdDate": "2026-02-03T18:50:36.714Z"
+  },
+  "6062890490": {
+    "deviceId": "6062890490",
+    "macroGroup": "General",
+    "initialAlerts": 4292,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1770145392800_qhpjf1w8q",
+        "text": "Equipo agregado al seguimiento con 4292 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-02-03T19:03:12.800Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770145415023_w8tzc0sjk",
+        "text": "Disco muerto, se recomienda el cambio de este, no se almacenan evidencias",
+        "author": "Usuario",
+        "timestamp": "2026-02-03T19:03:35.023Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-03T19:03:35.023Z",
+    "createdDate": "2026-02-03T19:03:12.800Z"
+  },
+  "8045677239": {
+    "deviceId": "8045677239",
+    "macroGroup": "General",
+    "initialAlerts": 5489,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1770145502567_9timj3fq4",
+        "text": "Equipo agregado al seguimiento con 5489 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-02-03T19:05:02.567Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770145539759_lw6uvizz6",
+        "text": "El equipo almacena evidencias, reporta fallas en el disco SSD, Lost y no disk",
+        "author": "Usuario",
+        "timestamp": "2026-02-03T19:05:39.759Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-03T19:05:39.759Z",
+    "createdDate": "2026-02-03T19:05:02.567Z"
+  },
+  "9053659327": {
+    "deviceId": "9053659327",
+    "macroGroup": "General",
+    "initialAlerts": 212,
+    "status": "Validando",
+    "comments": [
+      {
+        "id": "comment_1770149829606_nbix1l0t6",
+        "text": "Equipo agregado al seguimiento con 212 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-02-03T20:17:09.606Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770149833900_4kk0mb5ra",
+        "text": "Estado cambiado de \"En Proceso\" a \"Validando\"",
+        "author": "Sistema",
+        "timestamp": "2026-02-03T20:17:13.900Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770149889811_m5ii6cip3",
+        "text": "El equipo tenia desactivado el alarm file upload, No presenta SSD, solo SD de 32 GB, es necesario intervención urgente",
+        "author": "Usuario",
+        "timestamp": "2026-02-03T20:18:09.811Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-03T20:18:09.811Z",
+    "createdDate": "2026-02-03T20:17:09.606Z"
+  },
+  "9053078833": {
+    "deviceId": "9053078833",
+    "macroGroup": "General",
+    "initialAlerts": 4714,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1770155339121_31v2plyw8",
+        "text": "Equipo agregado al seguimiento con 4714 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-02-03T21:48:59.121Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770155355543_1ln8eraem",
+        "text": "No reconoce el DISCO SSD",
+        "author": "Usuario",
+        "timestamp": "2026-02-03T21:49:15.543Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-03T21:49:15.543Z",
+    "createdDate": "2026-02-03T21:48:59.121Z"
+  },
+  "8048878446": {
+    "deviceId": "8048878446",
+    "macroGroup": "General",
+    "initialAlerts": 4233,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1770156882198_vwrt00381",
+        "text": "Equipo agregado al seguimiento con 4233 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-02-03T22:14:42.198Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770156896998_s5qg0lddw",
+        "text": "Sin alarmas desde el 9/1",
+        "author": "Usuario",
+        "timestamp": "2026-02-03T22:14:56.998Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-03T22:14:56.998Z",
+    "createdDate": "2026-02-03T22:14:42.198Z"
+  },
+  "8047703033": {
+    "deviceId": "8047703033",
+    "macroGroup": "General",
+    "initialAlerts": 3,
+    "status": "Reparado",
+    "repairDate": "2026-03-17T21:52:06.472Z",
+    "comments": [
+      {
+        "id": "comment_1770332004824_8725f0bew",
+        "text": "Equipo agregado al seguimiento con 3 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-02-05T22:53:24.824Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770332109500_61b2r4hsp",
+        "text": "Se debe intentar formatear el disco, el equipo funciona correctamente hay casos en los que la data se pierde",
+        "author": "Usuario",
+        "timestamp": "2026-02-05T22:55:09.500Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1773784326472_hapek7ee8",
+        "text": "Estado cambiado de \"Validando\" a \"Reparado\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-17T21:52:06.472Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-03-17T21:52:06.472Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-17T21:52:06.472Z",
+    "createdDate": "2026-02-05T22:53:24.824Z"
+  },
+  "8046974486": {
+    "deviceId": "8046974486",
+    "macroGroup": "General",
+    "initialAlerts": 1065,
+    "status": "Reparado",
+    "repairDate": "2026-03-05T13:43:36.283Z",
+    "comments": [
+      {
+        "id": "comment_1770558729587_bpfm0uym6",
+        "text": "Equipo agregado al seguimiento con 1065 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-02-08T13:52:09.587Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770558762844_7ajpk3vpr",
+        "text": "Revisar la conexión del disco, manda errores de Lost, y erroes en la sd3 (USB)",
+        "author": "Usuario",
+        "timestamp": "2026-02-08T13:52:42.844Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1770558790797_h2hohjj0a",
+        "text": "Pocas fallas en los ultimos dias",
+        "author": "Usuario",
+        "timestamp": "2026-02-08T13:53:10.797Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1770558793515_32eu7qr8b",
+        "text": "Estado cambiado de \"En Proceso\" a \"Validando\"",
+        "author": "Sistema",
+        "timestamp": "2026-02-08T13:53:13.515Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772718216283_49mcfv2ur",
+        "text": "Estado cambiado de \"Validando\" a \"Reparado\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-05T13:43:36.283Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-03-05T13:43:36.283Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-05T13:43:36.283Z",
+    "createdDate": "2026-02-08T13:52:09.587Z"
+  },
+  "8045660581": {
+    "deviceId": "8045660581",
+    "macroGroup": "Repsol",
+    "initialAlerts": 430,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1770559143340_g467cxfbm",
+        "text": "Equipo agregado al seguimiento con 430 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-02-08T13:59:03.340Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770559145062_6i8ns96jy",
+        "text": "No reconoce el disco SSD, solo reconoce SD2, revisar la configuración o formatear el disco",
+        "author": "Usuario",
+        "timestamp": "2026-02-08T13:59:05.062Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-08T13:59:05.062Z",
+    "createdDate": "2026-02-08T13:59:03.340Z"
+  },
+  "8045644999": {
+    "deviceId": "8045644999",
+    "macroGroup": "Repsol",
+    "initialAlerts": 383,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1770559464718_7v02di5r2",
+        "text": "Equipo agregado al seguimiento con 383 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-02-08T14:04:24.718Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770559492424_2ypvs9wf5",
+        "text": "No genera alertas dms en los ultmos 4 dias",
+        "author": "Usuario",
+        "timestamp": "2026-02-08T14:04:52.424Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-08T14:04:52.424Z",
+    "createdDate": "2026-02-08T14:04:24.718Z"
+  },
+  "8045169682": {
+    "deviceId": "8045169682",
+    "macroGroup": "Repsol",
+    "initialAlerts": 337,
+    "status": "Validando",
+    "comments": [
+      {
+        "id": "comment_1770560305348_cz700dmma",
+        "text": "Equipo agregado al seguimiento con 337 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-02-08T14:18:25.348Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1770560362162_mni4q3602",
+        "text": "Fallas registradas en la tarjeta SD, el disco SSD no preseta muchas fallas",
+        "author": "Usuario",
+        "timestamp": "2026-02-08T14:19:22.162Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-02-08T14:19:22.162Z",
+    "createdDate": "2026-02-08T14:18:25.348Z"
+  },
+  "8045665242": {
+    "deviceId": "8045665242",
+    "macroGroup": "General",
+    "initialAlerts": 1145,
+    "status": "Reparado",
+    "repairDate": "2026-03-04T17:38:59.180Z",
+    "comments": [
+      {
+        "id": "comment_1772645931790_5e5xduxx9",
+        "text": "Equipo agregado al seguimiento con 1145 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T17:38:51.790Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772645939180_tfumhz1qp",
+        "text": "Estado cambiado de \"Validando\" a \"Reparado\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T17:38:59.180Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-03-04T17:38:59.180Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-04T17:38:59.180Z",
+    "createdDate": "2026-03-04T17:38:51.790Z"
+  },
+  "8046899329": {
+    "deviceId": "8046899329",
+    "macroGroup": "General",
+    "initialAlerts": 34,
+    "status": "Reparado",
+    "repairDate": "2026-03-04T19:57:50.756Z",
+    "comments": [
+      {
+        "id": "comment_1772654270756_xfrtmk3kk",
+        "text": "Equipo agregado al seguimiento con 34 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T19:57:50.756Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-03-04T19:57:50.756Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-04T19:57:50.756Z",
+    "createdDate": "2026-03-04T19:57:50.756Z"
+  },
+  "6062900471": {
+    "deviceId": "6062900471",
+    "macroGroup": "General",
+    "initialAlerts": 0,
+    "status": "Reparado",
+    "repairDate": "2026-03-04T21:41:46.764Z",
+    "comments": [
+      {
+        "id": "comment_1772654705773_0t7pgp25p",
+        "text": "Equipo agregado al seguimiento con 0 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T20:05:05.773Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772654740065_dv05ve4pu",
+        "text": "El equipo solo presenta fallas de bajo nivel, no son alertas graves",
+        "author": "Usuario",
+        "timestamp": "2026-03-04T20:05:40.065Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772660506764_dsetrjat3",
+        "text": "Estado cambiado de \"Validando\" a \"Reparado\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T21:41:46.764Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-03-04T21:41:46.764Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-04T21:41:46.764Z",
+    "createdDate": "2026-03-04T20:05:05.773Z"
+  },
+  "8045682684": {
+    "deviceId": "8045682684",
+    "macroGroup": "General",
+    "initialAlerts": 0,
+    "status": "Reparado",
+    "repairDate": "2026-03-04T21:34:31.913Z",
+    "comments": [
+      {
+        "id": "comment_1772654796672_ukbegm2z8",
+        "text": "Equipo agregado al seguimiento con 0 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T20:06:36.672Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772660071913_43ucxvw5a",
+        "text": "Estado cambiado de \"Validando\" a \"Reparado\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T21:34:31.913Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-03-04T21:34:31.913Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-04T21:34:31.913Z",
+    "createdDate": "2026-03-04T20:06:36.672Z"
+  },
+  "8047189639": {
+    "deviceId": "8047189639",
+    "macroGroup": "General",
+    "initialAlerts": 1,
+    "status": "Reparado",
+    "repairDate": "2026-03-04T21:52:21.180Z",
+    "comments": [
+      {
+        "id": "comment_1772660547868_jv9j9l3rm",
+        "text": "Equipo agregado al seguimiento con 1 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T21:42:27.868Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772660648148_0zp3efw5y",
+        "text": "No genero alertas de error desde el 25/02 en la SD",
+        "author": "Usuario",
+        "timestamp": "2026-03-04T21:44:08.148Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772661115693_l9bhk7k5q",
+        "text": "Estado cambiado de \"En Proceso\" a \"Validando\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T21:51:55.693Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772661141180_ph3ii5pxz",
+        "text": "Estado cambiado de \"Validando\" a \"Reparado\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T21:52:21.180Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-03-04T21:52:21.180Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-04T21:52:21.180Z",
+    "createdDate": "2026-03-04T21:42:27.868Z"
+  },
+  "6062897412": {
+    "deviceId": "6062897412",
+    "macroGroup": "General",
+    "initialAlerts": 20,
+    "status": "Reparado",
+    "repairDate": "2026-03-04T21:53:41.453Z",
+    "comments": [
+      {
+        "id": "comment_1772661190469_55uic7kt3",
+        "text": "Equipo agregado al seguimiento con 20 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T21:53:10.469Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772661191807_yl9rcjlm5",
+        "text": "Estado cambiado de \"En Proceso\" a \"Validando\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T21:53:11.807Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772661218468_lled6duth",
+        "text": "El equipo presenta fallas en el disco SD3, ultimo report eel 18/02",
+        "author": "Usuario",
+        "timestamp": "2026-03-04T21:53:38.468Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772661221453_xhm9kirxq",
+        "text": "Estado cambiado de \"Validando\" a \"Reparado\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T21:53:41.453Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-03-04T21:53:41.453Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-04T21:53:41.453Z",
+    "createdDate": "2026-03-04T21:53:10.469Z"
+  },
+  "6062899152": {
+    "deviceId": "6062899152",
+    "macroGroup": "General",
+    "initialAlerts": 0,
+    "status": "Reparado",
+    "repairDate": "2026-03-04T22:01:26.997Z",
+    "comments": [
+      {
+        "id": "comment_1772661684694_4pbwknuuf",
+        "text": "Equipo agregado al seguimiento con 0 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T22:01:24.694Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772661685885_q445qhyco",
+        "text": "Estado cambiado de \"En Proceso\" a \"Validando\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T22:01:25.885Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772661686997_2ordce2p4",
+        "text": "Estado cambiado de \"Validando\" a \"Reparado\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T22:01:26.997Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-03-04T22:01:26.997Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-04T22:01:26.997Z",
+    "createdDate": "2026-03-04T22:01:24.694Z"
+  },
+  "8048877984": {
+    "deviceId": "8048877984",
+    "macroGroup": "General",
+    "initialAlerts": 0,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772661715485_r78u2le2m",
+        "text": "Equipo agregado al seguimiento con 0 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T22:01:55.485Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772661727405_ofkhho42u",
+        "text": "Formatear el disco",
+        "author": "Usuario",
+        "timestamp": "2026-03-04T22:02:07.405Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-04T22:02:07.405Z",
+    "createdDate": "2026-03-04T22:01:55.485Z"
+  },
+  "6063458222": {
+    "deviceId": "6063458222",
+    "macroGroup": "General",
+    "initialAlerts": 4738,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772661772541_y4hlw9afp",
+        "text": "Equipo agregado al seguimiento con 4738 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T22:02:52.541Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772661774741_ph5xqevm4",
+        "text": "Estado cambiado de \"Validando\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T22:02:54.741Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772749505456_xxu71wvuh",
+        "text": "Es necesario el cambio de disco",
+        "author": "Usuario",
+        "timestamp": "2026-03-05T22:25:05.456Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-05T22:25:05.456Z",
+    "createdDate": "2026-03-04T22:02:52.541Z"
+  },
+  "8045680662": {
+    "deviceId": "8045680662",
+    "macroGroup": "General",
+    "initialAlerts": 1,
+    "status": "Validando",
+    "comments": [
+      {
+        "id": "comment_1772662310390_jtw3gz2i7",
+        "text": "Equipo agregado al seguimiento con 1 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T22:11:50.390Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772662433302_1qfs80641",
+        "text": "Estado cambiado de \"En Proceso\" a \"Validando\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T22:13:53.302Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-04T22:13:53.302Z",
+    "createdDate": "2026-03-04T22:11:50.390Z"
+  },
+  "8046997545": {
+    "deviceId": "8046997545",
+    "macroGroup": "General",
+    "initialAlerts": 5,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772662835007_fsr9cuegn",
+        "text": "Equipo agregado al seguimiento con 5 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T22:20:35.007Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772662853030_jkaj1zx5w",
+        "text": "ULTIMO REPORTE DE FALLA: 01/03 L1 SSD",
+        "author": "Usuario",
+        "timestamp": "2026-03-04T22:20:53.030Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-04T22:20:53.030Z",
+    "createdDate": "2026-03-04T22:20:35.007Z"
+  },
+  "8047178145": {
+    "deviceId": "8047178145",
+    "macroGroup": "General",
+    "initialAlerts": 48,
+    "status": "Reparado",
+    "repairDate": "2026-03-04T23:08:34.835Z",
+    "comments": [
+      {
+        "id": "comment_1772663837607_m6pkdpokz",
+        "text": "Equipo agregado al seguimiento con 48 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T22:37:17.607Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772665714835_wjdwu8onr",
+        "text": "Estado cambiado de \"En Proceso\" a \"Reparado\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T23:08:34.835Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-03-04T23:08:34.835Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-04T23:08:34.835Z",
+    "createdDate": "2026-03-04T22:37:17.607Z"
+  },
+  "8045176356": {
+    "deviceId": "8045176356",
+    "macroGroup": "General",
+    "initialAlerts": 0,
+    "status": "Reparado",
+    "repairDate": "2026-03-04T23:11:59.789Z",
+    "comments": [
+      {
+        "id": "comment_1772665919789_mnxlnbgat",
+        "text": "Equipo agregado al seguimiento con 0 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T23:11:59.789Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-03-04T23:11:59.789Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-04T23:11:59.789Z",
+    "createdDate": "2026-03-04T23:11:59.789Z"
+  },
+  "8045660854": {
+    "deviceId": "8045660854",
+    "macroGroup": "General",
+    "initialAlerts": 0,
+    "status": "Reparado",
+    "repairDate": "2026-03-04T23:12:18.622Z",
+    "comments": [
+      {
+        "id": "comment_1772665938622_2fq6bf2p0",
+        "text": "Equipo agregado al seguimiento con 0 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T23:12:18.622Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-03-04T23:12:18.622Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-04T23:12:18.622Z",
+    "createdDate": "2026-03-04T23:12:18.622Z"
+  },
+  "6063458289": {
+    "deviceId": "6063458289",
+    "macroGroup": "General",
+    "initialAlerts": 2023,
+    "status": "Reparado",
+    "repairDate": "2026-03-04T23:13:12.965Z",
+    "comments": [
+      {
+        "id": "comment_1772665977781_biag03plb",
+        "text": "Equipo agregado al seguimiento con 2023 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T23:12:57.781Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772665989100_4wflbn4hk",
+        "text": "Se intervino el 17/02",
+        "author": "Usuario",
+        "timestamp": "2026-03-04T23:13:09.100Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772665991089_4d10dddzc",
+        "text": "Estado cambiado de \"En Proceso\" a \"Validando\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T23:13:11.089Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772665992965_eeon8oo8v",
+        "text": "Estado cambiado de \"Validando\" a \"Reparado\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-04T23:13:12.965Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-03-04T23:13:12.965Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-04T23:13:12.965Z",
+    "createdDate": "2026-03-04T23:12:57.781Z"
+  },
+  "9053066564": {
+    "deviceId": "9053066564",
+    "macroGroup": "General",
+    "initialAlerts": 7270,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772825093781_6afd8vfog",
+        "text": "Equipo agregado al seguimiento con 7270 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T19:24:53.781Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772825138266_dho3yb55k",
+        "text": "Estado cambiado de \"Revisión Remota\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T19:25:38.266Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772825141444_su74pdd8j",
+        "text": "Estado cambiado de \"En Proceso\" a \"Revisión Remota\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T19:25:41.444Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772825158716_50t78d5sv",
+        "text": "el equipo no reconoce discos",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T19:25:58.716Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772825160866_7hvdjwky1",
+        "text": "Estado cambiado de \"Revisión Remota\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T19:26:00.866Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T19:26:00.866Z",
+    "createdDate": "2026-03-06T19:24:53.771Z"
+  },
+  "6063461143": {
+    "deviceId": "6063461143",
+    "macroGroup": "General",
+    "initialAlerts": 3196,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772825235612_s75fi724q",
+        "text": "Equipo agregado al seguimiento con 3196 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T19:27:15.612Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772825272857_ovsbkahcq",
+        "text": "El equipo no reconoce el disco SSD, solo la unidad SD",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T19:27:52.857Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T19:27:52.857Z",
+    "createdDate": "2026-03-06T19:27:15.612Z"
+  },
+  "5047556988": {
+    "deviceId": "5047556988",
+    "macroGroup": "General",
+    "initialAlerts": 5738,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772825389498_v7l7pvjt2",
+        "text": "Equipo agregado al seguimiento con 5738 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T19:29:49.498Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772825405282_8a5enf2ul",
+        "text": "Se requiere el cambio del disco ssd",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T19:30:05.282Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T19:30:05.282Z",
+    "createdDate": "2026-03-06T19:29:49.498Z"
+  },
+  "9053068453": {
+    "deviceId": "9053068453",
+    "macroGroup": "General",
+    "initialAlerts": 6410,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772825442010_n0bl11wwg",
+        "text": "Equipo agregado al seguimiento con 6410 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T19:30:42.010Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772825460553_oz5grd77o",
+        "text": "El disco presenta sectores defectuosos, es necesaria la intervención y el cambio del disco SSD",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T19:31:00.553Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T19:31:00.554Z",
+    "createdDate": "2026-03-06T19:30:42.010Z"
+  },
+  "9050380562": {
+    "deviceId": "9050380562",
+    "macroGroup": "General",
+    "initialAlerts": 5573,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772825569810_gx8k8dlkc",
+        "text": "Equipo agregado al seguimiento con 5573 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T19:32:49.810Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772825584449_wsoi0ajs6",
+        "text": "El disco presenta sectores defectuosos, es necesario el cambio",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T19:33:04.449Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T19:33:04.449Z",
+    "createdDate": "2026-03-06T19:32:49.810Z"
+  },
+  "6063454007": {
+    "deviceId": "6063454007",
+    "macroGroup": "General",
+    "initialAlerts": 3943,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772825623139_c33ufys34",
+        "text": "Equipo agregado al seguimiento con 3943 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T19:33:43.139Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772825649306_e78kono3s",
+        "text": "El disco presenta muchos sectores defectuosos, es necesario el cambio del disco",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T19:34:09.306Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T19:34:09.306Z",
+    "createdDate": "2026-03-06T19:33:43.139Z"
+  },
+  "9053659699": {
+    "deviceId": "9053659699",
+    "macroGroup": "General",
+    "initialAlerts": 3885,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772825738922_vwa5ubyzj",
+        "text": "Equipo agregado al seguimiento con 3885 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T19:35:38.922Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772825765538_wwbdtzz1o",
+        "text": "El disco presenta sectores defectuosos, es necesaria la intervención y cambio del disco",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T19:36:05.538Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T19:36:05.538Z",
+    "createdDate": "2026-03-06T19:35:38.922Z"
+  },
+  "9053080813": {
+    "deviceId": "9053080813",
+    "macroGroup": "General",
+    "initialAlerts": 4586,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772825948211_0pw5naxue",
+        "text": "Equipo agregado al seguimiento con 4586 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T19:39:08.211Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772825971194_rq2b5uzxu",
+        "text": "El disco esta fallando, presenta sectores defectuosos y es necesario el cambio del disco",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T19:39:31.194Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T19:39:31.194Z",
+    "createdDate": "2026-03-06T19:39:08.211Z"
+  },
+  "6063459352": {
+    "deviceId": "6063459352",
+    "macroGroup": "General",
+    "initialAlerts": 2411,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772826056042_2oznf44m7",
+        "text": "Equipo agregado al seguimiento con 2411 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T19:40:56.042Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772826070690_1ucj8db46",
+        "text": "Es necesaria la intervención en fisico",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T19:41:10.690Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T19:41:10.690Z",
+    "createdDate": "2026-03-06T19:40:56.042Z"
+  },
+  "9053658436": {
+    "deviceId": "9053658436",
+    "macroGroup": "General",
+    "initialAlerts": 3663,
+    "status": "Revisión Remota",
+    "comments": [
+      {
+        "id": "comment_1772827427619_xhnhyqtxb",
+        "text": "Equipo agregado al seguimiento con 3663 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T20:03:47.619Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772827453171_gtfrajo25",
+        "text": "Estado cambiado de \"En Proceso\" a \"Revisión Remota\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T20:04:13.171Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T20:04:13.171Z",
+    "createdDate": "2026-03-06T20:03:47.619Z"
+  },
+  "9053075706": {
+    "deviceId": "9053075706",
+    "macroGroup": "General",
+    "initialAlerts": 4775,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772828306557_d4kgc61tz",
+        "text": "Equipo agregado al seguimiento con 4775 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T20:18:26.557Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772828323084_un7jr2ht2",
+        "text": "El equipo no reconoce el disco, es necesaio intervenir",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T20:18:43.084Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T20:18:43.084Z",
+    "createdDate": "2026-03-06T20:18:26.557Z"
+  },
+  "9053064403": {
+    "deviceId": "9053064403",
+    "macroGroup": "General",
+    "initialAlerts": 4790,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772828831797_uziqv2n02",
+        "text": "Equipo agregado al seguimiento con 4790 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T20:27:11.797Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772828841220_cnu2dzjcw",
+        "text": "Es necesaria una intervención en fisico",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T20:27:21.220Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T20:27:21.220Z",
+    "createdDate": "2026-03-06T20:27:11.797Z"
+  },
+  "9053063777": {
+    "deviceId": "9053063777",
+    "macroGroup": "General",
+    "initialAlerts": 4893,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772829129741_jsg671fj7",
+        "text": "Equipo agregado al seguimiento con 4893 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T20:32:09.741Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772829147956_94mg49twz",
+        "text": "Se requiere intervención en fisico",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T20:32:27.956Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T20:32:27.956Z",
+    "createdDate": "2026-03-06T20:32:09.741Z"
+  },
+  "6063459287": {
+    "deviceId": "6063459287",
+    "macroGroup": "General",
+    "initialAlerts": 5679,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772830327376_7il9mp0d2",
+        "text": "Equipo agregado al seguimiento con 5679 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T20:52:07.376Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772830336781_nz3ii8cgl",
+        "text": "Requiere intervención en fisico",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T20:52:16.781Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T20:52:16.781Z",
+    "createdDate": "2026-03-06T20:52:07.376Z"
+  },
+  "6062893759": {
+    "deviceId": "6062893759",
+    "macroGroup": "General",
+    "initialAlerts": 8293,
+    "status": "Reparado",
+    "repairDate": "2026-03-17T21:46:52.950Z",
+    "comments": [
+      {
+        "id": "comment_1772830452638_bd9rtkxoh",
+        "text": "Equipo agregado al seguimiento con 8293 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T20:54:12.638Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772830455046_h7ne9oxs8",
+        "text": "Estado cambiado de \"Revisión Remota\" a \"Validando\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T20:54:15.046Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772830478221_51bsnrmk6",
+        "text": "El equipo se encuentra en monitoreo, a la espera de que mejore su situación",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T20:54:38.221Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1773784012950_y92et9rbk",
+        "text": "Estado cambiado de \"Validando\" a \"Reparado\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-17T21:46:52.950Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-03-17T21:46:52.950Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-17T21:46:52.950Z",
+    "createdDate": "2026-03-06T20:54:12.638Z"
+  },
+  "6063456135": {
+    "deviceId": "6063456135",
+    "macroGroup": "General",
+    "initialAlerts": 2106,
+    "status": "Revisión Remota",
+    "comments": [
+      {
+        "id": "comment_1772830615054_f3ahrvbtj",
+        "text": "Equipo agregado al seguimiento con 2106 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T20:56:55.054Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772830622046_tue2krzlw",
+        "text": "Se requiere formateo del disco",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T20:57:02.046Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T20:57:02.046Z",
+    "createdDate": "2026-03-06T20:56:55.054Z"
+  },
+  "9050383103": {
+    "deviceId": "9050383103",
+    "macroGroup": "General",
+    "initialAlerts": 3722,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772830683014_o6gbf3s9t",
+        "text": "Equipo agregado al seguimiento con 3722 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T20:58:03.014Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772830705157_g7fnhu3p2",
+        "text": "Se requiere intervención en fisico, el equipo no reconoce el disco",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T20:58:25.157Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T20:58:25.157Z",
+    "createdDate": "2026-03-06T20:58:03.014Z"
+  },
+  "6063461036": {
+    "deviceId": "6063461036",
+    "macroGroup": "General",
+    "initialAlerts": 2040,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772830775640_nhuvfsqnv",
+        "text": "Equipo agregado al seguimiento con 2040 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T20:59:35.640Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772830792981_aceq3ttpp",
+        "text": "Se requiere intervención en fisica",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T20:59:52.981Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T20:59:52.981Z",
+    "createdDate": "2026-03-06T20:59:35.640Z"
+  },
+  "8042338363": {
+    "deviceId": "8042338363",
+    "macroGroup": "General",
+    "initialAlerts": 2221,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772831137788_pcbzrt856",
+        "text": "Equipo agregado al seguimiento con 2221 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:05:37.788Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772831147917_1s67okoma",
+        "text": "Requiere intervención en fisico",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:05:47.917Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:05:47.918Z",
+    "createdDate": "2026-03-06T21:05:37.788Z"
+  },
+  "6063464808": {
+    "deviceId": "6063464808",
+    "macroGroup": "General",
+    "initialAlerts": 3975,
+    "status": "Reparado",
+    "repairDate": "2026-03-06T22:21:19.688Z",
+    "comments": [
+      {
+        "id": "comment_1772831268991_l97kvrz1y",
+        "text": "Equipo agregado al seguimiento con 3975 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:07:48.991Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772831326350_jkdrm7cey",
+        "text": "Estado cambiado de \"Revisión Remota\" a \"Validando\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:08:46.350Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772831338598_1nw3iyrsi",
+        "text": "En estado de revisión continua",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:08:58.598Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772835679688_khjkz5q2e",
+        "text": "Estado cambiado de \"Validando\" a \"Reparado\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T22:21:19.688Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-03-06T22:21:19.688Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T22:21:19.688Z",
+    "createdDate": "2026-03-06T21:07:48.991Z"
+  },
+  "9053066580": {
+    "deviceId": "9053066580",
+    "macroGroup": "General",
+    "initialAlerts": 3670,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772831376623_x3nm7o8yt",
+        "text": "Equipo agregado al seguimiento con 3670 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:09:36.623Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772831388703_33u4wpvyv",
+        "text": "El equipo no reconoce ninguna de las dos unidades de almacenmaiento",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:09:48.703Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:09:48.703Z",
+    "createdDate": "2026-03-06T21:09:36.622Z"
+  },
+  "6063460574": {
+    "deviceId": "6063460574",
+    "macroGroup": "General",
+    "initialAlerts": 1291,
+    "status": "Revisión Remota",
+    "comments": [
+      {
+        "id": "comment_1772831528927_5sc6to1c9",
+        "text": "Equipo agregado al seguimiento con 1291 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:12:08.927Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772831544550_rwfpv9tp8",
+        "text": "Estado cambiado de \"En Proceso\" a \"Revisión Remota\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:12:24.550Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772831555271_pyqdsgzzg",
+        "text": "Es necesario formatear el disco",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:12:35.271Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:12:35.271Z",
+    "createdDate": "2026-03-06T21:12:08.927Z"
+  },
+  "9053083510": {
+    "deviceId": "9053083510",
+    "macroGroup": "General",
+    "initialAlerts": 2493,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772831629855_n2oddxzv3",
+        "text": "Equipo agregado al seguimiento con 2493 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:13:49.855Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772831658854_bgzzkacqu",
+        "text": "Requiere intervención fisica. el disco ssd no esta siendo reconocido",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:14:18.854Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:14:18.854Z",
+    "createdDate": "2026-03-06T21:13:49.855Z"
+  },
+  "9050383376": {
+    "deviceId": "9050383376",
+    "macroGroup": "General",
+    "initialAlerts": 3441,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772831931079_cv7y1ic58",
+        "text": "Equipo agregado al seguimiento con 3441 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:18:51.079Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772831943870_fa4m0iy6w",
+        "text": "El equipo no reconoce ni disco ni sd",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:19:03.870Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:19:03.870Z",
+    "createdDate": "2026-03-06T21:18:51.079Z"
+  },
+  "9053063173": {
+    "deviceId": "9053063173",
+    "macroGroup": "General",
+    "initialAlerts": 2929,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772832026840_qw21xbjfd",
+        "text": "Equipo agregado al seguimiento con 2929 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:20:26.840Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772832055342_rawlustpg",
+        "text": "Se requiere intervención en fisico",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:20:55.342Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:20:55.342Z",
+    "createdDate": "2026-03-06T21:20:26.840Z"
+  },
+  "8049356517": {
+    "deviceId": "8049356517",
+    "macroGroup": "General",
+    "initialAlerts": 2908,
+    "status": "Revisión Remota",
+    "comments": [
+      {
+        "id": "comment_1772832540263_h84ypmbnj",
+        "text": "Realizar formateo del disco, no se detectaron fallas de sectores defectuosos",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:29:00.263Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772832544529_e2f7p85v7",
+        "text": "Estado cambiado de \"Pendiente\" a \"Revisión Remota\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:29:04.529Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:29:04.529Z",
+    "createdDate": "2026-03-06T21:29:00.263Z"
+  },
+  "6063455566": {
+    "deviceId": "6063455566",
+    "macroGroup": "General",
+    "initialAlerts": 1166,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772832581328_qeye7e5tj",
+        "text": "Equipo agregado al seguimiento con 1166 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:29:41.328Z",
+        "type": "system"
+      },
+      {
+        "id": "comment_1772832608719_z2qrutepw",
+        "text": "No se detecta el disco SSD, es necesaria una intervención en fisico",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:30:08.719Z",
+        "type": "user"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:30:08.719Z",
+    "createdDate": "2026-03-06T21:29:41.328Z"
+  },
+  "6062898568": {
+    "deviceId": "6062898568",
+    "macroGroup": "General",
+    "initialAlerts": 2717,
+    "status": "Revisión Remota",
+    "comments": [
+      {
+        "id": "comment_1772832664383_deqi7g6s3",
+        "text": "Realizar seguimiento, ultima conexión el 09/02",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:31:04.383Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772832666664_5lv1gsa36",
+        "text": "Estado cambiado de \"Pendiente\" a \"Revisión Remota\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:31:06.664Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:31:06.664Z",
+    "createdDate": "2026-03-06T21:31:04.383Z"
+  },
+  "9053081076": {
+    "deviceId": "9053081076",
+    "macroGroup": "General",
+    "initialAlerts": 2435,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772832724103_lcfclbyjt",
+        "text": "Se requiere intervención en fisico, el equipo no reconoce la tarjeta SD",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:32:04.103Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772832726952_h4062701l",
+        "text": "Estado cambiado de \"Pendiente\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:32:06.952Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:32:06.952Z",
+    "createdDate": "2026-03-06T21:32:04.103Z"
+  },
+  "9053066036": {
+    "deviceId": "9053066036",
+    "macroGroup": "General",
+    "initialAlerts": 2250,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772832790807_tq5797504",
+        "text": "Se requiere intervención en fisico. El equipo no reconoce la tarjeta SD",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:33:10.807Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772832792736_4moo6fvmj",
+        "text": "Estado cambiado de \"Pendiente\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:33:12.736Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:33:12.736Z",
+    "createdDate": "2026-03-06T21:33:10.807Z"
+  },
+  "9053071895": {
+    "deviceId": "9053071895",
+    "macroGroup": "General",
+    "initialAlerts": 2338,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772832817375_jt3mwq5od",
+        "text": "Se requiere intervención en fisico, el equipo no reconoce el disco SSD",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:33:37.375Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772832819496_vtx5qav56",
+        "text": "Estado cambiado de \"Pendiente\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:33:39.496Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:33:39.496Z",
+    "createdDate": "2026-03-06T21:33:37.375Z"
+  },
+  "9053064627": {
+    "deviceId": "9053064627",
+    "macroGroup": "General",
+    "initialAlerts": 2301,
+    "status": "Revisión Remota",
+    "comments": [
+      {
+        "id": "comment_1772833247667_whkmxbbhn",
+        "text": "Realizar formateo de discos",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:40:47.667Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772833250112_je648l947",
+        "text": "Estado cambiado de \"Pendiente\" a \"Revisión Remota\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:40:50.112Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:40:50.112Z",
+    "createdDate": "2026-03-06T21:40:47.667Z"
+  },
+  "9053079328": {
+    "deviceId": "9053079328",
+    "macroGroup": "General",
+    "initialAlerts": 1873,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772833300328_ojmcqe2i2",
+        "text": "Se requiere intervención en físico. El equipo no reconoce el SSD",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:41:40.328Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772833302121_tx21whapb",
+        "text": "Estado cambiado de \"Pendiente\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:41:42.121Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:41:42.121Z",
+    "createdDate": "2026-03-06T21:41:40.328Z"
+  },
+  "6063452456": {
+    "deviceId": "6063452456",
+    "macroGroup": "General",
+    "initialAlerts": 1638,
+    "status": "Revisión Remota",
+    "comments": [
+      {
+        "id": "comment_1772833328808_py8npl38h",
+        "text": "Equipo agregado al seguimiento con 1638 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:42:08.808Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:42:08.808Z",
+    "createdDate": "2026-03-06T21:42:08.808Z"
+  },
+  "9053087503": {
+    "deviceId": "9053087503",
+    "macroGroup": "General",
+    "initialAlerts": 2233,
+    "status": "Revisión Remota",
+    "comments": [
+      {
+        "id": "comment_1772833352185_f1nxbn07e",
+        "text": "Equipo agregado al seguimiento con 2233 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:42:32.185Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:42:32.185Z",
+    "createdDate": "2026-03-06T21:42:32.185Z"
+  },
+  "6063461507": {
+    "deviceId": "6063461507",
+    "macroGroup": "General",
+    "initialAlerts": 2202,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772833408144_ejmmn6u0l",
+        "text": "Se requiere intervención en físico. El disco presenta sectores defectuosos. Se recomienda remplazo",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:43:28.144Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772833411585_9445z4t7v",
+        "text": "Estado cambiado de \"Pendiente\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:43:31.585Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:43:31.585Z",
+    "createdDate": "2026-03-06T21:43:28.144Z"
+  },
+  "6063461846": {
+    "deviceId": "6063461846",
+    "macroGroup": "General",
+    "initialAlerts": 2031,
+    "status": "Revisión Remota",
+    "comments": [
+      {
+        "id": "comment_1772833451395_d64684272",
+        "text": "Revisar la configuración de la grabación",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:44:11.395Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772833453528_5x1fgcdeh",
+        "text": "Estado cambiado de \"Pendiente\" a \"Revisión Remota\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:44:13.528Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:44:13.528Z",
+    "createdDate": "2026-03-06T21:44:11.395Z"
+  },
+  "6063452381": {
+    "deviceId": "6063452381",
+    "macroGroup": "General",
+    "initialAlerts": 1652,
+    "status": "Revisión Remota",
+    "comments": [
+      {
+        "id": "comment_1772833948961_f2d25z9ky",
+        "text": "Se requiere revisión remota",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:52:28.961Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772833951633_smiy08x1d",
+        "text": "Estado cambiado de \"Pendiente\" a \"Revisión Remota\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:52:31.633Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:52:31.633Z",
+    "createdDate": "2026-03-06T21:52:28.961Z"
+  },
+  "6063452464": {
+    "deviceId": "6063452464",
+    "macroGroup": "General",
+    "initialAlerts": 1682,
+    "status": "Revisión Remota",
+    "comments": [
+      {
+        "id": "comment_1772834028952_3j3bm9ux2",
+        "text": "Se requiere intervención remota",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:53:48.952Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772834030906_ygmd0c5js",
+        "text": "Estado cambiado de \"Pendiente\" a \"Revisión Remota\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:53:50.906Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:53:50.906Z",
+    "createdDate": "2026-03-06T21:53:48.952Z"
+  },
+  "9050382592": {
+    "deviceId": "9050382592",
+    "macroGroup": "General",
+    "initialAlerts": 1609,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772834072080_p7mzyljvj",
+        "text": "Se requiere intervención en fisico. El equipo no reconoce el disco SSD",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:54:32.080Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772834074249_wh9b16g0i",
+        "text": "Estado cambiado de \"Pendiente\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:54:34.249Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:54:34.249Z",
+    "createdDate": "2026-03-06T21:54:32.080Z"
+  },
+  "9050382824": {
+    "deviceId": "9050382824",
+    "macroGroup": "General",
+    "initialAlerts": 1513,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772834128200_8h1sxz44h",
+        "text": "Se requiere intervención en físico. El disco presenta sectores defectuosos",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:55:28.200Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772834130001_57843ykqt",
+        "text": "Estado cambiado de \"Pendiente\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:55:30.001Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:55:30.001Z",
+    "createdDate": "2026-03-06T21:55:28.200Z"
+  },
+  "6063452225": {
+    "deviceId": "6063452225",
+    "macroGroup": "General",
+    "initialAlerts": 574,
+    "status": "Revisión Remota",
+    "comments": [
+      {
+        "id": "comment_1772834187440_8kmbdlgm8",
+        "text": "Se requiere intervención remota.",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:56:27.440Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772834191096_db3r5u1fd",
+        "text": "Estado cambiado de \"Pendiente\" a \"Revisión Remota\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:56:31.096Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:56:31.096Z",
+    "createdDate": "2026-03-06T21:56:27.440Z"
+  },
+  "8047114660": {
+    "deviceId": "8047114660",
+    "macroGroup": "General",
+    "initialAlerts": 1486,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772834232976_lebwpygut",
+        "text": "Se requiere intervención en físico. El equipo no reconoce el disco SSD",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:57:12.976Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772834235858_aygfrtg7k",
+        "text": "Estado cambiado de \"Pendiente\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:57:15.858Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:57:15.857Z",
+    "createdDate": "2026-03-06T21:57:12.976Z"
+  },
+  "9053078809": {
+    "deviceId": "9053078809",
+    "macroGroup": "General",
+    "initialAlerts": 1230,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772834272545_0i8n9ty1c",
+        "text": "Se requiere intervención en físico. El equipo no reconoce el disco SSD",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T21:57:52.545Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772834277409_0uik5534k",
+        "text": "Estado cambiado de \"Pendiente\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T21:57:57.409Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T21:57:57.409Z",
+    "createdDate": "2026-03-06T21:57:52.545Z"
+  },
+  "9053069501": {
+    "deviceId": "9053069501",
+    "macroGroup": "General",
+    "initialAlerts": 1307,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1772835616958_kx5lemhw2",
+        "text": "Se requiere intervención física. El disco presenta sectores defectuosos, se recomienda cambio",
+        "author": "Usuario",
+        "timestamp": "2026-03-06T22:20:16.958Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1772835643878_u4791uzmx",
+        "text": "Estado cambiado de \"Pendiente\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-06T22:20:43.878Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-06T22:20:43.878Z",
+    "createdDate": "2026-03-06T22:20:16.958Z"
+  },
+  "6062899293": {
+    "deviceId": "6062899293",
+    "macroGroup": "General",
+    "initialAlerts": 4272,
+    "status": "Revisión Remota",
+    "comments": [
+      {
+        "id": "comment_1773784508621_5cla8emz4",
+        "text": "No reconoce el sd, y no genero eventos. Es necesario formateo",
+        "author": "Usuario",
+        "timestamp": "2026-03-17T21:55:08.621Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1773784514334_q7dts8e27",
+        "text": "Estado cambiado de \"Pendiente\" a \"Revisión Remota\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-17T21:55:14.334Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-17T21:55:14.334Z",
+    "createdDate": "2026-03-17T21:55:08.621Z"
+  },
+  "9050383533": {
+    "deviceId": "9050383533",
+    "macroGroup": "General",
+    "initialAlerts": 4023,
+    "status": "Reparado",
+    "repairDate": "2026-03-17T21:57:01.069Z",
+    "comments": [
+      {
+        "id": "comment_1773784621069_j5kre0i7i",
+        "text": "Equipo agregado al seguimiento con 4023 alerta(s)",
+        "author": "Sistema",
+        "timestamp": "2026-03-17T21:57:01.069Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "actualCompletionDate": "2026-03-17T21:57:01.069Z",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-17T21:57:01.069Z",
+    "createdDate": "2026-03-17T21:57:01.069Z"
+  },
+  "9053067158": {
+    "deviceId": "9053067158",
+    "macroGroup": "General",
+    "initialAlerts": 2423,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1773784774660_73cd5gnml",
+        "text": "Es necesario reemplazar el disco SSD",
+        "author": "Usuario",
+        "timestamp": "2026-03-17T21:59:34.660Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1773784798854_1f2ays96j",
+        "text": "Estado cambiado de \"Pendiente\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-17T21:59:58.854Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-17T21:59:58.854Z",
+    "createdDate": "2026-03-17T21:59:34.660Z"
+  },
+  "9050384366": {
+    "deviceId": "9050384366",
+    "macroGroup": "General",
+    "initialAlerts": 1285,
+    "status": "En Proceso",
+    "comments": [
+      {
+        "id": "comment_1773784829693_bt2vubfyn",
+        "text": "Es necesario reemplazar el disco",
+        "author": "Usuario",
+        "timestamp": "2026-03-17T22:00:29.693Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1773784833174_zl58c9co8",
+        "text": "Estado cambiado de \"Pendiente\" a \"En Proceso\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-17T22:00:33.174Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-17T22:00:33.173Z",
+    "createdDate": "2026-03-17T22:00:29.693Z"
+  },
+  "9050384663": {
+    "deviceId": "9050384663",
+    "macroGroup": "General",
+    "initialAlerts": 1324,
+    "status": "Revisión Remota",
+    "comments": [
+      {
+        "id": "comment_1773784875917_db682yb78",
+        "text": "Es necesario formatear el disco",
+        "author": "Usuario",
+        "timestamp": "2026-03-17T22:01:15.917Z",
+        "type": "user"
+      },
+      {
+        "id": "comment_1773784886838_jlnwwnvfd",
+        "text": "Estado cambiado de \"Pendiente\" a \"Revisión Remota\"",
+        "author": "Sistema",
+        "timestamp": "2026-03-17T22:01:26.838Z",
+        "type": "system"
+      }
+    ],
+    "priority": "Media",
+    "lastModifiedBy": "Usuario",
+    "lastModifiedDate": "2026-03-17T22:01:26.838Z",
+    "createdDate": "2026-03-17T22:01:15.917Z"
+  }
+}
