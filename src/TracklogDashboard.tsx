@@ -7,7 +7,7 @@ import {
     AlertTriangle, HardDrive, CheckCircle, Search,
     Wrench, Truck, AlertOctagon, Download, Upload, Filter, Database,
     LayoutDashboard, Table, ChevronLeft, ChevronRight, FileText, X, Activity, Hammer, ExternalLink, Sun, Moon, Menu, Globe,
-    Lock, Unlock
+    Lock, Unlock, RefreshCcw
 } from 'lucide-react';
 import { supabase } from './lib/supabase';
 import { useTranslation } from 'react-i18next';
@@ -568,6 +568,18 @@ const DeviceDetailsModal = ({
         return getTime(b.Date) - getTime(a.Date);
     });
 
+    const categorySummary = React.useMemo(() => {
+        const summary: Record<string, { count: number, severity: string, level: string, action: string }> = {};
+        alarms.forEach(alarm => {
+            const diag = alarm.diagnosis || 'Desconocido';
+            if (!summary[diag]) {
+                summary[diag] = { count: 0, severity: alarm.severity, level: alarm.level, action: alarm.action };
+            }
+            summary[diag].count += (alarm._total_alerts || 1);
+        });
+        return Object.entries(summary).sort((a, b) => b[1].count - a[1].count);
+    }, [alarms]);
+
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
             <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
@@ -626,7 +638,37 @@ const DeviceDetailsModal = ({
 
                         <h3 className="text-sm font-bold text-slate-800 dark:text-zinc-200 uppercase tracking-wider mb-4 flex items-center gap-2">
                             <span className="w-2 h-2 rounded-full bg-red-500"></span>
-                            Historial de Fallas
+                            Resumen de Fallas Agrupadas
+                        </h3>
+
+                        <div className="flex flex-col gap-3 mb-8">
+                            {categorySummary.map(([diag, info], idx) => (
+                                <div key={idx} className="bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg p-4 flex items-center justify-between shadow-sm">
+                                    <div className="flex-1 pr-4">
+                                        <div className="text-sm font-bold text-slate-800 dark:text-zinc-200 mb-1 leading-snug">{diag}</div>
+                                        <div className="text-xs text-slate-500 dark:text-zinc-400">
+                                            Acción principal: <span className="font-semibold">{info.action}</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-4">
+                                        <span className={`text-[10px] font-bold px-2 py-1 rounded uppercase whitespace-nowrap
+                                            ${info.severity === 'Alta' ? 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-400' :
+                                                info.severity === 'Media' ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400' :
+                                                    'bg-slate-200 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400'}`}>
+                                            {info.level}
+                                        </span>
+                                        <div className="text-right border-l border-slate-200 dark:border-zinc-700 pl-4 min-w-[60px]">
+                                            <div className="text-2xl font-black text-slate-700 dark:text-zinc-300 leading-none">{info.count}</div>
+                                            <div className="text-[9px] uppercase font-bold text-slate-400 dark:text-zinc-500 mt-1">Alertas</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <h3 className="text-sm font-bold text-slate-800 dark:text-zinc-200 uppercase tracking-wider mb-4 flex items-center gap-2 border-t border-slate-200 dark:border-zinc-800 pt-6">
+                            <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                            Historial Diario de Fallas
                         </h3>
 
                         <div className="space-y-3 relative">
@@ -649,7 +691,12 @@ const DeviceDetailsModal = ({
 
                                     <div className="flex-1 bg-slate-50 dark:bg-zinc-900 rounded p-3 border border-transparent group-hover:border-slate-200 dark:border-zinc-800 transition-colors">
                                         <div className="flex justify-between items-start gap-2">
-                                            <div className="text-sm font-bold text-slate-700 dark:text-zinc-300">{alarm.diagnosis}</div>
+                                            <div className="text-sm font-bold text-slate-700 dark:text-zinc-300">
+                                                {alarm.diagnosis}
+                                                <span className="text-slate-400 dark:text-zinc-500 font-normal ml-2 text-xs">
+                                                    ({alarm._total_alerts || 1} alarmas)
+                                                </span>
+                                            </div>
                                             <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase whitespace-nowrap
                                                  ${alarm.severity === 'Alta' ? 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-400' :
                                                     alarm.severity === 'Media' ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400' :
@@ -661,7 +708,7 @@ const DeviceDetailsModal = ({
                                             <span className="font-semibold">Acción:</span> {alarm.action}
                                         </div>
                                         <div className="text-[10px] text-slate-400 dark:text-zinc-500 mt-2 font-mono">
-                                            Componente: {alarm.component} | Modelo: {alarm.model}
+                                            Componente: {alarm.component} | Log: {alarm.DiskDetails}
                                         </div>
                                     </div>
                                 </div>
@@ -753,8 +800,8 @@ const TrackingRow: React.FC<TrackingRowProps> = ({
                                 <div className="flex flex-wrap gap-1 mt-0.5">
                                     {item.allPlates.map((plate: string, idx: number) => (
                                         <span key={idx} className={`inline-flex items-center text-[9px] px-1.5 py-0.5 rounded border ${idx === 0
-                                                ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800 font-bold'
-                                                : 'bg-amber-50 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800'
+                                            ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800 font-bold'
+                                            : 'bg-amber-50 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800'
                                             }`}>
                                             {idx === 0 ? '🚛' : '🔄'} {plate}
                                         </span>
@@ -1023,8 +1070,8 @@ const TrackingColumn = ({ title, color, data, repairData, onUpdateStatus, onUpda
                 <button
                     onClick={handleExportCSV}
                     className={`flex items-center gap-2 px-3 py-1.5 rounded border transition-colors text-xs font-bold shadow-sm ${color === 'blue'
-                            ? 'bg-white dark:bg-zinc-900 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40'
-                            : 'bg-white dark:bg-zinc-900 border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-900/40'
+                        ? 'bg-white dark:bg-zinc-900 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40'
+                        : 'bg-white dark:bg-zinc-900 border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-900/40'
                         }`}
                     title="Exportar a CSV"
                 >
@@ -1094,19 +1141,27 @@ const TabButton = ({ active, onClick, icon, label }: { active: boolean; onClick:
 const RECORDS_PER_PAGE = 50;
 
 const ALL_MONTHS = [
-    { id: 'January', label: 'Enero' },
-    { id: 'February', label: 'Febrero' },
-    { id: 'March', label: 'Marzo' },
-    { id: 'April', label: 'Abril' },
-    { id: 'May', label: 'Mayo' },
-    { id: 'June', label: 'Junio' },
-    { id: 'July', label: 'Julio' },
-    { id: 'August', label: 'Agosto' },
-    { id: 'September', label: 'Septiembre' },
-    { id: 'October', label: 'Octubre' },
-    { id: 'November', label: 'Noviembre' },
-    { id: 'December', label: 'Diciembre' }
+    { id: 'January', label: 'Enero', num: 1 },
+    { id: 'February', label: 'Febrero', num: 2 },
+    { id: 'March', label: 'Marzo', num: 3 },
+    { id: 'April', label: 'Abril', num: 4 },
+    { id: 'May', label: 'Mayo', num: 5 },
+    { id: 'June', label: 'Junio', num: 6 },
+    { id: 'July', label: 'Julio', num: 7 },
+    { id: 'August', label: 'Agosto', num: 8 },
+    { id: 'September', label: 'Septiembre', num: 9 },
+    { id: 'October', label: 'Octubre', num: 10 },
+    { id: 'November', label: 'Noviembre', num: 11 },
+    { id: 'December', label: 'Diciembre', num: 12 }
 ];
+
+interface AvailableMonthInfo {
+    year: number;
+    month: number;
+    count: number;
+    earliest: string;
+    latest: string;
+}
 
 export default function TracklogDashboard() {
     const { t, i18n } = useTranslation();
@@ -1158,9 +1213,25 @@ export default function TracklogDashboard() {
     const [data, setData] = useState<ProcessedData[]>([]);
     const [trendRows, setTrendRows] = useState<TrendData[]>([]);
 
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSyncing, setIsSyncing] = useState(false);
+    const [loadError, setLoadError] = useState<string | null>(null);
     const [lastUpdate, setLastUpdate] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<TabType>('dashboard');
+
+    // --- DATA SELECTOR STATES ---
+    const [dataRangeReady, setDataRangeReady] = useState(false);
+    const [availableMonthsInfo, setAvailableMonthsInfo] = useState<AvailableMonthInfo[]>([]);
+    const [isDiscovering, setIsDiscovering] = useState(true);
+    const [discoveryError, setDiscoveryError] = useState<string | null>(null);
+    const [selectorYear, setSelectorYear] = useState(new Date().getFullYear());
+    const [selectorMode, setSelectorMode] = useState<'months' | 'custom'>('months');
+    const [selectorMonths, setSelectorMonths] = useState<{year: number, month: number}[]>([]);
+    const [customDateFrom, setCustomDateFrom] = useState<Date | null>(null);
+    const [customDateTo, setCustomDateTo] = useState<Date | null>(null);
+    // Rango activo que se envía a loadData
+    const [activeDateRange, setActiveDateRange] = useState<{from: string, to: string} | null>(null);
+    const [activeRangeLabel, setActiveRangeLabel] = useState('');
     const [trackingFilter, setTrackingFilter] = useState<'all' | 'yanacocha' | 'repsol'>('all');
 
     // Modo Oscuro
@@ -1356,7 +1427,7 @@ export default function TracklogDashboard() {
             [deviceId]: newEntry
         };
         setRepairData(updated);
-        
+
         // Supabase DB UPSERT
         const { error } = await supabase.from('repair_tracking').upsert({
             device_id: newEntry.deviceId,
@@ -1375,7 +1446,7 @@ export default function TracklogDashboard() {
             last_modified_date: newEntry.lastModifiedDate,
             created_date: newEntry.createdDate
         });
-        
+
         if (error) console.error("Error updating status in Supabase:", error);
     };
 
@@ -1423,7 +1494,7 @@ export default function TracklogDashboard() {
             [deviceId]: newEntry
         };
         setRepairData(updated);
-        
+
         // Supabase DB UPSERT
         const { error } = await supabase.from('repair_tracking').upsert({
             device_id: newEntry.deviceId,
@@ -1442,7 +1513,7 @@ export default function TracklogDashboard() {
             last_modified_date: newEntry.lastModifiedDate,
             created_date: newEntry.createdDate
         });
-        
+
         if (error) console.error("Error updating work type in Supabase:", error);
     };
 
@@ -1501,7 +1572,7 @@ export default function TracklogDashboard() {
         };
 
         setRepairData(updated);
-        
+
         // Supabase DB UPSERT
         const { error } = await supabase.from('repair_tracking').upsert({
             device_id: updatedEntry.deviceId,
@@ -1520,7 +1591,7 @@ export default function TracklogDashboard() {
             last_modified_date: updatedEntry.lastModifiedDate,
             created_date: updatedEntry.createdDate
         });
-        
+
         if (error) console.error("Error adding comment to Supabase:", error);
     };
 
@@ -1605,13 +1676,9 @@ export default function TracklogDashboard() {
     const [filterSeverity, setFilterSeverity] = useState<string>('all');
     const [filterComponent, setFilterComponent] = useState<string>('all');
     const [dateRange, setDateRange] = useState<{ start: string; end: string }>({ start: '', end: '' });
-    const [selectedMonths, setSelectedMonths] = useState<string[]>(['January', 'February', 'March']); // Default months
+    const [selectedMonths, setSelectedMonths] = useState<string[]>([]); // Ya no se usa como trigger principal
 
-    const [availableMonths, setAvailableMonths] = useState<{ id: string, name: string, file: string }[]>([
-        { id: 'January', name: 'Enero', file: '/diskAlarm_January.csv' },
-        { id: 'February', name: 'Febrero', file: '/diskAlarm_February.csv' },
-        { id: 'March', name: 'Marzo', file: '/diskAlarm_March.csv' },
-    ]);
+    const [availableMonths, setAvailableMonths] = useState<{ id: string, name: string, file: string }[]>([]);
     const [filterPv, setFilterPv] = useState<string>('all');
     const [filterModel, setFilterModel] = useState<string>('all');
     const [hasSearched, setHasSearched] = useState(false);
@@ -1634,7 +1701,7 @@ export default function TracklogDashboard() {
         setIsSearching(true);
         setHasSearched(true);
         setCurrentPage(pageToLoad);
-        
+
         try {
             let query = supabase.from('raw_alarms').select('*', { count: 'exact' });
 
@@ -1663,18 +1730,18 @@ export default function TracklogDashboard() {
 
             // 4. Filtros Locales Avanzados (PV y Modalidad) usando mapeo inverso
             if (filterPv !== 'all' || filterModel !== 'all') {
-                const validDevices = data.filter(d => 
+                const validDevices = data.filter(d =>
                     (filterPv === 'all' || d.pvName === filterPv) &&
                     (filterModel === 'all' || d.model === filterModel)
                 ).map(d => d.DeviceName);
-                
+
                 if (validDevices.length === 0) {
                     setServerRecords([]);
                     setServerTotalCount(0);
                     setIsSearching(false);
                     return;
                 }
-                
+
                 // Supabase in() restriction: prevent huge arrays
                 query = query.in('device_name', validDevices.slice(0, 100));
             }
@@ -1682,16 +1749,16 @@ export default function TracklogDashboard() {
             // Paginación
             const startIdx = (pageToLoad - 1) * RECORDS_PER_PAGE;
             const endIdx = startIdx + RECORDS_PER_PAGE - 1;
-            
+
             query = query.range(startIdx, endIdx).order('begin_time', { ascending: false });
 
             const { data: rawRes, count, error } = await query;
-            
+
             if (error) throw error;
 
             if (rawRes && count !== null) {
                 setServerTotalCount(count);
-                
+
                 // Map raw db to ProcessedData for rendering
                 const mappedRecords = rawRes.map((row, index) => {
                     const d = new Date(row.begin_time);
@@ -1721,7 +1788,7 @@ export default function TracklogDashboard() {
                         pvName: 'Dynamic'
                     };
                 });
-                
+
                 setServerRecords(mappedRecords);
             }
 
@@ -1879,7 +1946,7 @@ export default function TracklogDashboard() {
                 const { error } = await supabase.from('raw_alarms').upsert(batch, {
                     onConflict: 'device_name, begin_time, alarm_type, start_details, alarm_status'
                 });
-                
+
                 if (error) {
                     console.error("Batch insert error:", error);
                     throw error;
@@ -1894,13 +1961,13 @@ export default function TracklogDashboard() {
             // Solicitar a Supabase que recalcule las Vistas Materializadas para que el Dashboard lea lo más reciente de inmediato
             try {
                 await supabase.rpc('refresh_dashboard_views');
-            } catch(rpcErr) {
+            } catch (rpcErr) {
                 console.warn("No se pudo refrescar vistas materializadas (tal vez aún no existan):", rpcErr);
             }
 
             alert(`¡Carga Incremental Procesada!\nSe pasaron ${totalInserted} registros estructurados directamente a la Base de Datos PostgreSQL.\nDuplicados omitidos automáticamente.`);
             setIsMobileMenuOpen(false);
-            
+
             await loadData(true);
         } catch (error: any) {
             console.error("Error batch save:", error);
@@ -1912,62 +1979,216 @@ export default function TracklogDashboard() {
         }
     };
 
+    // Forzar refresh de vistas materializadas en Supabase sin recargar toda la UI
+    const handleSyncViews = async () => {
+        setIsSyncing(true);
+        try {
+            await supabase.rpc('refresh_dashboard_views');
+            await loadData(true);
+        } catch (err: any) {
+            console.error('Error al refrescar vistas:', err);
+            const isTimeout = err?.code === '57014' || err?.message?.includes('statement timeout');
+            if (isTimeout) {
+                alert('⏳ La sincronización tardó demasiado.\nLos datos base ya están en PostgreSQL. Las vistas se actualizarán pronto automáticamente vía trigger.\n\nSi el problema persiste, ejecuta el SQL actualizado en el Editor SQL de Supabase.');
+            } else {
+                alert(`Error al sincronizar con Supabase:\n${err?.message || JSON.stringify(err)}`);
+            }
+        } finally {
+            setIsSyncing(false);
+        }
+    };
+
     // 1. CARGA INTELIGENTE DE DATOS DESDE POSTGRES
+    // Helper: ejecutar query con un reintento automático si hay timeout
+    const queryWithRetry = async <T,>(queryFn: () => Promise<{ data: T | null; error: any }>, retries = 1, delayMs = 2000): Promise<{ data: T | null; error: any }> => {
+        const result = await queryFn();
+        if (result.error && (result.error.code === '57014' || result.error.message?.includes('statement timeout')) && retries > 0) {
+            console.warn(`Timeout detectado, reintentando en ${delayMs}ms... (${retries} intento(s) restante(s))`);
+            await new Promise(r => setTimeout(r, delayMs));
+            return queryWithRetry(queryFn, retries - 1, delayMs * 1.5);
+        }
+        return result;
+    };
+
+    // --- DISCOVERY: Query rápida para saber qué meses/años tienen datos ---
+    useEffect(() => {
+        const discoverAvailableData = async () => {
+            setIsDiscovering(true);
+            setDiscoveryError(null);
+            try {
+                // Intentar vía RPC (si ya se creó la función)
+                const { data: rpcData, error: rpcError } = await supabase.rpc('get_available_months');
+
+                if (!rpcError && rpcData && rpcData.length > 0) {
+                    const mapped: AvailableMonthInfo[] = rpcData.map((r: any) => ({
+                        year: r.alarm_year,
+                        month: r.alarm_month,
+                        count: Number(r.record_count),
+                        earliest: r.earliest_date,
+                        latest: r.latest_date
+                    }));
+                    setAvailableMonthsInfo(mapped);
+
+                    // Auto-seleccionar el año más reciente con datos
+                    const latestYear = Math.max(...mapped.map(m => m.year));
+                    setSelectorYear(latestYear);
+                } else {
+                    // Fallback: query directa a view_device_summary (sin año, solo meses)
+                    console.warn('RPC get_available_months no disponible, usando fallback:', rpcError?.message);
+                    const { data: fallbackData, error: fallbackError } = await supabase
+                        .from('view_device_summary')
+                        .select('month_number')
+                        .limit(1000);
+
+                    if (fallbackError) throw fallbackError;
+
+                    if (fallbackData) {
+                        const currentYear = new Date().getFullYear();
+                        const monthCounts = new Map<number, number>();
+                        fallbackData.forEach((row: any) => {
+                            const m = Number(row.month_number);
+                            monthCounts.set(m, (monthCounts.get(m) || 0) + 1);
+                        });
+
+                        const mapped: AvailableMonthInfo[] = Array.from(monthCounts.entries()).map(([month, count]) => ({
+                            year: currentYear,
+                            month,
+                            count,
+                            earliest: `${currentYear}-${String(month).padStart(2, '0')}-01`,
+                            latest: `${currentYear}-${String(month).padStart(2, '0')}-28`
+                        }));
+                        setAvailableMonthsInfo(mapped);
+                        setSelectorYear(currentYear);
+                    }
+                }
+            } catch (err: any) {
+                console.error('Error descubriendo datos disponibles:', err);
+                setDiscoveryError(err?.message || 'No se pudieron descubrir los datos disponibles.');
+            } finally {
+                setIsDiscovering(false);
+            }
+        };
+
+        discoverAvailableData();
+    }, []);
+
+    // Helper: computar rango de fechas desde selección de meses
+    const computeDateRangeFromMonths = (months: {year: number, month: number}[]): {from: string, to: string} | null => {
+        if (months.length === 0) return null;
+        const sorted = [...months].sort((a, b) => a.year * 100 + a.month - (b.year * 100 + b.month));
+        const first = sorted[0];
+        const last = sorted[sorted.length - 1];
+        const from = `${first.year}-${String(first.month).padStart(2, '0')}-01`;
+        const lastDay = new Date(last.year, last.month, 0).getDate();
+        const to = `${last.year}-${String(last.month).padStart(2, '0')}-${lastDay}`;
+        return { from, to };
+    };
+
+    // Helper: confirmar selección y cargar datos
+    const confirmDataSelection = () => {
+        let range: {from: string, to: string} | null = null;
+        let label = '';
+
+        if (selectorMode === 'months' && selectorMonths.length > 0) {
+            range = computeDateRangeFromMonths(selectorMonths);
+            const monthNames = selectorMonths.map(sm => {
+                const m = ALL_MONTHS.find(am => am.num === sm.month);
+                return `${m?.label || sm.month} ${sm.year}`;
+            });
+            label = monthNames.join(', ');
+
+            // Mantener selectedMonths sincronizado para compatibilidad legacy
+            const monthIds = selectorMonths.map(sm => ALL_MONTHS.find(am => am.num === sm.month)?.id).filter(Boolean) as string[];
+            setSelectedMonths([...new Set(monthIds)]);
+        } else if (selectorMode === 'custom' && customDateFrom && customDateTo) {
+            const from = `${customDateFrom.getFullYear()}-${String(customDateFrom.getMonth() + 1).padStart(2, '0')}-${String(customDateFrom.getDate()).padStart(2, '0')}`;
+            const to = `${customDateTo.getFullYear()}-${String(customDateTo.getMonth() + 1).padStart(2, '0')}-${String(customDateTo.getDate()).padStart(2, '0')}`;
+            range = { from, to };
+            label = `${customDateFrom.toLocaleDateString()} — ${customDateTo.toLocaleDateString()}`;
+        }
+
+        if (range) {
+            setActiveDateRange(range);
+            setActiveRangeLabel(label);
+            setDataRangeReady(true);
+        }
+    };
+
     const loadData = async (_force: boolean = false) => {
+        if (!activeDateRange) return;
         setIsLoading(true);
+        setLoadError(null);
         await new Promise(resolve => setTimeout(resolve, 100));
 
         try {
-            // Mapeo genérico de meses para filtrado SQL simple
-            const monthMap: Record<string, number> = {
-                'January': 1, 'February': 2, 'March': 3, 'April': 4,
-                'May': 5, 'June': 6, 'July': 7, 'August': 8,
-                'September': 9, 'October': 10, 'November': 11, 'December': 12
-            };
-            const selectedNumbers = selectedMonths.map(sm => monthMap[sm]);
+            // Usar rango de fechas en vez de month_number para soportar multi-año
+            const { from: dateFrom, to: dateTo } = activeDateRange;
 
-            if (selectedNumbers.length === 0) {
-                setData([]);
+            // 1. CARGAR RESUMEN GENERAL desde la vista materializada
+            // Filtrar por mes extraído del rango (arreglando offset de timezone)
+            const [fromYear, fromMonth, fromDay] = dateFrom.split('-').map(Number);
+            const [toYear, toMonth, toDay] = dateTo.split('-').map(Number);
+            const fromDate = new Date(fromYear, fromMonth - 1, fromDay);
+            const toDate = new Date(toYear, toMonth - 1, toDay);
+
+            // 1. CARGAR RESUMEN GENERAL
+            // Consultamos la agrupación parametrizada vía RPC para respetar 100% el rango de fechas incluso custom
+            fromDate.setHours(0, 0, 0, 0);
+            toDate.setHours(23, 59, 59, 999);
+
+            const { data: summaryData, error: summaryError } = await queryWithRetry(() =>
+                supabase.rpc('get_device_summary_custom', {
+                    p_from: fromDate.toISOString(),
+                    p_to: toDate.toISOString()
+                })
+            );
+
+            if (summaryError) {
+                const isTimeout = summaryError.code === '57014' || summaryError.message?.includes('statement timeout');
+                if (isTimeout) {
+                    setLoadError('La consulta excedió el tiempo límite (Timeout). Intenta con un rango más pequeño.');
+                } else if (summaryError.message?.includes('Could not find the function')) {
+                    setLoadError('Falta actualizar la Base de Datos. Por favor corre el script SQL upgrade_to_dynamic_summary.sql en Supabase.');
+                } else {
+                    setLoadError(`Error contactando a Supabase: ${summaryError.message || JSON.stringify(summaryError)}`);
+                }
                 setIsLoading(false);
                 return;
             }
 
-            // A) Obtener alarmas desde SQL
-            
-            // 1. CARGAR RESUMEN GENERAL (Para KPIs y Tabla Principal)
-            const { data: summaryData, error: summaryError } = await supabase
-                .from('view_device_summary')
-                .select('*');
-                
-            if (summaryError) throw summaryError;
+            // 2. CARGAR TENDENCIAS DIARIAS (no-fatal)
+            try {
+                const { data: trendsData, error: trendsError } = await queryWithRetry(() =>
+                    supabase
+                        .from('view_daily_trends')
+                        .select('*')
+                        .gte('alarm_date', dateFrom)
+                        .lte('alarm_date', dateTo)
+                );
 
-            // 2. CARGAR TENDENCIAS DIARIAS (Para gráficos lineales)
-            const { data: trendsData, error: trendsError } = await supabase
-                .from('view_daily_trends')
-                .select('*');
-                
-            if (trendsError) throw trendsError;
-            if (trendsData) setTrendRows(trendsData);
+                if (trendsError) {
+                    console.warn('Tendencias no disponibles:', trendsError.message);
+                } else if (trendsData) {
+                    setTrendRows(trendsData);
+                }
+            } catch (trendErr) {
+                console.warn('No se pudieron cargar tendencias:', trendErr);
+            }
 
             if (!summaryData) return;
 
-            // Filtrar resúmenes por los meses seleccionados (Frontend)
-            const filteredSummary = summaryData.filter(row => {
-                return selectedNumbers.includes(Number(row.month_number));
-            });
-
             // Convertir el resumen SQL a la interfaz ProcessedData legacy
-            const mappedProcessed = filteredSummary.map((row, index) => {
-                const d = new Date(row.latest_alarm || new Date().toISOString());
-                const localeDateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;
-                
+            const mappedProcessed = summaryData.map((row: any, index: number) => {
+                const dd = new Date(row.latest_alarm || new Date().toISOString());
+                const localeDateStr = `${dd.getDate().toString().padStart(2, '0')}/${(dd.getMonth() + 1).toString().padStart(2, '0')}/${dd.getFullYear()} ${dd.getHours().toString().padStart(2, '0')}:${dd.getMinutes().toString().padStart(2, '0')}:${dd.getSeconds().toString().padStart(2, '0')}`;
+
                 return {
                     id: index,
                     DeviceName: row.device_name,
                     ID: row.device_id_code || '',
                     Fleet: row.fleet || 'General',
                     DiskType: 'Aggregated',
-                    DiskDetails: 'Dashboard SQL View',
+                    DiskDetails: row.disk_details || 'Dashboard SQL View',
                     Speed: '0',
                     Date: localeDateStr,
                     ReUpload: 'No',
@@ -1978,7 +2199,7 @@ export default function TracklogDashboard() {
                     action: row.action,
                     severity: row.severity,
                     level: row.level,
-                    diagnosis: 'Consolidado General',
+                    diagnosis: row.diagnosis || 'Consolidado General',
                     model: '',
                     pv: '',
                     pvName: '',
@@ -1988,8 +2209,7 @@ export default function TracklogDashboard() {
 
             setData(mappedProcessed);
 
-
-            // D) Validar metadatos y fechas
+            // Validar metadatos
             try {
                 const { data: metaData } = await supabase.from('system_metadata').select('last_updated').eq('id', 1).single();
                 if (metaData && metaData.last_updated) {
@@ -2001,27 +2221,36 @@ export default function TracklogDashboard() {
                 console.warn("Metadatos no disponibles.");
             }
 
-            // Descubrir qué meses están REALMENTE activos en la base de datos para habilitar los botones
-            const existingMonthsInDbNums = Array.from(new Set(
-                (summaryData || []).map(row => Number(row.month_number))
+            // Actualizar availableMonths para compatibilidad legacy
+            const existingMonthNums = Array.from(new Set(
+                (summaryData || []).map((row: any) => Number(row.month_number))
             ));
             const newAvailable = ALL_MONTHS
-                .filter(m => existingMonthsInDbNums.includes(monthMap[m.id]))
+                .filter(m => existingMonthNums.includes(m.num))
                 .map(m => ({ id: m.id, name: m.label, file: 'db' }));
-
             setAvailableMonths(newAvailable);
-            
+
+            setLoadError(null);
+
         } catch (err: any) {
             console.error("Error SQL loadData:", err);
-            alert(`Error técnico contactando a Supabase:\n\n${err?.message || JSON.stringify(err)}\n\n(Detalle: Código ${err?.code || 'N/A'})`);
+            const isTimeout = err?.code === '57014' || err?.message?.includes('statement timeout');
+            if (isTimeout) {
+                setLoadError('La consulta excedió el tiempo límite. Intenta con un rango más pequeño.');
+            } else {
+                setLoadError(`Error contactando a Supabase: ${err?.message || JSON.stringify(err)}`);
+            }
         } finally {
             setIsLoading(false);
         }
     };
 
-        useEffect(() => {
-        loadData(false); // Carga inicial desde caché si existe
-    }, [selectedMonths]);
+    // Cargar datos cuando cambia el rango activo
+    useEffect(() => {
+        if (activeDateRange && dataRangeReady) {
+            loadData(false);
+        }
+    }, [activeDateRange]);
 
 
 
@@ -2145,10 +2374,10 @@ export default function TracklogDashboard() {
             // Aplicar el mismo filtro Scope
             const inInternalSet = TRACKLOG_INTERNAL_FLEETS.has(row.fleet) || row.fleet === 'TRACKLOG';
             const inScope = scopeFilter === 'all' ? true : (scopeFilter === 'internal' ? inInternalSet : !inInternalSet);
-            
+
             // Validar filtros del dashboard 
             // (action filter not applicable to trend data from view_daily_trends)
-            
+
             if (inScope) {
                 trendMap[row.alarm_date] = (trendMap[row.alarm_date] || 0) + Number(row.total_alerts);
             }
@@ -2249,7 +2478,7 @@ export default function TracklogDashboard() {
             const severityOrder = { 'Alta': 3, 'Media': 2, 'Baja': 1, 'Otro': 0 };
             const itemSev = item.severity || 'Baja';
             const groupSev = group.maxSeverity || 'Baja';
-            
+
             if ((severityOrder[itemSev as keyof typeof severityOrder] || 0) > (severityOrder[groupSev as keyof typeof severityOrder] || 0)) {
                 group.maxSeverity = itemSev;
                 group.worstDiagnosis = item.diagnosis || '';
@@ -2344,6 +2573,18 @@ export default function TracklogDashboard() {
                                     )}
                                 </div>
                             </div>
+
+                            {/* Active Range Badge */}
+                            {dataRangeReady && activeRangeLabel && (
+                                <button
+                                    onClick={() => { setDataRangeReady(false); setIsMobileMenuOpen(false); }}
+                                    className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors shadow-sm"
+                                    title="Cambiar rango de datos"
+                                >
+                                    <Filter className="w-3.5 h-3.5" />
+                                    {activeRangeLabel.length > 30 ? activeRangeLabel.substring(0, 30) + '...' : activeRangeLabel}
+                                </button>
+                            )}
                         </div>
 
                         {/* Contenedor Derecho: Menú Hamburguesa + Idiomas + Dark Mode */}
@@ -2382,6 +2623,21 @@ export default function TracklogDashboard() {
                                     </button>
                                 ))}
                             </div>
+
+                            {/* Sync Button */}
+                            <button
+                                onClick={handleSyncViews}
+                                disabled={isSyncing || isLoading}
+                                className={`hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-lg border transition-all shadow-sm ${isSyncing
+                                        ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-400 dark:text-blue-500 border-blue-200 dark:border-blue-800 cursor-wait'
+                                        : 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 border-slate-200 dark:border-zinc-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-700 dark:hover:text-emerald-400 hover:border-emerald-200 dark:hover:border-emerald-800'
+                                    }`}
+                                title="Sincronizar datos con Supabase ahora"
+                                aria-label="Sincronizar base de datos"
+                            >
+                                <RefreshCcw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                                {isSyncing ? 'Sincronizando...' : 'Sincronizar BD'}
+                            </button>
 
                             {/* Dark Mode Toggle */}
                             <button
@@ -2434,37 +2690,55 @@ export default function TracklogDashboard() {
 
                                         <div className="h-px w-full bg-slate-100 dark:bg-zinc-800" />
 
-                                        {/* Data Update & Monthly Selector */}
+                                        {/* Cambiar Rango de Datos */}
                                         <div className="flex flex-col gap-3">
-                                            <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Meses</span>
-                                            <div className="grid grid-cols-2 gap-2 mb-2">
-                                                {availableMonths.map(month => (
-                                                    <button
-                                                        key={month.id}
-                                                        onClick={() => {
-                                                            const newSelection = selectedMonths.includes(month.id)
-                                                                ? selectedMonths.filter(m => m !== month.id)
-                                                                : [...selectedMonths, month.id];
-                                                            setSelectedMonths(newSelection);
-                                                        }}
-                                                        className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-all ${selectedMonths.includes(month.id)
-                                                            ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800 shadow-sm'
-                                                            : 'bg-slate-50 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 border-slate-200 dark:border-zinc-700 hover:bg-slate-100 dark:hover:bg-zinc-700'
-                                                            }`}
-                                                    >
-                                                        {month.name}
-                                                    </button>
-                                                ))}
-                                            </div>
+                                            <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Rango de Datos</span>
+                                            <button
+                                                onClick={() => {
+                                    setDataRangeReady(false);
+                                                    setIsMobileMenuOpen(false);
+                                                }}
+                                                className="w-full flex items-center gap-2 px-4 py-2.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-lg text-sm font-bold border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
+                                            >
+                                                <Filter className="w-4 h-4" />
+                                                Cambiar Rango de Datos
+                                            </button>
+                                            {activeRangeLabel && (
+                                                <p className="text-[10px] text-slate-400 dark:text-zinc-500 px-1">Actual: {activeRangeLabel}</p>
+                                            )}
                                         </div>
 
                                         {isAdmin && (
                                             <>
                                                 <div className="h-px w-full bg-slate-100 dark:bg-zinc-800" />
-                                                
-                                                {/* Upload CSV */}
+
+                                                {/* Upload CSV + Sync Tools */}
                                                 <div className="flex flex-col gap-3">
                                                     <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider text-blue-600">Herramientas de Administrador</span>
+
+                                                    {/* Forzar Refresco de Vistas Materializadas */}
+                                                    <button
+                                                        onClick={async () => {
+                                                            setIsSyncing(true);
+                                                            try {
+                                                                await supabase.rpc('refresh_dashboard_views');
+                                                                await loadData(true);
+                                                                setIsMobileMenuOpen(false);
+                                                                alert('✅ Vistas materializadas refrescadas. Los datos ahora reflejan el estado actual de la base de datos.');
+                                                            } catch (err: any) {
+                                                                console.error('Error al refrescar vistas:', err);
+                                                                alert(`❌ Error al refrescar:\n${err?.message || JSON.stringify(err)}`);
+                                                            } finally {
+                                                                setIsSyncing(false);
+                                                            }
+                                                        }}
+                                                        disabled={isSyncing}
+                                                        className="w-full justify-center flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white rounded-lg text-sm font-bold transition-colors cursor-pointer shadow-md shadow-emerald-500/20"
+                                                    >
+                                                        <RefreshCcw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                                                        {isSyncing ? 'Sincronizando...' : 'Forzar Actualización de Datos'}
+                                                    </button>
+
                                                     <label
                                                         className="w-full justify-center flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold transition-colors cursor-pointer shadow-md shadow-blue-500/20"
                                                     >
@@ -2488,6 +2762,245 @@ export default function TracklogDashboard() {
                     </div>
                 </div>
             </header>
+
+            {/* ============================================================ */}
+            {/* DATA SELECTOR SCREEN — se muestra antes de cargar el dashboard */}
+            {/* ============================================================ */}
+            {!dataRangeReady ? (
+                <main className="max-w-3xl mx-auto px-6 py-12">
+                    <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-slate-200 dark:border-zinc-800 overflow-hidden">
+
+                        {/* Header del selector */}
+                        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 px-8 py-8 text-white">
+                            <div className="flex items-center gap-3 mb-3">
+                                <div className="bg-white/20 p-2.5 rounded-xl backdrop-blur-sm">
+                                    <Database className="w-7 h-7" />
+                                </div>
+                                <div>
+                                    <h2 className="text-2xl font-bold">Seleccionar Rango de Datos</h2>
+                                    <p className="text-blue-100 text-sm mt-0.5">Elige los meses o rango de fechas a consultar</p>
+                                </div>
+                            </div>
+
+                            {/* Resumen de datos disponibles */}
+                            {availableMonthsInfo.length > 0 && (
+                                <div className="mt-4 flex items-center gap-4 text-sm bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2.5">
+                                    <span className="text-blue-100">📅 Datos disponibles:</span>
+                                    <span className="font-bold">
+                                        {ALL_MONTHS.find(m => m.num === Math.min(...availableMonthsInfo.map(a => a.month)))?.label || ''}{' '}
+                                        {Math.min(...availableMonthsInfo.map(a => a.year))}
+                                        {' — '}
+                                        {ALL_MONTHS.find(m => m.num === Math.max(...availableMonthsInfo.map(a => a.month)))?.label || ''}{' '}
+                                        {Math.max(...availableMonthsInfo.map(a => a.year))}
+                                    </span>
+                                    <span className="text-blue-200 text-xs">
+                                        ({availableMonthsInfo.reduce((sum, a) => sum + a.count, 0).toLocaleString()} registros)
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+
+                        {isDiscovering ? (
+                            <div className="flex flex-col items-center justify-center py-20">
+                                <div className="relative">
+                                    <div className="w-16 h-16 border-4 border-slate-200 dark:border-zinc-800 rounded-full"></div>
+                                    <div className="w-16 h-16 border-4 border-blue-600 rounded-full absolute top-0 left-0 animate-spin border-t-transparent"></div>
+                                </div>
+                                <p className="mt-6 text-slate-500 dark:text-zinc-400 font-medium">Descubriendo datos disponibles...</p>
+                            </div>
+                        ) : discoveryError ? (
+                            <div className="flex flex-col items-center py-16 px-8 text-center">
+                                <AlertTriangle className="w-12 h-12 text-amber-500 mb-4" />
+                                <h3 className="text-lg font-bold text-slate-700 dark:text-zinc-200 mb-2">Error al descubrir datos</h3>
+                                <p className="text-sm text-slate-500 dark:text-zinc-400 mb-6">{discoveryError}</p>
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-colors"
+                                >
+                                    Reintentar
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="p-6 space-y-6">
+
+                                {/* Modo de selección */}
+                                <div className="flex bg-slate-100 dark:bg-zinc-800 rounded-lg p-1">
+                                    <button
+                                        onClick={() => setSelectorMode('months')}
+                                        className={`flex-1 px-4 py-2 text-sm font-bold rounded-md transition-all ${selectorMode === 'months' ? 'bg-white dark:bg-zinc-700 text-blue-700 dark:text-blue-400 shadow-sm' : 'text-slate-500 dark:text-zinc-400'}`}
+                                    >
+                                        📅 Por Meses
+                                    </button>
+                                    <button
+                                        onClick={() => setSelectorMode('custom')}
+                                        className={`flex-1 px-4 py-2 text-sm font-bold rounded-md transition-all ${selectorMode === 'custom' ? 'bg-white dark:bg-zinc-700 text-blue-700 dark:text-blue-400 shadow-sm' : 'text-slate-500 dark:text-zinc-400'}`}
+                                    >
+                                        🔍 Rango Personalizado
+                                    </button>
+                                </div>
+
+                                {selectorMode === 'months' ? (
+                                    <>
+                                        {/* Year Tabs */}
+                                        {(() => {
+                                            const availableYears = [...new Set(availableMonthsInfo.map(a => a.year))].sort();
+                                            // Si solo hay 1 año, añadir el anterior y siguiente para navegación
+                                            const years = availableYears.length > 0
+                                                ? [Math.min(...availableYears) - 1, ...availableYears, Math.max(...availableYears) + 1].filter((v, i, arr) => arr.indexOf(v) === i).sort()
+                                                : [new Date().getFullYear() - 1, new Date().getFullYear()];
+
+                                            return (
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-xs font-bold text-slate-400 dark:text-zinc-500 uppercase">Año:</span>
+                                                    <div className="flex gap-1.5 flex-wrap">
+                                                        {years.map(year => {
+                                                            const hasData = availableMonthsInfo.some(a => a.year === year);
+                                                            return (
+                                                                <button
+                                                                    key={year}
+                                                                    onClick={() => setSelectorYear(year)}
+                                                                    className={`px-4 py-1.5 text-sm font-bold rounded-lg border transition-all ${
+                                                                        selectorYear === year
+                                                                            ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200/50 dark:shadow-blue-900/30'
+                                                                            : hasData
+                                                                                ? 'bg-white dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700 hover:border-blue-300 dark:hover:border-blue-700'
+                                                                                : 'bg-slate-50 dark:bg-zinc-900 text-slate-300 dark:text-zinc-600 border-slate-100 dark:border-zinc-800 cursor-default'
+                                                                    }`}
+                                                                >
+                                                                    {year}
+                                                                    {hasData && <span className="ml-1 text-[10px] opacity-60">✓</span>}
+                                                                </button>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })()}
+
+                                        {/* 12-Month Grid */}
+                                        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2.5">
+                                            {ALL_MONTHS.map(month => {
+                                                const info = availableMonthsInfo.find(a => a.year === selectorYear && a.month === month.num);
+                                                const isAvailable = !!info;
+                                                const isSelected = selectorMonths.some(sm => sm.year === selectorYear && sm.month === month.num);
+
+                                                return (
+                                                    <button
+                                                        key={`${selectorYear}-${month.num}`}
+                                                        disabled={!isAvailable}
+                                                        onClick={() => {
+                                                            if (!isAvailable) return;
+                                                            const key = { year: selectorYear, month: month.num };
+                                                            setSelectorMonths(prev => {
+                                                                const exists = prev.some(sm => sm.year === key.year && sm.month === key.month);
+                                                                return exists
+                                                                    ? prev.filter(sm => !(sm.year === key.year && sm.month === key.month))
+                                                                    : [...prev, key];
+                                                            });
+                                                        }}
+                                                        className={`relative px-3 py-3.5 rounded-xl border-2 text-left transition-all ${
+                                                            isSelected
+                                                                ? 'bg-blue-50 dark:bg-blue-900/40 border-blue-500 dark:border-blue-600 ring-1 ring-blue-200 dark:ring-blue-800 shadow-sm'
+                                                                : isAvailable
+                                                                    ? 'bg-white dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-sm cursor-pointer'
+                                                                    : 'bg-slate-50 dark:bg-zinc-900/50 border-slate-100 dark:border-zinc-800/50 opacity-50 cursor-not-allowed'
+                                                        }`}
+                                                    >
+                                                        <div className={`text-sm font-bold ${isSelected ? 'text-blue-700 dark:text-blue-400' : isAvailable ? 'text-slate-700 dark:text-zinc-300' : 'text-slate-300 dark:text-zinc-600'}`}>
+                                                            {month.label}
+                                                        </div>
+                                                        {isAvailable ? (
+                                                            <div className="text-[10px] text-slate-400 dark:text-zinc-500 mt-0.5 font-medium">
+                                                                {info.count.toLocaleString()} registros
+                                                            </div>
+                                                        ) : (
+                                                            <div className="text-[10px] text-slate-300 dark:text-zinc-700 mt-0.5">Sin datos</div>
+                                                        )}
+
+                                                        {isSelected && (
+                                                            <div className="absolute top-1.5 right-1.5">
+                                                                <CheckCircle className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                                                            </div>
+                                                        )}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+
+                                        {/* Quick select */}
+                                        <div className="flex gap-2 flex-wrap">
+                                            <button
+                                                onClick={() => {
+                                                    const yearMonths = availableMonthsInfo
+                                                        .filter(a => a.year === selectorYear)
+                                                        .map(a => ({ year: a.year, month: a.month }));
+                                                    setSelectorMonths(yearMonths);
+                                                }}
+                                                className="px-3 py-1.5 text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors border border-blue-100 dark:border-blue-800"
+                                            >
+                                                Seleccionar todo {selectorYear}
+                                            </button>
+                                            <button
+                                                onClick={() => setSelectorMonths([])}
+                                                className="px-3 py-1.5 text-xs font-bold text-slate-500 dark:text-zinc-400 bg-slate-100 dark:bg-zinc-800 rounded-lg hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors"
+                                            >
+                                                Limpiar selección
+                                            </button>
+                                        </div>
+                                    </>
+                                ) : (
+                                    /* Custom Date Range */
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-slate-500 dark:text-zinc-400">Selecciona un rango de fechas personalizado para consultar los datos específicos:</p>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-xs font-bold text-slate-500 dark:text-zinc-400 uppercase mb-1.5">Desde</label>
+                                                <DatePicker
+                                                    selected={customDateFrom}
+                                                    onChange={(date: Date | null) => setCustomDateFrom(date)}
+                                                    dateFormat="dd/MM/yyyy"
+                                                    placeholderText="Fecha inicio"
+                                                    className="w-full px-3 py-2.5 border border-slate-300 dark:border-zinc-700 rounded-lg text-sm bg-white dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-slate-500 dark:text-zinc-400 uppercase mb-1.5">Hasta</label>
+                                                <DatePicker
+                                                    selected={customDateTo}
+                                                    onChange={(date: Date | null) => setCustomDateTo(date)}
+                                                    dateFormat="dd/MM/yyyy"
+                                                    placeholderText="Fecha fin"
+                                                    className="w-full px-3 py-2.5 border border-slate-300 dark:border-zinc-700 rounded-lg text-sm bg-white dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    minDate={customDateFrom || undefined}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Acción principal */}
+                                <div className="pt-2 border-t border-slate-100 dark:border-zinc-800">
+                                    <button
+                                        onClick={confirmDataSelection}
+                                        disabled={
+                                            (selectorMode === 'months' && selectorMonths.length === 0) ||
+                                            (selectorMode === 'custom' && (!customDateFrom || !customDateTo))
+                                        }
+                                        className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 dark:disabled:bg-zinc-700 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-200/50 dark:shadow-blue-900/30 text-sm flex items-center justify-center gap-2"
+                                    >
+                                        <LayoutDashboard className="w-5 h-5" />
+                                        {selectorMode === 'months'
+                                            ? `Cargar Dashboard (${selectorMonths.length} mes${selectorMonths.length !== 1 ? 'es' : ''})`
+                                            : 'Cargar Dashboard con Rango'
+                                        }
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </main>
+            ) : (
+            <>
 
             {/* TABS NAVIGATION */}
             {!isLoading && data.length > 0 && (
@@ -2539,6 +3052,36 @@ export default function TracklogDashboard() {
                             <p className="text-slate-500 dark:text-zinc-400">{t('loading_desc')}</p>
                         </div>
                     </div>
+                ) : loadError ? (
+                    <div className="flex flex-col items-center justify-center h-[60vh] border-2 border-dashed border-amber-300 dark:border-amber-700 rounded-2xl bg-white dark:bg-zinc-900 text-center p-12">
+                        <div className="bg-amber-50 dark:bg-amber-900/40 p-6 rounded-full mb-6 ring-8 ring-amber-50/50 dark:ring-amber-900/20">
+                            <AlertTriangle className="w-16 h-16 text-amber-500" />
+                        </div>
+                        <h2 className="text-2xl font-bold text-slate-800 dark:text-zinc-200 mb-2">Tiempo de espera agotado</h2>
+                        <p className="text-slate-500 dark:text-zinc-400 max-w-md mb-4">
+                            {loadError}
+                        </p>
+                        <p className="text-xs text-slate-400 dark:text-zinc-500 max-w-md mb-8">
+                            💡 Tip: intenta selecionar menos meses o reintenta en unos segundos.
+                        </p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => loadData(true)}
+                                className="px-8 py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-500 font-bold shadow-lg shadow-blue-200/50 dark:shadow-blue-900/30 transition-all flex items-center gap-2"
+                            >
+                                <RefreshCcw className="w-5 h-5" />
+                                Reintentar
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setSelectedMonths(selectedMonths.slice(0, 1));
+                                }}
+                                className="px-6 py-4 bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 rounded-xl hover:bg-slate-200 dark:hover:bg-zinc-700 font-bold transition-all"
+                            >
+                                Cargar solo 1 mes
+                            </button>
+                        </div>
+                    </div>
                 ) : data.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-[60vh] border-2 border-dashed border-slate-300 dark:border-zinc-700 rounded-2xl bg-white dark:bg-zinc-900 text-center p-12">
                         <div className="bg-red-50 dark:bg-red-900/40 p-6 rounded-full mb-6 ring-8 ring-red-50/50">
@@ -2549,7 +3092,7 @@ export default function TracklogDashboard() {
                             {t('error_desc')}
                         </p>
                         <button
-                            onClick={() => window.location.reload()}
+                            onClick={() => loadData(true)}
                             className="px-8 py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-500 font-bold shadow-lg shadow-blue-200 transition-all"
                         >
                             {t('retry')}
@@ -3378,11 +3921,11 @@ export default function TracklogDashboard() {
                                                 return (top5EquipmentSet.has(d.ID) || top5EquipmentSet.has(d.DeviceName)) && d.severity === 'Alta';
                                             });
 
-                                            const totalAlarmsCount = filteredAlarms.length; // Total real de alarmas
+                                            const totalAlarmsCount = filteredAlarms.reduce((sum, curr) => sum + (curr._total_alerts || 1), 0); // Total real de alarmas
 
                                             const dailyTrend = filteredAlarms.reduce((acc: any, curr) => {
                                                 const dateStr = curr.Date.split(' ')[0]; // DD/MM/YYYY
-                                                acc[dateStr] = (acc[dateStr] || 0) + 1;
+                                                acc[dateStr] = (acc[dateStr] || 0) + (curr._total_alerts || 1);
                                                 return acc;
                                             }, {});
 
@@ -3875,13 +4418,13 @@ export default function TracklogDashboard() {
 
                                         // Total de alarmas: derivado de groupedData para coincidir 1:1 con la tabla
                                         const totalAlarmsCount = selectedTrackingDevice
-                                            ? filteredAlarms.length
+                                            ? filteredAlarms.reduce((sum, curr) => sum + (curr._total_alerts || 1), 0)
                                             : filteredEquipment.reduce((sum, d) =>
                                                 sum + (generalSeverityFilter === 'all' ? d.totalAlerts : d.highSeverityCount), 0);
 
                                         const dailyTrend = filteredAlarms.reduce((acc: any, curr) => {
                                             const dateStr = curr.Date.split(' ')[0];
-                                            acc[dateStr] = (acc[dateStr] || 0) + 1;
+                                            acc[dateStr] = (acc[dateStr] || 0) + (curr._total_alerts || 1);
                                             return acc;
                                         }, {});
 
@@ -4162,6 +4705,9 @@ export default function TracklogDashboard() {
                         </form>
                     </div>
                 </div>
+            )}
+
+            </>
             )}
 
             <SpeedInsights />
