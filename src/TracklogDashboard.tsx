@@ -158,41 +158,54 @@ const processCSV = (csvText: string, mdvrMap?: Map<string, MdvrDetails>, fleetMa
         return clean;
     };
 
-    // Empezamos en 1 para saltar el header dada la estructura del CSV
-    for (let i = 1; i < rows.length; i++) {
+    if (rows.length === 0) return [];
+
+    const headers = rows[0].map(h => sanitize(h).toLowerCase());
+    
+    // Detectar si la primera fila es un encabezado real
+    const isHeaderRow = headers.some(h => h.includes('device') || h.includes('time') || h.includes('status') || h.includes('fleet') || h.includes('type'));
+
+    // Si detectamos headers, buscamos el índice correcto. Si no está en el CSV, asignamos -1.
+    // Si NO es header (archivo sin encabezados), usamos los índices legacy por defecto.
+    const getSafeIndex = (keywords: string[], fallback: number) => {
+        if (!isHeaderRow) return fallback;
+        const idx = headers.findIndex(h => keywords.some(k => h.includes(k) || h === k));
+        return idx !== -1 ? idx : -1;
+    };
+
+    const idxName = getSafeIndex(['device', 'plate', 'placa'], 0);
+    const idxFleet = getSafeIndex(['fleet', 'flota'], 2);
+    const idxStatus = getSafeIndex(['alarm status', 'estado'], 3);
+    const idxDate = getSafeIndex(['begin time', 'date', 'fecha', 'time'], 4);
+    const idxDetails = getSafeIndex(['start details', 'detalles'], 6);
+    const idxSpeed = getSafeIndex(['speed', 'velocidad'], 7);
+    const idxReUpload = getSafeIndex(['re-upload', 're upload'], 9);
+
+    const startIndex = isHeaderRow ? 1 : 0;
+
+    for (let i = startIndex; i < rows.length; i++) {
         const row = rows[i];
-        // Filtrar filas corruptas o incompletas (el CSV válido tiene 10 columnas, índices 0 al 9)
-        if (row.length < 10) continue;
+        // Filtrar filas vacías o con muy pocas columnas
+        if (row.length < 4) continue;
 
-        // Mapeo basado en la NUEVA estructura (Enero 2026):
-        // 0: Device Name (ID)
-        // 1: Alarm Type
-        // 2: Fleet
-        // 3: Alarm Status
-        // 4: Begin Time
-        // 5: Start position
-        // 6: Start details (Contiene Type y State)
-        // 7: Start Speed
-        // 8: Reporting time
-        // 9: Re-upload
+        const safeGet = (idx: number, fb: string = '') => (idx !== -1 && idx < row.length) ? sanitize(row[idx]) : fb;
 
-        const rawNameId = sanitize(row[0]);
+        const rawNameId = safeGet(idxName);
         const nameMatch = rawNameId.match(/^(.*)\((\d+)\)$/);
         const deviceName = nameMatch ? nameMatch[1].trim() : rawNameId; // Ya sanitizado
         const deviceID = nameMatch ? nameMatch[2] : '';
 
         // DETERMINAR FLOTA (Prioridad: Map > CSV)
-        let fleet = sanitize(row[2]);
+        let fleet = safeGet(idxFleet);
         if (fleetMap && fleetMap.has(deviceName)) {
             // Usamos el valor del mapa si existe
             fleet = fleetMap.get(deviceName) || fleet;
         } else if (fleetMap) {
-            // Intento de match parcial/fallback si hiciera falta
-            // Por ahora confiamos en deviceName exacto
+            // Fallback si fuera necesario
         }
         if (!fleet) fleet = 'General';
 
-        const rawDetails = sanitize(row[6]); // 'Start details' está en la columna 6
+        const rawDetails = safeGet(idxDetails);
         const detailParts = rawDetails.split(';');
 
         let diskType = 'Unknown';
@@ -213,10 +226,10 @@ const processCSV = (csvText: string, mdvrMap?: Map<string, MdvrDetails>, fleetMa
             Fleet: fleet,
             DiskType: diskType,
             DiskDetails: diskState,
-            AlarmStatus: sanitize(row[3]) || '',
-            Speed: sanitize(row[7]) || '0',         // Speed en columna 7
-            Date: sanitize(row[4]) || '',           // Begin Time en columna 4
-            ReUpload: sanitize(row[9]) || 'No',      // Re-upload en columna 9
+            AlarmStatus: safeGet(idxStatus),
+            Speed: safeGet(idxSpeed, '0'),
+            Date: safeGet(idxDate),
+            ReUpload: safeGet(idxReUpload, 'No'),
             RawDetails: rawDetails
         };
 
@@ -1849,7 +1862,12 @@ export default function TracklogDashboard() {
     // Funciones de Respaldo eliminadas (ya no son necesarias por Supabase)
 
     const parseDateToISO = (dateStr: string) => {
-        const parts = dateStr.split(/[ \/:\-]/);
+        if (!dateStr) return new Date().toISOString();
+
+        // Normalizar separadores y casos donde venga con T o puntos
+        const normalized = dateStr.replace(/\./g, '/').trim();
+        const parts = normalized.split(/[ \/:\-T]/);
+        
         if (parts.length >= 3) {
             let y, m, d, h = 0, min = 0, s = 0;
             if (parts[0].length === 4) {
@@ -1860,8 +1878,20 @@ export default function TracklogDashboard() {
             if (parts[3]) h = parseInt(parts[3], 10);
             if (parts[4]) min = parseInt(parts[4], 10);
             if (parts[5]) s = parseInt(parts[5], 10);
-            return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}T${h.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}Z`;
+
+            // Validar que los números extraídos tengan sentido antes de formatear
+            if (!isNaN(Number(y)) && !isNaN(Number(m)) && !isNaN(Number(d))) {
+                return `${y.padStart(4, '20')}-${m.padStart(2, '0')}-${d.padStart(2, '0')}T${h.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}Z`;
+            }
         }
+        
+        // Fallback Javascript nativo
+        const fallback = new Date(dateStr);
+        if (!isNaN(fallback.getTime())) {
+            return fallback.toISOString();
+        }
+
+        // Si es irreconocible, retorna hoy
         return new Date().toISOString();
     };
 
@@ -1912,6 +1942,18 @@ export default function TracklogDashboard() {
                 return;
             }
 
+            // --- PROTECCIÓN CONTRA CORRUPCIÓN DE FECHAS ---
+            // Revisar si la primera fecha extraída está cayendo al "fallback" de hoy por problemas de formato
+            const sampleRawDate = processedArray[0].Date;
+            const sampleISO = parseDateToISO(sampleRawDate);
+            const isTodayFallback = sampleISO.startsWith(new Date().toISOString().split('T')[0]);
+            
+            // Si el conversor aplicó "hoy" agresivamente pero la fila original claramente tiene otra información
+            if (isTodayFallback && sampleRawDate && !sampleRawDate.includes(new Date().getDate().toString())) {
+                const proceed = window.confirm(`⚠️ ¡ALERTA DE FORMATO DE FECHA!\n\nLa aplicación no pudo reconocer el formato de la fecha: "${sampleRawDate}". \nSi continúas, las gráficas quedarán agrupadas erróneamente en el día de HOY.\n\n¿Deseas cancelar la subida para revisar el CSV?`);
+                if (proceed) return; // return if user clicks OK to "cancel the upload" (proceed to cancel)
+            }
+
             // Formatear masivamente a objetos SQL
             const rawPayload = processedArray.map(item => ({
                 device_name: item.DeviceName || 'Unknown',
@@ -1937,20 +1979,35 @@ export default function TracklogDashboard() {
             });
             const dbPayload = Array.from(uniqueMap.values());
 
-            // Inserción en bloques (Lotes de 1000 para no reventar API limit)
-            const BATCH_SIZE = 1000;
+            // Inserción en bloques (Ya que eliminaremos el Trigger en Supabase, podemos subir lotes más grandes y eficientes)
+            const BATCH_SIZE = 500;
             let totalInserted = 0;
 
             for (let i = 0; i < dbPayload.length; i += BATCH_SIZE) {
                 const batch = dbPayload.slice(i, i + BATCH_SIZE);
-                const { error } = await supabase.from('raw_alarms').upsert(batch, {
-                    onConflict: 'device_name, begin_time, alarm_type, start_details, alarm_status'
-                });
+                let attempt = 0;
+                let success = false;
+                
+                while (attempt < 5 && !success) {
+                    const { error } = await supabase.from('raw_alarms').upsert(batch, {
+                        onConflict: 'device_name, begin_time, alarm_type, start_details, alarm_status'
+                    });
 
-                if (error) {
-                    console.error("Batch insert error:", error);
-                    throw error;
+                    if (error) {
+                        const isTimeout = error.code === '57014' || error.message?.toLowerCase().includes('timeout');
+                        if (isTimeout && attempt < 4) {
+                            console.warn(`Timeout en lote ${i}, reintentando... (intento ${attempt + 1})`);
+                            attempt++;
+                            await new Promise(r => setTimeout(r, 4000)); // Esperar 4s antes de reintentar
+                        } else {
+                            console.error("Batch insert error:", error);
+                            throw error;
+                        }
+                    } else {
+                        success = true;
+                    }
                 }
+                
                 totalInserted += batch.length;
                 await new Promise(r => setTimeout(r, 10)); // Yield repintado DOM
             }
